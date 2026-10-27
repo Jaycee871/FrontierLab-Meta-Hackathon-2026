@@ -1,3 +1,14 @@
+## 2026-10-28 · v0.19 — Researcher-selected M2 method evaluation
+
+- Recorded the researcher's explicit selection of **M2 — Structure-based dual-pH histidine-scanning computational design**; M1 remains a comparator rather than being discarded.
+- Preserved the human rationale separately from the canonical `frontierlab.method-evaluation.v1` object so provenance does not invalidate deterministic evaluation reconstruction.
+- Bound the evaluation to the exact recorded live Muse hypothesis trace rather than a paraphrased summary.
+- Added an explicit downstream validation requirement: where feasible, use an orthogonal assay such as SPR on monomeric Fab to distinguish intrinsic affinity from avidity/stoichiometry effects.
+- `require_evaluation()` now reconstructs the saved M2 evaluation exactly and confirms it is eligible for Stage 5 Planning.
+- Open reproducibility checks remain for M2 data, code availability and computational environment; no scientific execution is claimed.
+- GitHub Actions run 40578886168 passed **224 tests**.
+- Planning remains unapproved and no Planning Agent call has been made.
+
 ## 2026-10-28 · v0.18 — Human-reviewed Meta synthesis completed
 
 - GitHub Actions run 40574846326 completed the bounded reviewed continuation on the previously recorded two-source research case.
