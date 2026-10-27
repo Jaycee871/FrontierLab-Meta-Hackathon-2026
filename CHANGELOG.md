@@ -1,3 +1,12 @@
+## 2026-10-28 · v0.15 — Optional NIM research backend and real review pause
+
+- Added an owner-enabled NIM backend with explicit per-session transfer consent and a shared process cap of eight attempted calls; no automatic retries.
+- Preserved the same client through all five UI stages, recorded backend identity and request receipts, blocked provider switching and cleared stale results before new attempts.
+- Tested all five UI stages and consent revocation with fake HTTP responses. Local suite: 210 passing tests.
+- Completed two real core extraction calls on frozen published excerpts (1,802 tokens total); two quoted claims reached HUMAN_CLAIM_REVIEW_REQUIRED, with no automated review, hypothesis or plan.
+- Preserved the receipt and pending review packet and disabled the dedicated bounded trigger.
+- Public HF configuration/deployment and real reviewer-controlled continuation remain pending; no NVIDIA key was copied to HF.
+
 ## 2026-10-28 · v0.14 — Real Meta JSON and published-excerpt batch runs
 
 - Verified one published-excerpt JSON response (5.126 seconds, 526 tokens) and one 12-case joint-context batch (11.168 seconds, 1,794 tokens) via NVIDIA NIM.

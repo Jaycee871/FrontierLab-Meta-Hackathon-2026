@@ -15,6 +15,7 @@ from frontierlab.integrity_trials import suite_report
 from frontierlab.evaluation_ui import render_evaluation
 from frontierlab.evaluation import require_evaluation
 from frontierlab.literature_pilot import load_dataset, reviewer_packet
+from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
 
 st.set_page_config(page_title="FrontierLab | Research Intelligence", page_icon="🔬", layout="wide")
 st.markdown("""
@@ -30,17 +31,26 @@ h1,h2,h3 {letter-spacing:-0.025em;}
 
 st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH THE FRONTIER")
 st.title("FrontierLab  /  Research Intelligence")
-st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.14")
+st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.15")
 st.write("An evidence-grounded scientific research workflow that **records disagreement instead of hiding it**.")
 
+nim_authorized = False
 with st.sidebar:
     st.header("Engine")
-    mode_label = st.radio("Evidence mode", ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)", "Live Europe PMC + local Meta model"], index=0)
+    mode_label = st.radio("Evidence mode", ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)", "Live Europe PMC + local Meta model", "Live Europe PMC + Meta via NVIDIA"], index=0)
     mode = "demo" if mode_label.startswith("Synthetic") else "live"
     use_local_meta = mode_label == "Live Europe PMC + local Meta model"
-    st.info("PAID META API DISABLED. Optional Meta Muse Glimmer inference is restricted to a same-host, local llama.cpp server at 127.0.0.1:8080.")
+    use_nim = mode_label == "Live Europe PMC + Meta via NVIDIA"
+    st.info("Paid Meta Platforms API is disabled. Choose a local model or the optional NVIDIA-hosted Meta backend.")
     if mode == "demo":
         st.warning("SYNTHETIC DATA. Invented publications demonstrate auditing; none are real scientific evidence.")
+    elif use_nim:
+        if not research_enabled():
+            st.warning("NVIDIA research inference has not been enabled by the app owner.")
+        nim_authorized = st.checkbox(
+            "Allow this research question and retrieved abstracts to be sent to NVIDIA for Meta inference",
+            value=False, disabled=not research_enabled(), key="nim_research_consent")
+        st.caption(f"Remaining shared model calls in this server process: {remaining_calls()} / 8. Failed requests consume the allowance; no automatic retries.")
     elif use_local_meta:
         st.warning("Experimental real open-weight model mode. Requires an actual Muse Glimmer checkpoint served on THIS machine; charges no Meta API credits. Never expose the local server publicly.")
     else:
@@ -51,14 +61,20 @@ st.subheader("1 · Research question")
 with st.form("research_form"):
     question = st.text_area("Scientific research question", value=QUESTION, height=85)
     query = st.text_input("Europe PMC search query", value=QUERY, disabled=(mode == "demo"))
-    n = st.slider("Maximum live abstracts", 1, 10, 4, disabled=(mode == "demo"))
-    run_clicked = st.form_submit_button("Run research audit", use_container_width=True, type="primary")
+    n = st.slider("Maximum live abstracts", 1, 2 if use_nim else 10,
+                  2 if use_nim else 4, disabled=(mode == "demo"))
+    run_clicked = st.form_submit_button("Run research audit", use_container_width=True,
+                                       type="primary", disabled=use_nim and not nim_authorized)
 
 if run_clicked:
     with st.spinner("Retrieving evidence and applying verification gates..."):
         try:
-            local_client = OpenWeightClient() if use_local_meta else None
-            result = run_research(question, query, mode=mode, model_client=local_client, max_papers=n)
+            st.session_state.pop("frontier_result", None)
+            st.session_state.pop("frontier_model_client", None)
+            client = (NvidiaResearchClient(authorized=nim_authorized) if use_nim else
+                      OpenWeightClient() if use_local_meta else None)
+            st.session_state["frontier_model_client"] = client
+            result = run_research(question, query, mode=mode, model_client=client, max_papers=n)
             st.session_state["frontier_result"] = result
         except Exception as exc:
             st.error(f"Research run failed: {type(exc).__name__}: {exc}")
@@ -75,16 +91,26 @@ with st.expander("Published-literature pilot · 12 cases awaiting researcher ann
         "Download literature reviewer packet", data=json.dumps(reviewer_packet(pilot), ensure_ascii=False, indent=2),
         file_name="frontierlab_real_excerpt_review.json", mime="application/json")
     st.markdown("[Pilot protocol and source attribution](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/blob/main/docs/REAL_LITERATURE_PILOT.md)")
+    extraction_path = Path(__file__).resolve().parent / "docs/runs/nim_claim_review_pending_20261028.json"
+    if extraction_path.exists():
+        st.caption("Recorded core-workflow extraction: two real model-proposed claims await human review; no hypotheses or plans have been generated.")
+        st.download_button("Download pending core-workflow claim review", data=extraction_path.read_text(encoding="utf-8"), file_name="nim_claim_review_pending_20261028.json", mime="application/json")
 
 result = st.session_state.get("frontier_result")
 if result:
+    active_client = st.session_state.get("frontier_model_client")
+    if result.backend == "nvidia-nim" and (not use_nim or not nim_authorized):
+        active_client = None
     stats = summary(result)
     a, b, c, d = st.columns(4)
     a.metric("Sources", stats["sources"])
     b.metric("Claims: passage checks / synthetic", stats["claims"])
     c.metric("Conflicts", stats["conflicts"])
     d.metric("Rejected claims", stats["rejected"])
-    st.caption(f"Decision gate: **{stats['decision']}** · Model: {result.model} · Data source: {result.mode}")
+    st.caption(f"Decision gate: **{stats['decision']}** · Backend: {result.backend} · Model: {result.model} · Data source: {result.mode}")
+    if result.inference:
+        with st.expander("Model request receipts"):
+            st.json(result.inference)
     for warning in result.audit.warnings:
         st.warning(warning)
     if result.mode == "demo":
@@ -216,17 +242,17 @@ if result:
                 )
                 if result.review.get("status")=="READY_FOR_HUMAN_GATED_SYNTHESIS":
                     st.info("Review complete. Hypothesis synthesis requires an actually connected, available model and further human scrutiny.")
-                    if st.button("Resume model synthesis after human review", type="secondary"):
+                    if st.button("Resume model synthesis after human review", type="secondary",
+                                 disabled=active_client is None):
                         try:
-                            client=OpenWeightClient() if "muse-glimmer" in result.model.lower() else None
-                            continue_after_review(result, model_client=client)
+                            continue_after_review(result, model_client=active_client)
                             st.session_state["frontier_result"]=result
                             st.success("Provisional human-gated draft created; scientific validation is still needed.")
                         except (ValueError, PermissionError, RuntimeError) as exc:
                             st.error(f"Synthesis remains blocked: {type(exc).__name__}: {exc}")
     with st.expander("3 · Falsifiable hypotheses", expanded=True):
         st.json(result.hypotheses)
-    render_evaluation(result)
+    render_evaluation(result, model_client=active_client)
     st.subheader("5 · Research plan approval gate")
     try:
         require_evaluation(result)
@@ -234,9 +260,9 @@ if result:
     except (ValueError, PermissionError):
         evaluation_ready = False
     approved = st.checkbox("I have reviewed the evidence, conflicts and limitations. Allow a DRAFT research plan.")
-    if st.button("Generate cited plan", disabled=not approved or not result.hypotheses or not evaluation_ready, type="primary"):
+    if st.button("Generate cited plan", disabled=not approved or not result.hypotheses or not evaluation_ready or (result.mode == "live" and active_client is None), type="primary"):
         try:
-            planner = OpenWeightClient() if result.mode == "live" and "muse-glimmer" in result.model.lower() else None
+            planner = active_client if result.mode == "live" else None
             make_plan(result, model_client=planner, approved=approved)
             st.success("Draft created. Human scientific review is still required.")
         except Exception as exc:
@@ -248,5 +274,5 @@ if result:
     st.download_button("Download complete provenance JSON", data=export_json(result),
                        file_name="frontierlab_audit.json", mime="application/json")
 else:
-    st.info("Begin with synthetic conflict fixtures or Europe PMC. Local Muse Glimmer inference is optional, requires a separately launched checkpoint, and NEVER contacts the paid Meta API.")
+    st.info("Begin with the synthetic audit or Europe PMC. Model-backed research requires a configured local server or an explicitly enabled NVIDIA backend.")
 

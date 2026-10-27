@@ -40,7 +40,7 @@ def allowed_sources(run: Run) -> list[str]:
 def context_id(run: Run) -> str:
     allowed_sources(run)
     return _digest({
-        "question": run.question, "mode": run.mode, "model": run.model,
+        "question": run.question, "mode": run.mode, "model": run.model, "backend": run.backend,
         "sources": [source_fingerprint(p) for p in run.papers],
         "claims": [c.__dict__ for c in run.audit.verified_claims],
         "conflicts": run.audit.conflicts, "hypotheses": run.hypotheses,
@@ -175,6 +175,8 @@ def suggest_methods(run: Run, *, model_client) -> list[dict]:
     known = allowed_sources(run)
     if run.mode != "live" or model_client is None:
         raise PermissionError("Method suggestions require a live, connected model")
+    if run.backend not in ("none", "unspecified") and getattr(model_client, "backend", "unspecified") != run.backend:
+        raise PermissionError("Use this run's original model backend for method suggestions")
     response = model_client.json("Method Evaluation Agent", (
         'Propose up to two alternative research methods relevant to the hypotheses. '
         'Return {"candidates":[{"name":string,"evidence_ids":[provided IDs],"scope":string,'

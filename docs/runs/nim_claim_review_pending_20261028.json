@@ -1,0 +1,49 @@
+{
+  "schema": "frontierlab.human-review.v1",
+  "dataset_id": "746c55247226e19e7b15",
+  "research_question": "What do these two published excerpts establish about pH-dependent antibody engineering, and what remains unknown about generalization?",
+  "model_claims_from": "meta/muse-glimmer-30b",
+  "label_definitions": {
+    "SUPPORTED": "The cited excerpt supports this specific claim within its stated scope.",
+    "CONTRADICTED": "The cited excerpt directly contradicts the specific claim.",
+    "INSUFFICIENT": "The cited excerpt does not decide this claim.",
+    "PENDING": "Not yet independently reviewed."
+  },
+  "note": "Quoted text existing in an abstract does not establish semantic validity. Reviewer judgments need transparent rationale; not an independently adjudicated gold dataset.",
+  "cases": [
+    {
+      "case_id": "C001-221002a4fd8db92e",
+      "paper_id": "PMC4314675",
+      "paper_title": "Construction of pH-sensitive Her2-binding IgG1-Fc by directed evolution",
+      "source": "Europe PMC published abstract excerpt (frozen snapshot)",
+      "url": "https://europepmc.org/articles/PMC4314675",
+      "doi": "10.1002/biot.201300483",
+      "claim_key": "ph-sensitive her2-binding fcabs without histidine mutations",
+      "claim": "Two of three isolated pH-sensitive Fcabs lacked histidine mutations.",
+      "model_proposed_stance": "inconclusive",
+      "evidence_quote": "Interestingly, two of the three Fcabs did not contain a single histidine mutation",
+      "abstract_available": true,
+      "source_snapshot_sha256": "76f280ac91d7ef93d3018b02b620d64dda0e54be3c3f26d04b7d9dfb2614f764",
+      "verbatim_quote_matched": true,
+      "review_label": "PENDING",
+      "review_note": ""
+    },
+    {
+      "case_id": "C002-f9bdc5b0413323ca",
+      "paper_id": "PMC6927761",
+      "paper_title": "Structure-based engineering of pH-dependent antibody binding for selective targeting of solid-tumor microenvironment",
+      "source": "Europe PMC published abstract excerpt (frozen snapshot)",
+      "url": "https://europepmc.org/articles/PMC6927761",
+      "doi": "10.1080/19420862.2019.1682866",
+      "claim_key": "ph-dependent antibody binding selectivity improvement",
+      "claim": "Binding selectivity toward acidic pH was improved up to 25-fold relative to parental bH1-Fab in this engineering study",
+      "model_proposed_stance": "supports",
+      "evidence_quote": "Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab.",
+      "abstract_available": true,
+      "source_snapshot_sha256": "bc081ff7fdbd09c27784a5d02cf52a8059547e5ea38c9c32b7b0e65fe68b385a",
+      "verbatim_quote_matched": true,
+      "review_label": "PENDING",
+      "review_note": ""
+    }
+  ]
+}

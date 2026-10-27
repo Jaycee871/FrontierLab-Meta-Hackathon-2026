@@ -11,7 +11,7 @@ def log_step(log: list[dict], role: str, state: str, note: str):
     log.append({"time_utc": datetime.now(timezone.utc).isoformat(), "role": role, "status": state, "note": note})
 
 
-def run_research(question: str, query: str, *, mode: str, model_client=None, max_papers: int = 5,
+def _run_research(question: str, query: str, *, mode: str, model_client=None, max_papers: int = 5,
                  retrieve=retrieve_papers) -> Run:
     if not question.strip():
         raise ValueError("Please enter a research question")
@@ -87,11 +87,29 @@ def run_research(question: str, query: str, *, mode: str, model_client=None, max
                 "explanation":"Quote presence has been checked; entailment has not."}, log)
 
 
+def run_research(question: str, query: str, *, mode: str, model_client=None,
+                 max_papers: int = 5, retrieve=retrieve_papers) -> Run:
+    run = _run_research(question, query, mode=mode, model_client=model_client,
+                        max_papers=max_papers, retrieve=retrieve)
+    if mode == "live" and model_client is not None:
+        run.backend = getattr(model_client, "backend", "unspecified")
+        run.inference = getattr(model_client, "provenance", None)
+    return run
+
+
+def _same_backend(run, client):
+    if client is not None and run.backend not in ("none", "unspecified") and (
+        getattr(client, "backend", "unspecified") != run.backend
+    ):
+        raise PermissionError("Continue this run with its original model backend")
+
+
 def continue_after_review(run: Run, *, model_client=None) -> Run:
     """Resume skeptical synthesis only after explicit human claim-level review."""
     from .review import approved_claims, review_packet
     if run.mode != "live" or model_client is None:
         raise PermissionError("Live human-gated synthesis requires a connected model")
+    _same_backend(run, model_client)
     if not run.review or run.review.get("dataset_id") != review_packet(run)["dataset_id"]:
         raise PermissionError("No valid source-bound human review packet")
     if run.review.get("status") != "READY_FOR_HUMAN_GATED_SYNTHESIS":
@@ -146,6 +164,7 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
     if not run.hypotheses:
         raise ValueError("Cannot plan without a supported hypothesis")
     if run.mode == "live":
+        _same_backend(run, model_client)
         from .review import approved_claims, review_packet
         if not run.review or run.review.get("dataset_id") != review_packet(run)["dataset_id"]:
             raise PermissionError("Live planning requires a valid human-reviewed evidence packet")

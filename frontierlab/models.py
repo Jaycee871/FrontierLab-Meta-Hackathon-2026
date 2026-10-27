@@ -50,6 +50,8 @@ class Run:
     plan: dict | None = None
     review: dict | None = None
     evaluation: dict | None = None
+    backend: str = "none"
+    inference: dict | None = None
 
     def as_dict(self) -> dict:
         return asdict(self)
