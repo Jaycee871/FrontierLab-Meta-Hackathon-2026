@@ -71,3 +71,8 @@ Added an optional offline permission-gate demonstration and host-only OpenShell 
 ## Optional real Meta open-weight inference (NO paid Meta API)
 
 A new localhost-only Muse Glimmer adapter is available as an experimental third UI mode. This connects to an already-running local llama.cpp server, and never to Meta Model API. The old paid API client is intentionally blocked at initialization. See [deployment notes](docs/META_OPENWEIGHT_HF_CPU.md) and the hardware checker at scripts/muse_hardware_check.py. The HF free CPU tier is too small for the 17GB model; use it for the frontend and research tools. No real checkpoint or GPU test has been completed.
+
+
+## HF PRO Spaces deployment template
+
+For a no-hourly-cost public CPU Basic Docker demonstration, see [HF PRO setup](docs/HF_PRO_SETUP.md), [Space Dockerfile](deploy/hf-space/Dockerfile) and [Space README](deploy/hf-space/README.md). This has not been deployed to Hugging Face yet. The free CPU Space runs metadata retrieval and synthetic audits, not actual Meta Glimmer inference. An experimental Gradio ZeroGPU model Space would be a separate project.
