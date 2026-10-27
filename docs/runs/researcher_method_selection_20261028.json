@@ -1,0 +1,20 @@
+{
+  "schema": "frontierlab.researcher-method-selection.v1",
+  "recorded_date_taipei": "2026-10-28",
+  "reviewer": "Jaycee871",
+  "source_evaluation": "docs/runs/method_evaluation_20261028.json",
+  "evaluation_id": "58a884bd149570895c9cb37d38b86ca37836499db7e1a12c43a8ce3ba29f6da0",
+  "context_id": "70fc6840f9712c2d1c63c06ff06abdb2b8394d07521b7fcfd1fa0cba31c70bf0",
+  "decision": "SELECT_M2",
+  "selected_candidate_id": "M2",
+  "automatic_selection": false,
+  "planning_approved": false,
+  "reasoning": {
+    "ai_enablement": "M2 offers the clearest in-silico-to-in-vitro AI-for-Science demonstration because structure interpretation, variant prioritization and experimental handoff can all be represented explicitly.",
+    "end_to_end_story": "M2 provides a coherent computational design → Fab → cell → full antibody → functional validation storyline.",
+    "m1_comparator_role": "M1 remains scientifically useful as a comparator because directed evolution can reveal histidine-independent solutions, but its core search loop is more dependent on physical library generation and FACS screening.",
+    "critical_thinking": "The histidine-centered search bias and avidity/stoichiometry limitations should be surfaced as explicit uncertainties rather than hidden."
+  },
+  "downstream_validation_requirement": "Where feasible, include an orthogonal assay such as SPR on monomeric Fab to distinguish intrinsic affinity from avidity effects before interpreting cell-binding measurements mechanistically.",
+  "note": "This is the human researcher's selection rationale. It is stored separately so the canonical method-evaluation object remains exactly reproducible by frontierlab.evaluation.build_evaluation()."
+}
