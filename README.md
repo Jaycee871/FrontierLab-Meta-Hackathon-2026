@@ -5,9 +5,9 @@
 
 FrontierLab helps researchers turn a scientific question into a testable hypothesis and a reviewable research plan. Its initial focus is biomedical research: collect literature, inspect supporting and conflicting evidence, examine uncertainty, and let the researcher intervene before moving forward.
 
-**Current implementation: v0.16 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Current codebase: v0.17 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
-The evidence retrieval and audit components have working software and recorded tests. **One genuine Meta Muse Glimmer inference through NVIDIA NIM succeeded on a synthetic prompt**; the [run receipt](docs/runs/meta_nim_smoke_20261028.json) records the answer, model identity, timing and token use. A single published-excerpt JSON check and a 12-case joint-context batch have also completed; see [structured run records](docs/META_STRUCTURED_RUNS.md). A complete live research run remains pending. Paid Meta Model API access is disabled.
+The evidence retrieval and audit components have working software and recorded tests. **One genuine Meta Muse Glimmer inference through NVIDIA NIM succeeded on a synthetic prompt**; the [run receipt](docs/runs/meta_nim_smoke_20261028.json) records the answer, model identity, timing and token use. A single published-excerpt JSON check, a 12-case joint-context batch and a two-call core extraction have also completed; see [structured run records](docs/META_STRUCTURED_RUNS.md) and the [NIM research backend](docs/NIM_RESEARCH_BACKEND.md). Both extracted core claims now have explicit researcher SUPPORTED judgments. A source-bound two-call continuation runner is implemented and CI-tested, but its real skeptic/hypothesis calls have **not** yet been executed. A complete live research run remains pending. Paid Meta Model API access is disabled.
 
 [Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -17,7 +17,7 @@ The evidence retrieval and audit components have working software and recorded t
 | --- | --- | --- |
 | **1. Research** | Define the scientific question, scope and assumptions. | Question and literature-query inputs in Streamlit. |
 | **2. Evidence** | Retrieve papers and inspect citation-linked claims, quotations and disagreement. | Europe PMC retrieval; separate three-source discovery workflow; source and quotation checks. |
-| **3. Hypothesis** | Propose falsifiable hypotheses grounded in reviewed evidence. | Model workflow implemented with a mandatory human review gate; live research synthesis still unverified. |
+| **3. Hypothesis** | Propose falsifiable hypotheses grounded in reviewed evidence. | Mandatory human review gate plus a bounded continuation runner are implemented; offline continuation tests pass, while the real reviewed skeptic/hypothesis continuation remains unexecuted. |
 | **4. Evaluation** | Compare candidate methods, reproducibility conditions and uncertainty. | Source-bound method comparison, six reproducibility-documentation checks, uncertainty and researcher selection/deferral; actual paper reproduction and scientific validation remain pending. |
 | **5. Planning** | Approve a draft with controls, measurements and falsification criteria. | Requires a current method evaluation and explicit approval; exports the selected method, rationale, unresolved checks and draft controls/metrics/replication/falsification. Live inference remains unverified. |
 
@@ -32,8 +32,8 @@ Four principles guide the workflow: **transparent evidence, reproducibility, unc
 | **Human claim review** | Implemented; both recorded core claims explicitly reviewed SUPPORTED by Jaycee871. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
 | **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
 | **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **214 tests passed locally and in GitHub CI** for v0.16, including the NIM five-stage interface flow with fake HTTP responses. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
-| **Meta model inference** | **Recorded smoke, JSON, 12-case and core extraction runs.** | The real NIM-backed core extracted two source-quoted claims and stopped for human review. The same-client UI flow is tested with fake transport; both core claims now have explicit researcher SUPPORTED judgments; live synthesis remains pending. [Backend and run](docs/NIM_RESEARCH_BACKEND.md). |
+| **Software checks** | **217 tests passed in GitHub CI** for the v0.17 codebase, including source-bound rehydration of the completed review and the two-call continuation boundary. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
+| **Meta model inference** | **Recorded smoke, JSON, 12-case and core extraction runs.** | The real NIM-backed core extracted two source-quoted claims and stopped for human review. Both core claims now have explicit researcher SUPPORTED judgments. A manual two-call reviewed continuation workflow is prepared and tested offline; no real skeptic/hypothesis continuation result is claimed yet. [Backend and run](docs/NIM_RESEARCH_BACKEND.md). |
 | **Hosted interface** | **v0.16 deployed and verified RUNNING on CPU Basic.** | Runtime revision, health endpoint and rendered source marker checked; both supplied claim judgments and rationales are visible. NIM is still owner-disabled on HF. [Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Deployment receipt](docs/runs/hf_deployment_20261028.json). |
 | **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
 
@@ -113,7 +113,7 @@ python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
 ```
 
-The 214-test suite includes Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction and single/batch output validation tests. The v0.15 CI run passed 210 tests; v0.16 adds source-bound recorded-review and deployment packaging checks. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
+The **217-test** suite includes Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries and single/batch output validation tests. GitHub Actions run [40573319812](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40573319812) passed all 217 tests. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
 
 ## Repository guide
 
@@ -134,7 +134,7 @@ Some setup documents preserve earlier implementation snapshots. Use the dated st
 
 ## Next milestones
 
-1. **Review and continue the real core run:** both model-proposed claims have researcher SUPPORTED judgments. The [completed review](docs/runs/nim_claim_review_completed_20261028.json) preserves the supplied rationales; live synthesis remains a separate next action.
+1. **Run the bounded reviewed continuation:** both model-proposed claims have researcher SUPPORTED judgments, and the new manual continuation runner revalidates their source bindings before allowing exactly two new calls: skeptic then hypothesis. The workflow is prepared and CI-tested; the real continuation has not yet been triggered.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison:** use the same model and cases to compare no gate, source/quote checks, and checks plus human review; report abstention and intervention separately.
 4. **Record the public demo:** v0.16 is deployed with a checked revision; record an approximately three-minute demonstration of actual behavior.
