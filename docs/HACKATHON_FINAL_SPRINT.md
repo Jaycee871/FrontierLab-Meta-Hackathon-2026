@@ -4,7 +4,16 @@
 
 ## Verified inference update — October 28, 2026
 
-One authorized synthetic Meta Muse Glimmer request through NVIDIA NIM returned final text: finish_reason=stop, 10.535 seconds, 249 tokens. See [run 40562188386](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386) and [receipt](runs/meta_nim_smoke_20261028.json). The dedicated one-shot branch trigger was disabled after the call. Structured JSON, real-literature evaluation, the local backend and a full live research run remain unverified. Next execution work is a bounded structured-output check and integration, subject to the existing cost policy.
+FrontierLab now has several dated genuine Meta Muse Glimmer / NVIDIA NIM records rather than only the original synthetic smoke test:
+
+- the original synthetic one-shot returned final text with verified model identity;
+- a published-excerpt strict-JSON check completed;
+- a 12-case joint-context batch completed;
+- the NIM-backed core executed two real Evidence Extraction Agent calls on frozen published excerpts and stopped at the mandatory human-review gate;
+- both core claims were subsequently reviewed by Jaycee871 as SUPPORTED with written rationales;
+- a source-bound continuation runner now revalidates that completed review and permits exactly two further calls: Adversarial Skeptic Agent and Hypothesis Agent.
+
+The continuation runner is software-verified but **has not yet been executed against the live NIM endpoint**. Method evaluation, researcher selection and planning therefore remain downstream milestones rather than claimed completed work. GitHub Actions run 40573319812 passed 217 tests.
 
 ## Official submission boundary
 
@@ -18,24 +27,26 @@ One authorized synthetic Meta Muse Glimmer request through NVIDIA NIM returned f
 
 | Deliverable | Status | Evidence / limitation |
 | --- | --- | --- |
-| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.11 main `08c3621`, GitHub Actions 116 passing tests; mainly mock/fictional guard tests |
+| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.17 codebase; GitHub Actions run 40573319812 passed 217 tests, including the recorded-review continuation boundary |
 | Manuscript-to-abstract source matching | SOFTWARE VERIFIED | Valid DOI and verbatim excerpt checks are not semantic entailment |
-| Human review gate, version-bound annotations | SOFTWARE VERIFIED | Review decisions are not independent adjudicated expert ground truth |
+| Human review gate, version-bound annotations | SOFTWARE + RECORDED REVIEW VERIFIED | Two real core claims have explicit researcher SUPPORTED judgments; these are not independent expert gold labels |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
-| HF public Streamlit Space | REBUILT AND RUNNING AS SHOWN BY USER | Updated v0.11 demo panel has NOT been separately confirmed deployed |
-| Authentic Meta Muse Glimmer response | VERIFIED SINGLE SYNTHETIC RESPONSE | NVIDIA NIM run 40562188386; final text and model identity recorded. No scientific or full-pipeline performance claim. |
-| Live research claim-evaluation comparison | NOT STARTED | No authentic Meta output and independently adjudicated dataset yet |
+| HF public Streamlit Space | v0.16 DEPLOYED AND VERIFIED RUNNING | CPU Basic frontend is revision-bound and shows the completed human review; NIM remains owner-disabled there |
+| Authentic Meta Muse Glimmer response | MULTIPLE RECORDED NIM RUNS | Synthetic smoke, strict JSON, 12-case batch and two-call core extraction recorded; no scientific accuracy claim |
+| Human-reviewed live continuation | PREPARED, NOT EXECUTED | Two-call skeptic → hypothesis runner is source-bound and CI-tested; real continuation has not been triggered |
+| Live research claim-evaluation comparison | NOT COMPLETED | 12-case real model outputs exist, but independently adjudicated reference labels and controlled A/B/C comparison remain pending |
 | Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
 | Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
 
-## Priority 1: genuine Meta inference — highest priority
+## Priority 1: finish one human-reviewed Meta path — highest priority
 
-1. Perform one **explicitly authorized** NVIDIA trial smoke call with the updated reasoning budget; no automatic retries or provider spending.
-2. Preserve the official model ID, a short non-sensitive output, finish reason, token use, timing and exact git SHA in a reproducible run record. Never store API keys, headers or hidden reasoning.
-3. If the trial cannot return an answer, evaluate a legitimate alternative open-weight Meta provider from the official partner list (Baseten / Modal / Fireworks) subject to confirmed participant entitlement and costs. Do NOT silently switch to a non-Meta model while claiming Meta usage.
-4. Do not confuse 'API responded HTTP 200' with 'model gave an answer', or 'model gave an answer' with verified scientific judgment.
+1. Run the prepared **bounded reviewed continuation** only with explicit owner authorization. It is hard-capped at two new calls and performs no automatic retry.
+2. Preserve the official model ID, finish reason, token use, timing, input/output hashes and exact git revision in a dated run record. Never store API keys, headers or hidden reasoning.
+3. Inspect the skeptic output and citation-linked hypotheses. Do not treat model synthesis as validated scientific truth.
+4. Perform the next method comparison as a separate researcher action. Method selection and planning must not be auto-approved merely because the Meta calls completed.
+5. Do not confuse 'model returned valid JSON' with verified scientific judgment, or a draft hypothesis with a discovered biological mechanism.
 
-## Priority 2: small controlled claim-error benchmark
+## Priority 2: controlled claim-error benchmark
 
 - Start with 12 preregistered cases: 4 supported, 4 contradicted, 4 insufficient, using legally reusable snippets. Cover exact quote but opposite interpretation, source-ID mismatch, stale version, claims that cannot be decided from abstract, and tool failure.
 - Expert/researcher labels are separate from agent predictions. Blind dual review is desirable before publishing any gold standard.
@@ -49,6 +60,16 @@ One authorized synthetic Meta Muse Glimmer request through NVIDIA NIM returned f
 - Failure-path demo must remain honest if the model unexpectedly produces a correct response. Include a recorded genuine model trace and a replay only when transparently labeled 'recorded real run'.
 - Public HF CPU Basic is the frontend. It does not have a loaded 30B model; hosting Meta inference needs an approved external provider/backend with secrets kept off GitHub and appropriate cost controls.
 - Package a stable backup video that matches the application; do not call prewritten fake responses live model output.
+
+## Current official schedule check — October 28, 2026
+
+The current Meta and Cerebral Valley event pages both still list **November 4, 2026 at 9:00 PM ET** as the project submission deadline. The official Meta page describes the Indie Developer Track as being judged on creativity, technical ambition and whether the project works; the Push the Frontier theme explicitly includes accelerating scientific experiments.
+
+Official references:
+- https://dev.meta.ai/events/global-hackathon
+- https://events.cerebralvalley.ai/e/meta-ai-developer-hackathon
+
+The participant portal may contain additional submission-form fields that are not visible on the public event pages, so the logged-in final form still needs a separate check.
 
 ## Priority 4: release and submission
 
