@@ -41,28 +41,43 @@
       "evidence_ids": [
         "PMC6927761"
       ],
-      "rationale": "PMC6927761 supports the study-specific 25-fold selectivity observation; methodology, assay conditions and generalization still require full-text review."
+      "rationale": "PMC6927761 excerpt supports a 25-fold selectivity improvement claim but provides no methodology, assay conditions, or evidence that the improvement was experimentally executed versus proposed; generalization beyond bH1-Fab is unknown."
     },
     {
       "text": "pH-sensitive Fcabs can be isolated without histidine mutations, at least in the three Fcabs described.",
       "evidence_ids": [
         "PMC4314675"
       ],
-      "rationale": "PMC4314675 supports the observation that two of three isolated pH-sensitive Fcabs lacked histidine mutations; mechanism and broader applicability remain unresolved."
+      "rationale": "PMC4314675 excerpt notes two of three isolated pH-sensitive Fcabs lacked histidine mutations, but the excerpt is an abstract fragment only with no pH-dependence data, mechanism, or generalizability information, so functional pH sensitivity and broader applicability remain unverified."
     }
   ],
   "skeptic": {
-    "decision": "HUMAN_REVIEWED_DRAFT",
-    "key_uncertainties": [
-      "Generalization beyond the reported bH1-Fab system is not established.",
-      "Mechanism of pH sensitivity in Fcabs lacking histidine mutations is unresolved from the reviewed excerpt.",
-      "Cross-study differences in format, assay conditions and engineering strategy prevent direct mechanistic equivalence."
+    "explanation": "From the provided source data only: PMC6927761 excerpt reports that in an engineering study, binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab. The excerpt does not provide methodology, assay conditions, or evidence of generalization beyond bH1-Fab. PMC4314675 excerpt notes that two of three isolated pH-sensitive Fcabs did not contain a single histidine mutation. The excerpt is an abstract fragment only and provides no pH-dependence data, mechanism, or generalizability information. No deterministic conflicts are listed in the source data. No executed experimental details, proposed work distinctions, or generalization evidence can be established from these excerpts alone.",
+    "uncertainties": [
+      "Whether the 25-fold selectivity improvement in PMC6927761 reflects executed experimental measurements or proposed work, as methodology and assay conditions are not provided in the excerpt",
+      "Whether pH-sensitive binding was actually demonstrated for the Fcabs in PMC4314675, as the excerpt provides no pH-dependence data",
+      "The mechanism underlying pH sensitivity in the two Fcabs without histidine mutations, as no mechanistic information is provided in the excerpt",
+      "Generalizability of the 25-fold selectivity improvement beyond the parental bH1-Fab, as the excerpt states generalization remains unknown",
+      "Generalizability of histidine-independent pH sensitivity beyond the three isolated Fcabs, as generalizability information is not provided in the excerpt"
     ],
     "recommended_checks": [
-      "Inspect full methods and assay conditions for both studies.",
-      "Compare pH windows, binding readouts, controls and replication.",
-      "Assess whether independent studies reproduce histidine-independent and structure-guided pH switching."
-    ]
+      "Retrieve full text of PMC6927761 to verify assay conditions, measured pH values, replicates, and whether selectivity improvement was experimentally demonstrated versus proposed",
+      "Retrieve full text of PMC4314675 to verify pH-dependent binding data for the three Fcabs, characterization methods, and sequence analysis",
+      "Check whether PMC6927761 reports controls, parental bH1-Fab baseline binding at neutral and acidic pH, and statistical testing",
+      "Check whether PMC4314675 reports how pH sensitivity was defined and measured, and whether the histidine mutation status was correlated with functional pH dependence",
+      "Search for independent replication or follow-up studies assessing generalization of histidine-independent pH sensitivity and bH1-Fab engineering across different targets"
+    ],
+    "decision": "HUMAN_REVIEWED_DRAFT",
+    "human_review_summary": {
+      "total": 2,
+      "reviewed": 2,
+      "pending": 0,
+      "supported": 2,
+      "contradicted": 0,
+      "insufficient": 0,
+      "supported_distinct_sources": 2,
+      "human_label_coverage": 1
+    }
   },
   "human_review_dataset_id": "746c55247226e19e7b15",
   "human_supported_sources": [
@@ -72,5 +87,5 @@
   "method_selection_automated": false,
   "planning_automated": false,
   "scientific_accuracy_verified": false,
-  "note": "Permanent compact summary of the GitHub Actions artifact; does not replace the original artifact or establish scientific correctness."
+  "note": "Permanent compact record of the GitHub Actions artifact. Hypotheses and skeptic output are preserved verbatim as structured values from the recorded run; this does not establish scientific correctness."
 }
