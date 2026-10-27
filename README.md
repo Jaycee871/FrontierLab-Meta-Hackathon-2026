@@ -106,3 +106,8 @@ The live research pipeline now requires each model-proposed claim to carry a **2
 ## v0.9 · Human-gated scientific claim review
 
 The live pipeline stops at HUMAN_CLAIM_REVIEW_REQUIRED after excerpt validation, before its Skeptic/Hypothesis agents. The new review form and JSON packet collect per-claim human verdicts. Model synthesis resumes only after all cases are reviewed and at least two distinct papers are human-supported. These labels are NOT independently adjudicated scientific gold data. See [research protocol](docs/HUMAN_REVIEW_GATE.md). HF Space needs a Docker rebuild to display the code.
+
+
+## v0.10 · NVIDIA BioNeMo scientific tools (offline preflight)
+
+Optional [BioNeMo adapter](frontierlab/bionemo.py): four documented scientific tools, with **protein-only Boltz-2 input preflight and response schema checking** implemented; no hosted API, model loading, billed inference, or extra HF Space deployment. The preflight requires human-reviewed evidence plus an explicit authorization in research mode and writes a sequence-redacted provenance manifest. For real scientific work, results still require independent validation. Run `python -m scripts.bionemo_preflight`. See [integration limitations and permissions](docs/BIONEMO_SCIENCE_TOOLS.md).

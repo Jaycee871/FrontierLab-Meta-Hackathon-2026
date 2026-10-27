@@ -1,3 +1,12 @@
+## 2026-10-28 · v0.10 — BioNeMo offline scientific-tool adapter
+
+- Added BioNeMo tool registry with status flags; only Boltz-2 protein preflight is available.
+- Added source-bound human authorization requirements for research preflight, separate from permission to transfer data to NVIDIA.
+- Added deterministic, sequence-redacted manifest with request hash and no implied GPU inference.
+- Added strict Boltz-2 response shape checks that do NOT mistake schema validity for scientific proof.
+- Added standalone zero-network preflight script and negative regression tests.
+- No new HF deployment, API key, GPU job, paid Meta inference or NVIDIA hosted inference.
+
 ## 2026-10-27 · v0.9 — Human gate before hypothesis synthesis
 
 - Added source-bound review packet with deterministic IDs, human verdicts and rationale.
