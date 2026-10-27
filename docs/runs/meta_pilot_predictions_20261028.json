@@ -1,0 +1,80 @@
+{
+  "schema": "frontierlab.real-excerpt-predictions.v1",
+  "dataset_id": "8f8451991149de486136f60b2516a255af4962ce16d71d0dfe05afc0c752f275",
+  "model_id": "meta/muse-glimmer-30b",
+  "execution_origin": "GITHUB_NIM_RUN_RECEIPT",
+  "cases": [
+    {
+      "case_id": "R01",
+      "source_id": "PMC8686790",
+      "label": "SUPPORTED",
+      "evidence_quote": "Nine pH-dependent antibodies were isolated using single-acidic amino acid residue mutagenesis at the six hot-spot residue positions."
+    },
+    {
+      "case_id": "R02",
+      "source_id": "PMC8686790",
+      "label": "CONTRADICTED",
+      "evidence_quote": "Nine pH-dependent antibodies were isolated using single-acidic amino acid residue mutagenesis at the six hot-spot residue positions."
+    },
+    {
+      "case_id": "R03",
+      "source_id": "PMC8686790",
+      "label": "INSUFFICIENT",
+      "evidence_quote": ""
+    },
+    {
+      "case_id": "R04",
+      "source_id": "PMC6927761",
+      "label": "SUPPORTED",
+      "evidence_quote": "Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab."
+    },
+    {
+      "case_id": "R05",
+      "source_id": "PMC6927761",
+      "label": "CONTRADICTED",
+      "evidence_quote": "Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab."
+    },
+    {
+      "case_id": "R06",
+      "source_id": "PMC6927761",
+      "label": "INSUFFICIENT",
+      "evidence_quote": ""
+    },
+    {
+      "case_id": "R07",
+      "source_id": "PMC4314675",
+      "label": "SUPPORTED",
+      "evidence_quote": "Interestingly, two of the three Fcabs did not contain a single histidine mutation"
+    },
+    {
+      "case_id": "R08",
+      "source_id": "PMC4314675",
+      "label": "CONTRADICTED",
+      "evidence_quote": "Interestingly, two of the three Fcabs did not contain a single histidine mutation"
+    },
+    {
+      "case_id": "R09",
+      "source_id": "PMC4314675",
+      "label": "INSUFFICIENT",
+      "evidence_quote": ""
+    },
+    {
+      "case_id": "R10",
+      "source_id": "PMC4622719",
+      "label": "SUPPORTED",
+      "evidence_quote": "The strategy allows simultaneous screening for both, high affinity binding at pH 7.4 and pH-sensitivity, and excludes conventional negative selection steps."
+    },
+    {
+      "case_id": "R11",
+      "source_id": "PMC4622719",
+      "label": "CONTRADICTED",
+      "evidence_quote": "The strategy allows simultaneous screening for both, high affinity binding at pH 7.4 and pH-sensitivity, and excludes conventional negative selection steps."
+    },
+    {
+      "case_id": "R12",
+      "source_id": "PMC4622719",
+      "label": "INSUFFICIENT",
+      "evidence_quote": ""
+    }
+  ]
+}

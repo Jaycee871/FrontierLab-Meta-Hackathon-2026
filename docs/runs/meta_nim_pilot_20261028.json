@@ -1,0 +1,258 @@
+{
+  "record_type": "meta_nim_published_excerpt_batch",
+  "recorded_date_taipei": "2026-10-28",
+  "github_run_url": "https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40563954658",
+  "receipt": {
+    "schema_version": 1,
+    "started_at_utc": "2026-10-27T18:52:20.905307+00:00",
+    "git_sha": "65a4bcf15645fb01dbdf5e8e3022bb3fa5b05020",
+    "github_run_id": "40563954658",
+    "github_run_attempt": "1",
+    "dataset_id": "8f8451991149de486136f60b2516a255af4962ce16d71d0dfe05afc0c752f275",
+    "requested_model": "meta/muse-glimmer-30b",
+    "max_tokens": 2048,
+    "reasoning_effort": "low",
+    "input_sha256": "2a7ab800d44ee7c61d8d1d318939c5c61e387c53d0db87bbe3f27c0a316a0812",
+    "input_scope": "TWELVE_CASES_IN_ONE_JOINT_CONTEXT",
+    "draft_reference_labels_sent": false,
+    "paid_meta_platforms_api_used": false,
+    "scientific_accuracy": null,
+    "reference_comparison": "PENDING_RESEARCHER_REVIEW",
+    "reported_model": "meta/muse-glimmer-30b",
+    "finish_reason": "stop",
+    "elapsed_seconds": 11.168,
+    "usage": {
+      "prompt_tokens": 838,
+      "completion_tokens": 956,
+      "total_tokens": 1794
+    },
+    "output_sha256": "9a2e2b769713a9e4bd201e975ec6500a4db1a9ae61865da4c0509e6396a88e56",
+    "status": "BATCH_STRUCTURED_OUTPUT_RETURNED",
+    "predictions": {
+      "schema": "frontierlab.real-excerpt-predictions.v1",
+      "dataset_id": "8f8451991149de486136f60b2516a255af4962ce16d71d0dfe05afc0c752f275",
+      "model_id": "meta/muse-glimmer-30b",
+      "execution_origin": "GITHUB_NIM_RUN_RECEIPT",
+      "cases": [
+        {
+          "case_id": "R01",
+          "source_id": "PMC8686790",
+          "label": "SUPPORTED",
+          "evidence_quote": "Nine pH-dependent antibodies were isolated using single-acidic amino acid residue mutagenesis at the six hot-spot residue positions."
+        },
+        {
+          "case_id": "R02",
+          "source_id": "PMC8686790",
+          "label": "CONTRADICTED",
+          "evidence_quote": "Nine pH-dependent antibodies were isolated using single-acidic amino acid residue mutagenesis at the six hot-spot residue positions."
+        },
+        {
+          "case_id": "R03",
+          "source_id": "PMC8686790",
+          "label": "INSUFFICIENT",
+          "evidence_quote": ""
+        },
+        {
+          "case_id": "R04",
+          "source_id": "PMC6927761",
+          "label": "SUPPORTED",
+          "evidence_quote": "Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab."
+        },
+        {
+          "case_id": "R05",
+          "source_id": "PMC6927761",
+          "label": "CONTRADICTED",
+          "evidence_quote": "Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab."
+        },
+        {
+          "case_id": "R06",
+          "source_id": "PMC6927761",
+          "label": "INSUFFICIENT",
+          "evidence_quote": ""
+        },
+        {
+          "case_id": "R07",
+          "source_id": "PMC4314675",
+          "label": "SUPPORTED",
+          "evidence_quote": "Interestingly, two of the three Fcabs did not contain a single histidine mutation"
+        },
+        {
+          "case_id": "R08",
+          "source_id": "PMC4314675",
+          "label": "CONTRADICTED",
+          "evidence_quote": "Interestingly, two of the three Fcabs did not contain a single histidine mutation"
+        },
+        {
+          "case_id": "R09",
+          "source_id": "PMC4314675",
+          "label": "INSUFFICIENT",
+          "evidence_quote": ""
+        },
+        {
+          "case_id": "R10",
+          "source_id": "PMC4622719",
+          "label": "SUPPORTED",
+          "evidence_quote": "The strategy allows simultaneous screening for both, high affinity binding at pH 7.4 and pH-sensitivity, and excludes conventional negative selection steps."
+        },
+        {
+          "case_id": "R11",
+          "source_id": "PMC4622719",
+          "label": "CONTRADICTED",
+          "evidence_quote": "The strategy allows simultaneous screening for both, high affinity binding at pH 7.4 and pH-sensitivity, and excludes conventional negative selection steps."
+        },
+        {
+          "case_id": "R12",
+          "source_id": "PMC4622719",
+          "label": "INSUFFICIENT",
+          "evidence_quote": ""
+        }
+      ]
+    },
+    "passage_audit": {
+      "schema": "frontierlab.real-excerpt-report.v1",
+      "dataset_id": "8f8451991149de486136f60b2516a255af4962ce16d71d0dfe05afc0c752f275",
+      "status": "AWAITING_RESEARCHER_ANNOTATION",
+      "prediction_origin": "IMPORTED_UNVERIFIED",
+      "reported_model_id": "meta/muse-glimmer-30b",
+      "real_model_execution_verified": false,
+      "independent_reference_labels_verified": false,
+      "total": 12,
+      "reviewed": 0,
+      "quote_anchor_count": 8,
+      "gate_abstentions": 4,
+      "metrics": null,
+      "cases": [
+        {
+          "case_id": "R01",
+          "source_id": "PMC8686790",
+          "raw_label": "SUPPORTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "SUPPORTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R02",
+          "source_id": "PMC8686790",
+          "raw_label": "CONTRADICTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "CONTRADICTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R03",
+          "source_id": "PMC8686790",
+          "raw_label": "INSUFFICIENT",
+          "source_matches_case": true,
+          "excerpt_matched": false,
+          "gate_label": "INSUFFICIENT",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R04",
+          "source_id": "PMC6927761",
+          "raw_label": "SUPPORTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "SUPPORTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R05",
+          "source_id": "PMC6927761",
+          "raw_label": "CONTRADICTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "CONTRADICTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R06",
+          "source_id": "PMC6927761",
+          "raw_label": "INSUFFICIENT",
+          "source_matches_case": true,
+          "excerpt_matched": false,
+          "gate_label": "INSUFFICIENT",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R07",
+          "source_id": "PMC4314675",
+          "raw_label": "SUPPORTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "SUPPORTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R08",
+          "source_id": "PMC4314675",
+          "raw_label": "CONTRADICTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "CONTRADICTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R09",
+          "source_id": "PMC4314675",
+          "raw_label": "INSUFFICIENT",
+          "source_matches_case": true,
+          "excerpt_matched": false,
+          "gate_label": "INSUFFICIENT",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R10",
+          "source_id": "PMC4622719",
+          "raw_label": "SUPPORTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "SUPPORTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R11",
+          "source_id": "PMC4622719",
+          "raw_label": "CONTRADICTED",
+          "source_matches_case": true,
+          "excerpt_matched": true,
+          "gate_label": "CONTRADICTED",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        },
+        {
+          "case_id": "R12",
+          "source_id": "PMC4622719",
+          "raw_label": "INSUFFICIENT",
+          "source_matches_case": true,
+          "excerpt_matched": false,
+          "gate_label": "INSUFFICIENT",
+          "reference_label": "PENDING",
+          "semantic_support_automatically_verified": false
+        }
+      ],
+      "note": "The gate checks source/excerpt integrity, not meaning. Supplied reviewer labels are not authenticated independent gold. Human corrections are intervention, not autonomous model accuracy. Draft AI reference labels are never used for scoring."
+    },
+    "final_output": "{\"cases\":[{\"case_id\":\"R01\",\"source_id\":\"PMC8686790\",\"label\":\"SUPPORTED\",\"evidence_quote\":\"Nine pH-dependent antibodies were isolated using single-acidic amino acid residue mutagenesis at the six hot-spot residue positions.\"},{\"case_id\":\"R02\",\"source_id\":\"PMC8686790\",\"label\":\"CONTRADICTED\",\"evidence_quote\":\"Nine pH-dependent antibodies were isolated using single-acidic amino acid residue mutagenesis at the six hot-spot residue positions.\"},{\"case_id\":\"R03\",\"source_id\":\"PMC8686790\",\"label\":\"INSUFFICIENT\",\"evidence_quote\":\"\"},{\"case_id\":\"R04\",\"source_id\":\"PMC6927761\",\"label\":\"SUPPORTED\",\"evidence_quote\":\"Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab.\"},{\"case_id\":\"R05\",\"source_id\":\"PMC6927761\",\"label\":\"CONTRADICTED\",\"evidence_quote\":\"Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab.\"},{\"case_id\":\"R06\",\"source_id\":\"PMC6927761\",\"label\":\"INSUFFICIENT\",\"evidence_quote\":\"\"},{\"case_id\":\"R07\",\"source_id\":\"PMC4314675\",\"label\":\"SUPPORTED\",\"evidence_quote\":\"Interestingly, two of the three Fcabs did not contain a single histidine mutation\"},{\"case_id\":\"R08\",\"source_id\":\"PMC4314675\",\"label\":\"CONTRADICTED\",\"evidence_quote\":\"Interestingly, two of the three Fcabs did not contain a single histidine mutation\"},{\"case_id\":\"R09\",\"source_id\":\"PMC4314675\",\"label\":\"INSUFFICIENT\",\"evidence_quote\":\"\"},{\"case_id\":\"R10\",\"source_id\":\"PMC4622719\",\"label\":\"SUPPORTED\",\"evidence_quote\":\"The strategy allows simultaneous screening for both, high affinity binding at pH 7.4 and pH-sensitivity, and excludes conventional negative selection steps.\"},{\"case_id\":\"R11\",\"source_id\":\"PMC4622719\",\"label\":\"CONTRADICTED\",\"evidence_quote\":\"The strategy allows simultaneous screening for both, high affinity binding at pH 7.4 and pH-sensitivity, and excludes conventional negative selection steps.\"},{\"case_id\":\"R12\",\"source_id\":\"PMC4622719\",\"label\":\"INSUFFICIENT\",\"evidence_quote\":\"\"}]}",
+    "semantic_support_independently_verified": false
+  },
+  "trigger": {
+    "branch": "meta-pilot-once-20261028",
+    "trigger_commit": "65a4bcf15645fb01dbdf5e8e3022bb3fa5b05020",
+    "disabled_commit": "e0fe583d6614e2f4b85238e62d8011a957149836",
+    "status": "DISABLED"
+  },
+  "scope": "Twelve cases in one joint context, not twelve independent trials. References remain unreviewed; no accuracy metric is reported. The generic passage audit alone does not attest to model execution; this wrapper links the actual GitHub call receipt."
+}

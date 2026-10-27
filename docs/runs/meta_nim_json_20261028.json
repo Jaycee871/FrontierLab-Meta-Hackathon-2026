@@ -1,0 +1,53 @@
+{
+  "record_type": "meta_nim_single_published_excerpt_json",
+  "recorded_date_taipei": "2026-10-28",
+  "github_run_url": "https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40563411852",
+  "receipt": {
+    "schema_version": 1,
+    "started_at_utc": "2026-10-27T18:48:48.021934+00:00",
+    "git_sha": "c73f46bf3c113cc0eb1cf3f9a20ef085af5a9e35",
+    "github_run_id": "40563411852",
+    "github_run_attempt": "1",
+    "dataset_id": "8f8451991149de486136f60b2516a255af4962ce16d71d0dfe05afc0c752f275",
+    "case_id": "R07",
+    "requested_model": "meta/muse-glimmer-30b",
+    "max_tokens": 2048,
+    "reasoning_effort": "low",
+    "input_sha256": "39fb6277b99ea0983a876f4b90e94f749d850988cd97bccba867ae00b3b20096",
+    "source_excerpt_sha256": "49cd4c396cdb62ceed8afd66641a8a5204871b75ac623a2d4e77ac01b570a5d6",
+    "source_url": "https://europepmc.org/articles/PMC4314675",
+    "doi": "10.1002/biot.201300483",
+    "license_url": "https://creativecommons.org/licenses/by/3.0/",
+    "input_scope": "ONE_PUBLISHED_ABSTRACT_EXCERPT",
+    "draft_reference_labels_sent": false,
+    "paid_meta_platforms_api_used": false,
+    "semantic_support_independently_verified": false,
+    "reference_comparison": "PENDING_RESEARCHER_REVIEW",
+    "reported_model": "meta/muse-glimmer-30b",
+    "finish_reason": "stop",
+    "usage": {
+      "prompt_tokens": 328,
+      "completion_tokens": 198,
+      "total_tokens": 526
+    },
+    "elapsed_seconds": 5.126,
+    "output_sha256": "5b861ddf018521898bc55d86958d315be733a78af8726297b9d4660437f1287b",
+    "status": "STRUCTURED_OUTPUT_AND_QUOTE_VALID",
+    "quote_matched": true,
+    "prediction": {
+      "case_id": "R07",
+      "source_id": "PMC4314675",
+      "label": "SUPPORTED",
+      "evidence_quote": "Interestingly, two of the three Fcabs did not contain a single histidine mutation",
+      "explanation": "The source text explicitly states that two of the three Fcabs did not contain a single histidine mutation, directly matching the claim."
+    },
+    "final_output": "{\"case_id\":\"R07\",\"source_id\":\"PMC4314675\",\"label\":\"SUPPORTED\",\"evidence_quote\":\"Interestingly, two of the three Fcabs did not contain a single histidine mutation\",\"explanation\":\"The source text explicitly states that two of the three Fcabs did not contain a single histidine mutation, directly matching the claim.\"}"
+  },
+  "trigger": {
+    "branch": "meta-json-once-20261028",
+    "trigger_commit": "c73f46bf3c113cc0eb1cf3f9a20ef085af5a9e35",
+    "disabled_commit": "7f0fdf516adb361ac57f848bd055d933d25a2122",
+    "status": "DISABLED"
+  },
+  "scope": "One case, strict JSON and verbatim quote validation. Not a semantic accuracy estimate or complete research pipeline."
+}

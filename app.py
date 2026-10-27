@@ -1,6 +1,7 @@
 """Run with 'streamlit run app.py'."""
 from __future__ import annotations
 import json
+from pathlib import Path
 import streamlit as st
 from frontierlab.demo_data import QUESTION, QUERY
 from frontierlab.quantitative import inverse_variance_heterogeneity
@@ -29,7 +30,7 @@ h1,h2,h3 {letter-spacing:-0.025em;}
 
 st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH THE FRONTIER")
 st.title("FrontierLab  /  Research Intelligence")
-st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.13")
+st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.14")
 st.write("An evidence-grounded scientific research workflow that **records disagreement instead of hiding it**.")
 
 with st.sidebar:
@@ -64,7 +65,12 @@ if run_clicked:
 
 with st.expander("Published-literature pilot · 12 cases awaiting researcher annotation"):
     pilot = load_dataset()
-    st.caption("Four published antibody-engineering papers; short abstract excerpts only. No model has classified these cases. Draft reference labels are excluded from the review download.")
+    st.caption("Four published antibody-engineering papers; short abstract excerpts only. Draft reference labels are excluded from the review download. Researcher annotations remain pending.")
+    recorded_path = Path(__file__).resolve().parent / "docs/runs/meta_nim_pilot_20261028.json"
+    if recorded_path.exists():
+        recorded = json.loads(recorded_path.read_text(encoding="utf-8"))["receipt"]
+        st.info("RECORDED REAL META RUN · 12 structured predictions, 8 matched quotations and 4 insufficient-evidence responses. This panel makes no live model call; accuracy awaits researcher review.")
+        st.download_button("Download recorded Meta predictions", data=json.dumps(recorded["predictions"], ensure_ascii=False, indent=2), file_name="meta_pilot_predictions_20261028.json", mime="application/json")
     st.download_button(
         "Download literature reviewer packet", data=json.dumps(reviewer_packet(pilot), ensure_ascii=False, indent=2),
         file_name="frontierlab_real_excerpt_review.json", mime="application/json")

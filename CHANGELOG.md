@@ -1,3 +1,12 @@
+## 2026-10-28 · v0.14 — Real Meta JSON and published-excerpt batch runs
+
+- Verified one published-excerpt JSON response (5.126 seconds, 526 tokens) and one 12-case joint-context batch (11.168 seconds, 1,794 tokens) via NVIDIA NIM.
+- Preserved strict schema checks, expected IDs, original final text, input/output hashes and raw predictions.
+- Batch returned eight quote-anchored supporting/contradicting responses and four insufficient-evidence responses; human references remain pending and accuracy remains null.
+- Added scripts with explicit opt-ins, 24 offline tests, run receipts and an offline-compatible predictions packet. Full local suite: 195 passing tests.
+- Disabled both branch-scoped single-request triggers. No default-branch auto-inference trigger or billed Meta Platforms API use.
+- Added a clearly labeled recorded-run download to Streamlit; HF rebuild and the complete live research pipeline remain pending.
+
 ## 2026-10-28 · First verified Meta Muse Glimmer final response
 
 - Used the connected GitHub integration to create a branch-scoped one-shot trigger for the user's explicitly requested NVIDIA NIM trial; no browser login required.

@@ -5,9 +5,9 @@
 
 FrontierLab helps researchers turn a scientific question into a testable hypothesis and a reviewable research plan. Its initial focus is biomedical research: collect literature, inspect supporting and conflicting evidence, examine uncertainty, and let the researcher intervene before moving forward.
 
-**Current implementation: v0.13 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Current implementation: v0.14 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
-The evidence retrieval and audit components have working software and recorded tests. **One genuine Meta Muse Glimmer inference through NVIDIA NIM succeeded on a synthetic prompt**; the [run receipt](docs/runs/meta_nim_smoke_20261028.json) records the answer, model identity, timing and token use. A complete live research run remains pending. Paid Meta Model API access is disabled.
+The evidence retrieval and audit components have working software and recorded tests. **One genuine Meta Muse Glimmer inference through NVIDIA NIM succeeded on a synthetic prompt**; the [run receipt](docs/runs/meta_nim_smoke_20261028.json) records the answer, model identity, timing and token use. A single published-excerpt JSON check and a 12-case joint-context batch have also completed; see [structured run records](docs/META_STRUCTURED_RUNS.md). A complete live research run remains pending. Paid Meta Model API access is disabled.
 
 [Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -32,9 +32,9 @@ Four principles guide the workflow: **transparent evidence, reproducibility, unc
 | **Human claim review** | Implemented and covered by offline tests. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
 | **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
 | **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **171 tests passed in CI** at commit `bd3c6e8`. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
-| **Meta model inference** | **One synthetic smoke test succeeded.** | NVIDIA NIM reported meta/muse-glimmer-30b, finish_reason=stop, 10.535 seconds and 249 total tokens. This does not yet verify structured JSON, local inference, scientific accuracy or the full UI pipeline. [Run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386). |
-| **Hosted interface** | Reported running in the project record. | The v0.13 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
+| **Software checks** | **195 tests passed locally** for v0.14; the new trial scripts have offline schema and opt-in tests. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
+| **Meta model inference** | **Synthetic, single-case JSON and 12-case batch requests succeeded.** | NVIDIA NIM returned 12 structured pilot predictions: 8 matching quotations and 4 insufficient-evidence responses. Human reference labels remain pending; no accuracy claim. Local inference and the complete live UI pipeline remain unverified. [Records](docs/META_STRUCTURED_RUNS.md). |
+| **Hosted interface** | Reported running in the project record. | The v0.14 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
 | **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
 
 Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386).
@@ -85,7 +85,7 @@ See [method evaluation and planning](docs/METHOD_EVALUATION.md), [verbatim evide
 
 | Module | Purpose | Current boundary |
 | --- | --- | --- |
-| [Real literature pilot](docs/REAL_LITERATURE_PILOT.md) | Twelve excerpt-level cases from four published papers; blank reviewer packets and imported-output comparison. | Reference labels are AI-authored proposals awaiting researcher review; no model run or accuracy claim. |
+| [Real literature pilot](docs/REAL_LITERATURE_PILOT.md) | Twelve excerpt-level cases from four published papers; blank reviewer packets and imported-output comparison. | One real Meta batch is recorded; reference labels are AI-authored proposals awaiting researcher review. No accuracy claim. |
 | [Claim-to-passage audit](docs/CLAIM_VERIFICATION_AND_NIM.md) | Separate source identity, quotation matching and semantic-label agreement. | Ten hand-authored fictional cases; not measured Meta model performance. |
 | [Research Failure Lab](docs/RESEARCH_FAILURE_LAB.md) | Exercise stale reviews, misattributed quotations, spoofed tool results and other handoff failures. | Twelve fictional software scenarios; not a biological or human-participant study. |
 | [BioNeMo tools](docs/BIONEMO_SCIENCE_TOOLS.md) | Prepare an optional scientific-computation step within Evaluation. | Protein-only Boltz-2 preflight and response-shape checks. ProteinMPNN, RFdiffusion and OpenFold3 are listed but not connected. |
@@ -109,7 +109,7 @@ python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
 ```
 
-The 171-test suite includes two Streamlit interaction tests and fifteen real-excerpt pilot tests; its CI result is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
+The 195-test suite includes Streamlit interaction, source-packet and single/batch model-output validation tests. The earlier 171-test CI run is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
 
 ## Repository guide
 
@@ -130,7 +130,7 @@ Some setup documents preserve earlier implementation snapshots. Use the dated st
 
 ## Next milestones
 
-1. **Verify structured Meta inference:** build on the successful single-prompt smoke test, check JSON responses, and connect the model to the reviewed research workflow.
+1. **Integrate the verified NIM output path:** single-case JSON and the 12-case pilot are recorded; the full five-stage UI flow and its researcher gates still need live integration.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison:** use the same model and cases to compare no gate, source/quote checks, and checks plus human review; report abstention and intervention separately.
 4. **Stabilize the public demo:** confirm the deployed revision and record an approximately three-minute demonstration of actual behavior.

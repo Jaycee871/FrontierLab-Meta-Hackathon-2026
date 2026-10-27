@@ -2,7 +2,7 @@
 
 Prepared October 28, 2026 (Asia/Taipei), v0.13.
 
-This pilot contains twelve claim-interpretation cases grounded in short abstract excerpts from four published antibody-engineering papers. It prepares a small, inspectable test of source matching and semantic overreach for FrontierLab. No model has been run on these cases, and no scientific accuracy result is available.
+This pilot contains twelve claim-interpretation cases grounded in short abstract excerpts from four published antibody-engineering papers. It prepares a small, inspectable test of source matching and semantic overreach for FrontierLab. A real Meta batch has now classified all twelve cases; see [recorded runs](META_STRUCTURED_RUNS.md). Researcher references remain pending, so no scientific accuracy result is available.
 
 ## Sources and scope
 
@@ -71,3 +71,7 @@ The suite tests source hashes, packet completeness, hidden draft-label exclusion
 python -m pytest -q
 ```
 
+
+## Recorded batch update
+
+Run 40563954658 returned all twelve predictions in one joint-context NVIDIA NIM request. Eight quotations matched and four responses abstained for insufficient evidence. These are integrity/response counts, not accuracy. [Prediction packet](runs/meta_pilot_predictions_20261028.json) can be supplied directly to the offline evaluator. The full [run protocol and receipts](META_STRUCTURED_RUNS.md) preserve the code revision, usage and limitations.
