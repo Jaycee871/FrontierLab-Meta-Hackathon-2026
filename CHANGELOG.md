@@ -1,3 +1,10 @@
+## 2026-10-27 · v0.7 — optional OpenCode reviewer
+
+- Added OpenCode project config with default approvals, no model or provider key, read-only reviewer, and static security tests.
+- Git push, shell secrets commands and unknown external directory access are blocked by OpenCode tool permissions, but no OS security boundary is claimed.
+- NVIDIA Muse Glimmer live trial has NOT succeeded; earlier two invocations returned no final answer. Fixed output budget awaits a fresh manual run.
+- Nothing installed or deployed in HF Space.
+
 ## 2026-10-27 · v0.6.1 — Correct empty Muse Glimmer trial answers
 
 - Two user-triggered NVIDIA NIM trial runs (40527133709, 40527145564) received API responses but returned no final text with the former 192-token budget.

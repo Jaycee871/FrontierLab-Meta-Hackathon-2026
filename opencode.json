@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "*": "ask",
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "**/.streamlit/secrets.toml": "deny",
+      "*secrets.toml": "deny",
+      "*.env.example": "allow"
+    },
+    "edit": "ask",
+    "bash": {
+      "*": "ask",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git push*": "deny",
+      "git commit*": "ask",
+      "rm *": "deny",
+      "gh secret*": "deny",
+      "gh auth*": "deny"
+    },
+    "external_directory": "deny",
+    "webfetch": "ask",
+    "websearch": "ask",
+    "task": "ask"
+  },
+  "agent": {
+    "frontierlab-review": {
+      "description": "Read-only independent review of FrontierLab claim evidence and provenance",
+      "mode": "subagent",
+      "prompt": "Audit code, provenance and reproducibility, not individual users. Read only non-secret source files. Separate bibliographic ID, verbatim source excerpt, and semantic claim entailment. Find false positive and false negative test cases. No shell commands, edits, private files, invented model results or automatic git actions.",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "external_directory": "deny",
+        "task": "deny"
+      }
+    }
+  }
+}

@@ -91,3 +91,8 @@ The GitHub secret Meta_API_Key is wired into a manual-only Springer Nature Meta 
 ## v0.6 · Claim-to-evidence audit / optional NVIDIA-hosted Muse Glimmer
 
 The existing synthetic research demo now includes a separate 10-case, HAND-LABELED, FICTIONAL claim-to-passage benchmark: source IDs, exact quote anchors, and comparison with human-authored labels are separate checks. No semantic truth can be inferred from quote matches. The optional NVIDIA NIM adapter is isolated from Meta Platforms' billed Model API, off by default, and can only be exercised in a manual GitHub Actions workflow with synthetic input. See [full experiment protocol](docs/CLAIM_VERIFICATION_AND_NIM.md). An HF Space rebuild is required for new UI code to appear.
+
+
+## OpenCode optional developer assistant
+
+We include an approval-first [OpenCode project config](opencode.json), a read-only scientific review subagent, and [setup / security caveats](docs/OPENCODE_DEVELOPER.md). This is LOCAL developer tooling only, not a deployed scientific agent or sandbox. Nothing runs automatically or uses GitHub Secrets. The public HF Space is unchanged.
