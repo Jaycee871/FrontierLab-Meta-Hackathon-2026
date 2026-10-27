@@ -96,3 +96,8 @@ The existing synthetic research demo now includes a separate 10-case, HAND-LABEL
 ## OpenCode optional developer assistant
 
 We include an approval-first [OpenCode project config](opencode.json), a read-only scientific review subagent, and [setup / security caveats](docs/OPENCODE_DEVELOPER.md). This is LOCAL developer tooling only, not a deployed scientific agent or sandbox. Nothing runs automatically or uses GitHub Secrets. The public HF Space is unchanged.
+
+
+## v0.8 — strict verbatim abstract grounding in live mode
+
+The live research pipeline now requires each model-proposed claim to carry a **24–500-character passage copied verbatim from the cited paper's own abstract**. The deterministic gate rejects missing, borrowed, fabricated, malformed or too-short quotes BEFORE hypothesis generation; evidence_quote and passage_matched are exported for review. **Even a real quote does not establish semantic entailment.** Synthetic/demo mode stays separate. See [limitations and test protocol](docs/VERBATIM_EVIDENCE_GATE.md). HF Space rebuild needed to display this update. No paid Meta API is used.

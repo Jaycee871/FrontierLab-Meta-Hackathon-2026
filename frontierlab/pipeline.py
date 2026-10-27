@@ -56,7 +56,11 @@ def run_research(question: str, query: str, *, mode: str, model_client=None, max
             "Output JSON: {\"claims\": [{\"paper_id\": exact source paper ID, "
             "\"claim_key\": concise normalized comparison target, "
             "\"stance\": one of supports|contradicts|mixed|inconclusive, "
-            "\"statement\": carefully scoped interpretation, \"limitation\": caveat}]}. "
+            "\"statement\": carefully scoped interpretation, \"limitation\": caveat, " 
+            "\"evidence_quote\": exact 24-to-500-character contiguous excerpt from THIS abstract}]}. "
+            "The evidence_quote MUST appear verbatim within the given abstract. "
+            "If no supporting or contradicting passage can be quoted, output no claim. "
+            "Quote presence does NOT establish logical support; researcher review is mandatory. "
             "Use only abstract-level evidence; don't infer results not given. "
             "If this abstract is irrelevant or uninformative, use an empty claims array."
         ), packet)
@@ -65,8 +69,8 @@ def run_research(question: str, query: str, *, mode: str, model_client=None, max
                 if c.get("paper_id") != paper.paper_id:
                     c["paper_id"] = "REJECTED_UNKNOWN_ID"
                 extracted.append(c)
-    audit = validate_claims(papers, extracted)
-    log_step(log, "Extraction Agent", "COMPLETE", f"{len(extracted)} proposed claims; {len(audit.rejected_claims)} rejected for invalid metadata")
+    audit = validate_claims(papers, extracted, require_quote=True)
+    log_step(log, "Extraction Agent", "COMPLETE", f"{len(extracted)} proposed; {len(audit.verified_claims)} abstract-quoted; {len(audit.rejected_claims)} rejected")
     if risk_decision(audit) == "INSUFFICIENT_EVIDENCE":
         audit.warnings.append("Fewer than two distinct sources with validated source IDs; hypothesis generation stopped.")
         log_step(log, "Audit Gate", "BLOCKED", "Insufficient distinct sourced claims for synthesis")

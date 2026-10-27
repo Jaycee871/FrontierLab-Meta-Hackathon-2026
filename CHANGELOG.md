@@ -1,3 +1,11 @@
+## 2026-10-27 · v0.8 — fail-closed live abstract passage grounding
+
+- Live claim extraction now requires a verbatim 24–500 character evidence_quote from the cited abstract; ungrounded claims are blocked.
+- Added excerpt-match flags to Claim records, exposed text in UI/export, and regression tests for wrong-paper, missing, tiny and fabricated quotations.
+- Explicitly distinguishes quotation presence from scientific entailment.
+- Synthetic demo remains intact, no genuine model inference and no billed Meta API triggered by this change.
+- HF Space must be rebuilt to pick up the new code.
+
 ## 2026-10-27 · v0.7 — optional OpenCode reviewer
 
 - Added OpenCode project config with default approvals, no model or provider key, read-only reviewer, and static security tests.

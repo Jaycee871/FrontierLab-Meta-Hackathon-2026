@@ -59,7 +59,7 @@ if result:
     stats = summary(result)
     a, b, c, d = st.columns(4)
     a.metric("Sources", stats["sources"])
-    b.metric("Source-ID-checked claims", stats["claims"])
+    b.metric("Claims: passage checks / synthetic", stats["claims"])
     c.metric("Conflicts", stats["conflicts"])
     d.metric("Rejected claims", stats["rejected"])
     st.caption(f"Decision gate: **{stats['decision']}** · Model: {result.model} · Data source: {result.mode}")
@@ -98,8 +98,12 @@ if result:
         for claim in result.audit.verified_claims:
             st.markdown(f"**{claim.stance.upper()}** · {claim.paper_id} · {claim.claim_key}")
             st.write(claim.statement)
+            if claim.passage_matched:
+                st.caption(f"Verbatim abstract excerpt (NOT semantic verification): {claim.evidence_quote}")
+            else:
+                st.caption("No passage match recorded (synthetic fixture only).")
             st.caption(f"Limitations: {claim.limitation}")
-        st.caption("Source-ID verification is NOT independent fact checking. Confirm each statement in the original paper.")
+        st.caption("Valid source IDs and verbatim excerpts are NOT independent scientific fact-checking or semantic entailment. Compare claims against the original article and methods.")
         if result.audit.rejected_claims:
             st.json(result.audit.rejected_claims)
     with st.expander("3 · Conflict review & skeptic", expanded=True):

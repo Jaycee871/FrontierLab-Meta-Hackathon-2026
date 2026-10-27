@@ -24,6 +24,8 @@ class Claim:
     stance: Stance
     statement: str
     limitation: str
+    evidence_quote: str = ""
+    passage_matched: bool = False
 
 @dataclass
 class Audit:
