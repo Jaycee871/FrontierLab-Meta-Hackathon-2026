@@ -5,7 +5,8 @@
 - Added deployment revision display and an opt-in HF deploy script that updates only the existing public Docker CPU Basic Space from an explicit source snapshot.
 - The deploy job receives only HF_TOKEN1. It neither transfers an NVIDIA key nor changes inference enablement or hardware.
 - Hypotheses, method selection and plans remain separate workflow actions; deployment is not a live synthesis result.
-- All 214 offline tests pass, including recorded-review bindings and deployment packaging/target checks.
+- All 214 offline tests pass locally and in GitHub CI, including recorded-review bindings and deployment packaging/target checks.
+- Deployed 58 snapshot assets to the existing HF Space; verified matching RUNNING runtime revision, health HTTP 200, v0.16 source marker and both human judgments/rationales in the rendered UI. HF NIM inference remains disabled.
 
 ## 2026-10-28 · v0.15 — Optional NIM research backend and real review pause
 

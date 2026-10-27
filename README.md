@@ -29,12 +29,12 @@ Four principles guide the workflow: **transparent evidence, reproducibility, unc
 | --- | --- | --- |
 | **Literature discovery** | Recorded three-source run succeeded. | Europe PMC, Springer Nature Meta API v2 and Springer Nature Open Access API each returned two records: six total, four with abstracts. The Streamlit retrieval interface currently uses Europe PMC. |
 | **Evidence checks** | Implemented and covered by offline tests. | Source-ID validation and a contiguous, verbatim 24–500-character quotation from the cited abstract; invalid claims are rejected. |
-| **Human claim review** | Implemented and covered by offline tests. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
+| **Human claim review** | Implemented; both recorded core claims explicitly reviewed SUPPORTED by Jaycee871. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
 | **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
 | **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **214 tests passed locally** for v0.16, including the NIM five-stage interface flow with fake HTTP responses. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
+| **Software checks** | **214 tests passed locally and in GitHub CI** for v0.16, including the NIM five-stage interface flow with fake HTTP responses. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
 | **Meta model inference** | **Recorded smoke, JSON, 12-case and core extraction runs.** | The real NIM-backed core extracted two source-quoted claims and stopped for human review. The same-client UI flow is tested with fake transport; both core claims now have explicit researcher SUPPORTED judgments; live synthesis remains pending. [Backend and run](docs/NIM_RESEARCH_BACKEND.md). |
-| **Hosted interface** | Reported running in the project record. | The existing public CPU Basic Space is the deployment target. The revision-bound deployment and verification receipt will be recorded separately. [Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026). |
+| **Hosted interface** | **v0.16 deployed and verified RUNNING on CPU Basic.** | Runtime revision, health endpoint and rendered source marker checked; both supplied claim judgments and rationales are visible. NIM is still owner-disabled on HF. [Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Deployment receipt](docs/runs/hf_deployment_20261028.json). |
 | **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
 
 Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386).
@@ -134,7 +134,7 @@ Some setup documents preserve earlier implementation snapshots. Use the dated st
 1. **Review and continue the real core run:** both model-proposed claims have researcher SUPPORTED judgments. The [completed review](docs/runs/nim_claim_review_completed_20261028.json) preserves the supplied rationales; live synthesis remains a separate next action.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison:** use the same model and cases to compare no gate, source/quote checks, and checks plus human review; report abstention and intervention separately.
-4. **Stabilize the public demo:** confirm the deployed revision and record an approximately three-minute demonstration of actual behavior.
+4. **Record the public demo:** v0.16 is deployed with a checked revision; record an approximately three-minute demonstration of actual behavior.
 5. **Submit the entry:** verify the participant portal's current requirements and complete the formal submission.
 
 See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Repository publication and a hosted demo do not establish formal submission.

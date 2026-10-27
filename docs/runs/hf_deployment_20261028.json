@@ -1,0 +1,66 @@
+{
+  "record_type": "hf_deployment_verified",
+  "recorded_date_taipei": "2026-10-28",
+  "version": "v0.16",
+  "deployment": {
+    "status": "HF_SOURCE_COMMITTED_BUILD_PENDING",
+    "space_id": "Jaycee766/FrontierLab-Meta-Hackathon-2026",
+    "source_sha": "6162226f5abdf22a4749b41b0eae82db41f69a7f",
+    "previous_space_sha": "5a72e84fcce90b2ee82fdf1cbbafda058636162f",
+    "space_commit_sha": "f0b4759482b0988e46294bbf4fbcdf86514f8971",
+    "space_url": "https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026",
+    "app_url": "https://jaycee766-frontierlab-meta-hackathon-2026.hf.space",
+    "files_uploaded": 58,
+    "nvidia_secret_transferred": false,
+    "hardware_changed": false
+  },
+  "github_workflow_url": "https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40569845627",
+  "software_checks": {
+    "passed": 214,
+    "ci_result": "214 passed in 3.16s",
+    "model_accuracy_measurement": false
+  },
+  "verification": {
+    "runtime_stage": "RUNNING",
+    "runtime_sha": "f0b4759482b0988e46294bbf4fbcdf86514f8971",
+    "current_hardware": "cpu-basic",
+    "requested_hardware": "cpu-basic",
+    "health_http_status": 200,
+    "health_body": "ok",
+    "uploaded_manifest_matches": [
+      "app.py",
+      "docs/runs/nim_claim_review_completed_20261028.json",
+      "Dockerfile"
+    ],
+    "rendered_ui": {
+      "version": "v0.16",
+      "source_revision": "6162226f5abd",
+      "backend_option": "Live Europe PMC + Meta via NVIDIA",
+      "saved_review_visible": true,
+      "saved_review_verdicts": {
+        "C001": "SUPPORTED",
+        "C002": "SUPPORTED"
+      },
+      "supplied_chinese_rationales_visible": true,
+      "nim_inference_enabled": false,
+      "nim_consent_disabled": true,
+      "research_submit_disabled_without_nim_enablement": true,
+      "remaining_process_calls": 8
+    },
+    "live_model_calls_during_deployment": 0
+  },
+  "human_review": {
+    "path": "docs/runs/nim_claim_review_completed_20261028.json",
+    "reviewer": "Jaycee871",
+    "cases": 2,
+    "status": "READY_FOR_HUMAN_GATED_SYNTHESIS",
+    "independent_expert_adjudication_verified": false
+  },
+  "trigger": {
+    "branch": "hf-deploy-once-20261028",
+    "trigger_commit": "6162226f5abdf22a4749b41b0eae82db41f69a7f",
+    "disabled_commit": "d04cb645a8e3f5ec60ef271c9a528ca60da9de6c",
+    "status": "DISABLED"
+  },
+  "scope": "Revision-bound public interface deployment and two explicit user review judgments. No NVIDIA credential transferred, owner inference enablement, new model inference, hypothesis, method selection, research plan or formal competition submission."
+}

@@ -1,6 +1,6 @@
 # Hugging Face PRO: FrontierLab CPU Basic Space setup
 
-Prepared 2026-10-27. Status: repository template only. **No HF Space has been created or deployed** through this document, and no paid HF hardware has been authorized.
+Historical preparation notes from 2026-10-27. Updated status on 2026-10-28 (Asia/Taipei): the existing public Space now runs v0.16 on CPU Basic. See [current deployment procedure](HF_DEPLOYMENT.md) and [verified receipt](runs/hf_deployment_20261028.json). The steps and account screenshots below preserve the original setup context; no paid HF hardware has been authorized.
 
 ## What the user account screenshots show
 
