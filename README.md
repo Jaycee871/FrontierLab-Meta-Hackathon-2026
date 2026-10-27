@@ -5,7 +5,7 @@
 
 FrontierLab helps researchers turn a scientific question into a testable hypothesis and a reviewable research plan. Its initial focus is biomedical research: collect literature, inspect supporting and conflicting evidence, examine uncertainty, and let the researcher intervene before moving forward.
 
-**Current implementation: v0.15 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Current implementation: v0.16 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
 The evidence retrieval and audit components have working software and recorded tests. **One genuine Meta Muse Glimmer inference through NVIDIA NIM succeeded on a synthetic prompt**; the [run receipt](docs/runs/meta_nim_smoke_20261028.json) records the answer, model identity, timing and token use. A single published-excerpt JSON check and a 12-case joint-context batch have also completed; see [structured run records](docs/META_STRUCTURED_RUNS.md). A complete live research run remains pending. Paid Meta Model API access is disabled.
 
@@ -32,9 +32,9 @@ Four principles guide the workflow: **transparent evidence, reproducibility, unc
 | **Human claim review** | Implemented and covered by offline tests. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
 | **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
 | **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **210 tests passed locally** for v0.15, including the NIM five-stage interface flow with fake HTTP responses. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
-| **Meta model inference** | **Recorded smoke, JSON, 12-case and core extraction runs.** | The real NIM-backed core extracted two source-quoted claims and stopped for human review. The same-client UI flow is tested with fake transport; live human-reviewed continuation and HF deployment remain pending. [Backend and run](docs/NIM_RESEARCH_BACKEND.md). |
-| **Hosted interface** | Reported running in the project record. | The v0.15 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
+| **Software checks** | **214 tests passed locally** for v0.16, including the NIM five-stage interface flow with fake HTTP responses. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
+| **Meta model inference** | **Recorded smoke, JSON, 12-case and core extraction runs.** | The real NIM-backed core extracted two source-quoted claims and stopped for human review. The same-client UI flow is tested with fake transport; both core claims now have explicit researcher SUPPORTED judgments; live synthesis remains pending. [Backend and run](docs/NIM_RESEARCH_BACKEND.md). |
+| **Hosted interface** | Reported running in the project record. | The existing public CPU Basic Space is the deployment target. The revision-bound deployment and verification receipt will be recorded separately. [Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026). |
 | **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
 
 Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386).
@@ -110,7 +110,7 @@ python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
 ```
 
-The 210-test suite includes Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction and single/batch output validation tests. The earlier 171-test CI run is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
+The 214-test suite includes Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction and single/batch output validation tests. The v0.15 CI run passed 210 tests; v0.16 adds source-bound recorded-review and deployment packaging checks. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
 
 ## Repository guide
 
@@ -131,7 +131,7 @@ Some setup documents preserve earlier implementation snapshots. Use the dated st
 
 ## Next milestones
 
-1. **Review and continue the real core run:** two model-proposed claims are pending researcher review. The NIM UI is implemented; live approved continuation and deployment verification remain.
+1. **Review and continue the real core run:** both model-proposed claims have researcher SUPPORTED judgments. The [completed review](docs/runs/nim_claim_review_completed_20261028.json) preserves the supplied rationales; live synthesis remains a separate next action.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison:** use the same model and cases to compare no gate, source/quote checks, and checks plus human review; report abstention and intervention separately.
 4. **Stabilize the public demo:** confirm the deployed revision and record an approximately three-minute demonstration of actual behavior.

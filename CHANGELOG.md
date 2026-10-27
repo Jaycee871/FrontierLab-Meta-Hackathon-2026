@@ -1,3 +1,12 @@
+## 2026-10-28 · v0.16 — Researcher review and revision-bound HF deployment
+
+- Saved Jaycee871's explicit SUPPORTED judgments and supplied rationales for both core-extraction cases, bound to the original question, case IDs and source snapshots.
+- Displayed the completed two-claim review separately from the still-unreviewed 12-case pilot; preserved the original pending packet and extraction receipt.
+- Added deployment revision display and an opt-in HF deploy script that updates only the existing public Docker CPU Basic Space from an explicit source snapshot.
+- The deploy job receives only HF_TOKEN1. It neither transfers an NVIDIA key nor changes inference enablement or hardware.
+- Hypotheses, method selection and plans remain separate workflow actions; deployment is not a live synthesis result.
+- All 214 offline tests pass, including recorded-review bindings and deployment packaging/target checks.
+
 ## 2026-10-28 · v0.15 — Optional NIM research backend and real review pause
 
 - Added an owner-enabled NIM backend with explicit per-session transfer consent and a shared process cap of eight attempted calls; no automatic retries.

@@ -1,0 +1,24 @@
+name: Deploy FrontierLab to existing HF Space
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: frontierlab-hf-deploy
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements-dev.txt 'huggingface_hub>=0.36,<2'
+      - run: python -m pytest -q
+      - name: Deploy reviewed snapshot to existing CPU Basic Space
+        env:
+          FRONTIERLAB_HF_DEPLOY: 'YES'
+          HF_TOKEN1: ${{ secrets.HF_TOKEN1 }}
+        run: python -m scripts.deploy_hf_space
