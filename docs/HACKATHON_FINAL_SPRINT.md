@@ -38,13 +38,13 @@ The continuation runner is software-verified but **has not yet been executed aga
 | Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
 | Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
 
-## Priority 1: finish one human-reviewed Meta path — highest priority
+## Priority 1: complete Stage 4 Method Evaluation — highest priority
 
-1. Run the prepared **bounded reviewed continuation** only with explicit owner authorization. It is hard-capped at two new calls and performs no automatic retry.
-2. Preserve the official model ID, finish reason, token use, timing, input/output hashes and exact git revision in a dated run record. Never store API keys, headers or hidden reasoning.
-3. Inspect the skeptic output and citation-linked hypotheses. Do not treat model synthesis as validated scientific truth.
-4. Perform the next method comparison as a separate researcher action. Method selection and planning must not be auto-approved merely because the Meta calls completed.
-5. Do not confuse 'model returned valid JSON' with verified scientific judgment, or a draft hypothesis with a discovered biological mechanism.
+1. Review the two source-derived candidate methods in `docs/runs/method_evaluation_draft_20261028.json`.
+2. Inspect the original papers' protocol, parameters, validation readouts and known limitations before selecting or deferring.
+3. Keep method selection as a separate researcher decision; the model-generated hypotheses do not authorize a method automatically.
+4. Only after a current saved evaluation and explicit approval should Planning be allowed to draft controls, metrics, replication and falsification criteria.
+5. Continue to distinguish a validated execution trace from validated scientific truth.
 
 ## Priority 2: controlled claim-error benchmark
 
