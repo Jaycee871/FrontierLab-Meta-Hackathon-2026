@@ -1,3 +1,13 @@
+## 2026-10-28 · v0.17 — Bounded continuation after human review
+
+- Added `scripts/nim_research_continue_trial.py` to rehydrate the recorded two-source Meta extraction and the completed researcher review without repeating extraction calls.
+- Revalidates review schema, dataset ID, case IDs, paper IDs, source fingerprints, claims and exact quotations before any continuation is eligible.
+- Enforces a fresh two-call hard cap: **Adversarial Skeptic Agent → Hypothesis Agent**, then stops before method evaluation or planning.
+- Added a manual-only GitHub workflow that preserves a non-secret continuation artifact and performs no automatic retries.
+- Added regression tests for source-bound rehydration, exact role sequence, method-boundary stop, stale review rejection and pending-review rejection.
+- GitHub Actions run 40573319812 passed **217 tests**.
+- No real continuation API call has been triggered by this change; live skeptic/hypothesis synthesis remains pending.
+
 ## 2026-10-28 · Legacy MUSE multilingual reference
 
 - Added a dedicated reference note for Facebook Research's archived MUSE multilingual word-embedding project.
