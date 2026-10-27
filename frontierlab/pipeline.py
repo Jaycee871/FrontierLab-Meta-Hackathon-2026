@@ -77,15 +77,49 @@ def run_research(question: str, query: str, *, mode: str, model_client=None, max
         return Run(question, mode, model_client.model, papers, audit, [],
                    {"decision": "INSUFFICIENT_EVIDENCE"}, log)
 
-    claims = [c.__dict__ for c in audit.verified_claims]
-    evidence_ids = [p.paper_id for p in papers]
+    audit.warnings.append(
+        "Live quoted claims are PROVISIONAL until reviewed individually by a researcher. "
+        "No skeptical synthesis or hypotheses have been generated."
+    )
+    log_step(log, "Human Claim Review", "BLOCKED", "Claim-level semantic judgments pending researcher annotations")
+    return Run(question, mode, model_client.model, papers, audit, [],
+               {"decision":"HUMAN_CLAIM_REVIEW_REQUIRED",
+                "explanation":"Quote presence has been checked; entailment has not."}, log)
+
+
+def continue_after_review(run: Run, *, model_client=None) -> Run:
+    """Resume skeptical synthesis only after explicit human claim-level review."""
+    from .review import approved_claims, review_packet
+    if run.mode != "live" or model_client is None:
+        raise PermissionError("Live human-gated synthesis requires a connected model")
+    if not run.review or run.review.get("dataset_id") != review_packet(run)["dataset_id"]:
+        raise PermissionError("No valid source-bound human review packet")
+    if run.review.get("status") != "READY_FOR_HUMAN_GATED_SYNTHESIS":
+        raise PermissionError("Complete all claim reviews and support at least two distinct sources")
+    approved = approved_claims(run)
+    evidence_ids = sorted({c.paper_id for c in approved})
+    if len(evidence_ids) < 2:
+        raise PermissionError("Two independently reviewed supporting sources required")
+    papers = [p for p in run.papers if p.paper_id in evidence_ids]
+    claims = [c.__dict__ for c in approved]
+    audit = run.audit
+    question = run.question
+    log = run.log
+    # The raw model's detected tensions remain in run.audit.conflicts.
+    # A separate reviewed-only contrast cannot be inferred when assay conditions vary.
+    reviewer_conflicts = [
+        record for record in audit.conflicts
+        if any(pid in evidence_ids for pid in record.get("supports", []))
+        and any(pid in evidence_ids for pid in record.get("contradicts", []))
+    ]
     skeptic = model_client.json("Adversarial Skeptic Agent", (
         "Analyze sources ONLY. Output JSON: {\"explanation\": string, "
         "\"uncertainties\": [strings], \"recommended_checks\": [strings]}. "
         "Seek rival explanations, confounding, and methodological differences. "
         "Do not force consensus."
-    ), {"question": question, "claims": claims, "deterministic_conflicts": audit.conflicts})
-    skeptic["decision"] = risk_decision(audit)
+    ), {"question": question, "claims": claims, "deterministic_conflicts": reviewer_conflicts})
+    skeptic["decision"] = "REVIEW_CONFLICT" if reviewer_conflicts else "HUMAN_REVIEWED_DRAFT"
+    skeptic["human_review_summary"] = run.review["review_stats"]
     log_step(log, "Skeptic Agent", "COMPLETE", f"Rule-based disposition: {skeptic['decision']}")
 
     proposed = model_client.json("Hypothesis Agent", (
@@ -93,12 +127,15 @@ def run_research(question: str, query: str, *, mode: str, model_client=None, max
         "\"evidence_ids\": [only provided source IDs], \"rationale\": brief limitations-aware rationale}]}. "
         "Maximum 2; no medical advice or unwarranted claims."
     ), {"question": question, "claims": claims, "valid_evidence_ids": evidence_ids,
-        "conflicts": audit.conflicts, "skeptic": skeptic})
+        "conflicts": reviewer_conflicts, "skeptic": skeptic})
     hypotheses, rejected = enforce_citations(proposed.get("hypotheses", []), papers)
     if rejected:
         audit.warnings.append(f"Rejected {len(rejected)} hypotheses with unsupported source IDs.")
     log_step(log, "Hypothesis Agent", "COMPLETE", f"{len(hypotheses)} citation-linked hypotheses survived audit")
-    return Run(question, mode, model_client.model, papers, audit, hypotheses, skeptic, log)
+    run.hypotheses = hypotheses
+    run.skeptic = skeptic
+    run.model = model_client.model
+    return run
 
 
 def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
@@ -106,6 +143,14 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
         raise PermissionError("Human approval required before planning")
     if not run.hypotheses:
         raise ValueError("Cannot plan without a supported hypothesis")
+    if run.mode == "live":
+        from .review import approved_claims, review_packet
+        if not run.review or run.review.get("dataset_id") != review_packet(run)["dataset_id"]:
+            raise PermissionError("Live planning requires a valid human-reviewed evidence packet")
+        if run.review.get("status") != "READY_FOR_HUMAN_GATED_SYNTHESIS" or (
+            len({c.paper_id for c in approved_claims(run)}) < 2
+        ):
+            raise PermissionError("Live planning requires two human-reviewed supporting sources")
     if risk_decision(run.audit) == "INSUFFICIENT_EVIDENCE":
         raise ValueError("Cannot plan from fewer than two sources with valid evidence claims")
     if run.mode == "demo":
@@ -124,6 +169,9 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
         return run
     if model_client is None:
         raise ValueError("A valid local model is required to generate a live plan")
+    permitted_claims = approved_claims(run)
+    permitted_ids = {c.paper_id for c in permitted_claims}
+    permitted_papers = [p for p in run.papers if p.paper_id in permitted_ids]
     proposed = model_client.json("Scientific Planning Agent", (
         "Write ONE cautious, research-review plan. Return JSON: "
         "{\"objective\": string, \"steps\": [strings], "
@@ -131,10 +179,10 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
         "Focus on controls, replication, measurement, falsification and human oversight. "
         "This is a conceptual research proposal, not medical advice or automated laboratory instructions."
     ), {"question": run.question, "hypotheses": run.hypotheses,
-        "claims": [c.__dict__ for c in run.audit.verified_claims],
+        "claims": [c.__dict__ for c in permitted_claims],
         "conflicts": run.audit.conflicts, "skeptic": run.skeptic,
-        "allowed_evidence_ids": [p.paper_id for p in run.papers]})
-    accepted, rejected = enforce_citations([proposed], run.papers)
+        "allowed_evidence_ids": sorted(permitted_ids)})
+    accepted, rejected = enforce_citations([proposed], permitted_papers)
     if rejected or not accepted:
         log_step(run.log, "Citation Gate", "BLOCKED", "Planning Agent used missing/invalid source IDs")
         raise ValueError("Plan references invalid citations; generation stopped")

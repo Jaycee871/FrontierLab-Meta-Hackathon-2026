@@ -1,7 +1,8 @@
 from frontierlab.audit import enforce_citations, validate_claims
 from frontierlab.demo_data import DEMO_CLAIMS, DEMO_PAPERS, QUESTION
 from frontierlab.models import Paper
-from frontierlab.pipeline import make_plan, run_research
+from frontierlab.pipeline import make_plan, run_research, continue_after_review
+from frontierlab.review import review_packet, save_review
 from frontierlab.meta import parse_json_response
 import pytest
 
@@ -74,8 +75,16 @@ def test_full_multiagent_pipeline_with_stub_not_live_api():
     run = run_research("Test the role of buffer", "search", mode="live", model_client=StubMuse(),
                        retrieve=lambda q,n: ps)
     assert len(run.audit.conflicts) == 1
-    assert run.hypotheses
+    assert run.hypotheses == []
+    assert run.skeptic["decision"] == "HUMAN_CLAIM_REVIEW_REQUIRED"
     assert run.plan is None
+    with pytest.raises(PermissionError, match="human"):
+        continue_after_review(run, model_client=StubMuse())
+    packet=review_packet(run)
+    save_review(run,[{"case_id":c["case_id"],"review_label":"SUPPORTED"} for c in packet["cases"]])
+    continue_after_review(run, model_client=StubMuse())
+    assert len(run.hypotheses) == 1
+    assert run.skeptic["decision"] == "REVIEW_CONFLICT"
     make_plan(run, model_client=StubMuse(), approved=True)
     assert run.plan["status"] == "DRAFT_FOR_RESEARCHER_REVIEW"
 
@@ -142,3 +151,25 @@ def test_quote_match_is_not_entailment_and_rejection_is_explicit():
     assert outcome.verified_claims[0].passage_matched
     assert not any("semantic entailment is verified" in s.lower() for s in outcome.warnings)
     # A textual citation exists, but the human reviewer must reject its semantics.
+
+def test_pipeline_never_calls_skeptic_or_hypothesis_before_human_review():
+    calls=[]
+    class Instrumented(StubMuse):
+        def json(self,role,task,payload):
+            calls.append(role)
+            return super().json(role,task,payload)
+    ps=[Paper(f"PMID:{i}",f"Title{i}","2026","Author",
+              "The tested response depends on experimental buffer conditions.",
+              f"https://example.org/{i}") for i in [1,2]]
+    model=Instrumented()
+    run=run_research("Study buffer","buffer",mode="live",model_client=model,
+                     retrieve=lambda q,n:ps)
+    assert calls==["Evidence Extraction Agent"]*2
+    assert not run.hypotheses
+    packet=review_packet(run)
+    save_review(run,[{"case_id":packet["cases"][0]["case_id"],"review_label":"SUPPORTED"},
+                     {"case_id":packet["cases"][1]["case_id"],"review_label":"INSUFFICIENT",
+                      "review_note":"The quoted abstract does not resolve the claim."}])
+    with pytest.raises(PermissionError, match="Complete all claim reviews"):
+        continue_after_review(run,model_client=model)
+    assert calls==["Evidence Extraction Agent"]*2

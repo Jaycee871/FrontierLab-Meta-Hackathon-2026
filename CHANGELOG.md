@@ -1,3 +1,11 @@
+## 2026-10-27 · v0.9 — Human gate before hypothesis synthesis
+
+- Added source-bound review packet with deterministic IDs, human verdicts and rationale.
+- Blocked live Skeptic/Hypothesis execution until all cases are reviewed and two distinct sources are SUPPORTED.
+- Continued model synthesis and planning can cite ONLY reviewer-supported papers.
+- Added Streamlit review form and portable JSON export, plus regression tests.
+- No real NVIDIA/Meta inference, GPU quota or paid Meta API used in this update.
+
 ## 2026-10-27 · v0.8 — fail-closed live abstract passage grounding
 
 - Live claim extraction now requires a verbatim 24–500 character evidence_quote from the cited abstract; ungrounded claims are blocked.

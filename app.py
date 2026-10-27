@@ -1,10 +1,12 @@
 """Run with 'streamlit run app.py'."""
 from __future__ import annotations
+import json
 import streamlit as st
 from frontierlab.demo_data import QUESTION, QUERY
 from frontierlab.quantitative import inverse_variance_heterogeneity
 from frontierlab.openweight import OpenWeightClient
-from frontierlab.pipeline import make_plan, run_research
+from frontierlab.pipeline import make_plan, run_research, continue_after_review
+from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.claim_verification import audit_predictions, conflict_transparency
@@ -113,9 +115,74 @@ if result:
         else:
             st.info("No machine-detected contradictions; this is not proof of agreement.")
         st.json(result.skeptic)
+    if result.mode == "live" and result.audit.verified_claims:
+        with st.expander("Researcher claim review · required before synthesis", expanded=True):
+            st.warning(
+                "Verbatim excerpt matching does NOT establish entailment. "
+                "Choose a human judgment for each claim. PENDING items and fewer than two "
+                "supported distinct sources block research hypothesis generation."
+            )
+            packet=review_packet(result)
+            previous={c["case_id"]:c for c in (result.review or {}).get("cases", [])}
+            st.download_button(
+                "Download source-bound blank reviewer packet",
+                data=json.dumps(packet, ensure_ascii=False, indent=2),
+                file_name="frontierlab_human_review_blank.json", mime="application/json"
+            )
+            decisions=[]
+            with st.form("claim_reviewer_form"):
+                for case in packet["cases"]:
+                    cid=case["case_id"]
+                    earlier=previous.get(cid, {})
+                    st.markdown(f"**{cid} · {case['paper_title']}**")
+                    st.caption(f"Source ID: {case['paper_id']} · {case['source']}")
+                    st.write("**Model claim:** " + case["claim"])
+                    st.code(case["evidence_quote"], language="text")
+                    st.caption("The quotation exists in the source abstract. Its meaning has NOT been verified.")
+                    opts=["PENDING","SUPPORTED","CONTRADICTED","INSUFFICIENT"]
+                    default=earlier.get("review_label","PENDING")
+                    verdict=st.selectbox(
+                        "Reviewer judgment", opts,
+                        index=opts.index(default) if default in opts else 0,
+                        key=f"claim_review_{cid}"
+                    )
+                    note=st.text_input(
+                        "Reason for verdict (required if contradicted or insufficient)",
+                        value=earlier.get("review_note",""), key=f"claim_reason_{cid}"
+                    )
+                    decisions.append({"case_id":cid,"review_label":verdict,"review_note":note})
+                    st.divider()
+                submitted=st.form_submit_button("Save human review judgments", type="primary")
+            if submitted:
+                try:
+                    save_review(result, decisions)
+                    st.session_state["frontier_result"]=result
+                    st.success("Human review saved in this session; download JSON to preserve it.")
+                except ValueError as exc:
+                    st.error(f"Review validation failed: {exc}")
+            if result.review:
+                st.json({"review_status":result.review.get("status"),
+                         "review_statistics":result.review.get("review_stats"),
+                         "independent_expert_adjudication_verified":False})
+                st.download_button(
+                    "Download human-annotated review JSON",
+                    data=json.dumps(result.review,ensure_ascii=False,indent=2),
+                    file_name="frontierlab_human_review_annotated.json",
+                    mime="application/json"
+                )
+                if result.review.get("status")=="READY_FOR_HUMAN_GATED_SYNTHESIS":
+                    st.info("Review complete. Hypothesis synthesis requires an actually connected, available model and further human scrutiny.")
+                    if st.button("Resume model synthesis after human review", type="secondary"):
+                        try:
+                            client=OpenWeightClient() if "muse-glimmer" in result.model.lower() else None
+                            continue_after_review(result, model_client=client)
+                            st.session_state["frontier_result"]=result
+                            st.success("Provisional human-gated draft created; scientific validation is still needed.")
+                        except (ValueError, PermissionError, RuntimeError) as exc:
+                            st.error(f"Synthesis remains blocked: {type(exc).__name__}: {exc}")
     with st.expander("4 · Falsifiable hypotheses", expanded=True):
         st.json(result.hypotheses)
-    st.subheader("5 · Human review gate")
+    st.subheader("5 · Research plan approval gate")
     approved = st.checkbox("I have reviewed the evidence, conflicts and limitations. Allow a DRAFT research plan.")
     if st.button("Generate cited plan", disabled=not approved or not result.hypotheses, type="primary"):
         try:
