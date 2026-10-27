@@ -61,3 +61,8 @@ Official links:
 - Hackathon: https://cerebralvalley.ai/e/meta-ai-developer-hackathon
 
 Project idea originally submitted by Pack Kwan Low (Jaycee). This repository is the new competition-period implementation of that idea.
+
+
+## 🦞 OpenClaw / NVIDIA OpenShell isolation research
+
+Added an optional offline permission-gate demonstration and host-only OpenShell launch/inspection/probe scripts. **Actual NVIDIA runtime has not been deployed or validated.** No Meta paid API calls, secrets or private repository mounts are involved. See [docs/OPENCLAW_OPENSHELL.md](docs/OPENCLAW_OPENSHELL.md). Run the clearly simulated demo with `python -m scripts.lobster_guard_demo`.

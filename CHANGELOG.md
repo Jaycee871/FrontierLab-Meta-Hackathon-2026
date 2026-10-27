@@ -1,3 +1,10 @@
+## 2026-10-27 · v0.2 — OpenClaw / OpenShell isolation experiment
+
+- Added a simulated fail-closed capability gate, three offline tests, and a clearly labeled demo.
+- Added a host preflight and manual OpenShell creation, effective-policy inspection, benign network probe and cleanup scripts.
+- No real OpenShell runtime, network denial, inference or GPU allocation has been claimed.
+- Billed Meta API remains disabled. Open-weight Meta model compliance is still outstanding.
+
 # Changelog
 
 ## 2026-10-27 · v0.1.1 — cost-safe resource assessment
