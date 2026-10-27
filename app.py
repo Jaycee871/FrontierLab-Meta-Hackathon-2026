@@ -1,9 +1,8 @@
 """Run with 'streamlit run app.py'."""
 from __future__ import annotations
-import os
 import streamlit as st
 from frontierlab.demo_data import QUESTION, QUERY
-from frontierlab.meta import MuseClient, DEFAULT_MODEL
+from frontierlab.quantitative import inverse_variance_heterogeneity
 from frontierlab.pipeline import make_plan, run_research
 from frontierlab.reporting import export_json, summary
 
@@ -25,17 +24,13 @@ st.write("An evidence-grounded scientific research workflow that **records disag
 
 with st.sidebar:
     st.header("Engine")
-    mode_label = st.radio("Evidence mode", ["Synthetic audit demonstration", "Live Europe PMC literature"], index=0)
+    mode_label = st.radio("Evidence mode", ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)"], index=0)
     mode = "demo" if mode_label.startswith("Synthetic") else "live"
-    model = st.text_input("Meta Muse model", value=DEFAULT_MODEL)
-    key = st.text_input("Meta Model API key (session only)", value="", type="password", help="Not written to disk. Alternatively use MODEL_API_KEY environment variable.")
-    meta_ready = bool(key or os.getenv("MODEL_API_KEY"))
+    st.info("PAID META API DISABLED. This build makes no Meta Model API calls, even if a key exists in the environment.")
     if mode == "demo":
         st.warning("SYNTHETIC DATA. Invented publications demonstrate auditing; none are real scientific evidence.")
-    elif not meta_ready:
-        st.info("Live literature retrieval can run without a key. Model extraction and synthesis require Meta API credentials.")
     else:
-        st.success("Meta API credentials available (connection not yet tested).")
+        st.info("Only Europe PMC metadata is fetched. Model-based claims and hypotheses remain disabled until a safe open-weight backend is tested.")
     st.caption("No autonomous wet-lab execution, clinical advice or unverified study claims.")
 
 with st.form("research_form"):
@@ -47,11 +42,8 @@ with st.form("research_form"):
 if run_clicked:
     with st.spinner("Retrieving evidence and applying verification gates..."):
         try:
-            client = MuseClient(api_key=key or None, model=model) if mode == "live" and meta_ready else None
-            result = run_research(question, query, mode=mode, model_client=client, max_papers=n)
+            result = run_research(question, query, mode=mode, model_client=None, max_papers=n)
             st.session_state["frontier_result"] = result
-            st.session_state["frontier_key"] = key
-            st.session_state["frontier_model"] = model
         except Exception as exc:
             st.error(f"Research run failed: {type(exc).__name__}: {exc}")
 
@@ -66,6 +58,15 @@ if result:
     st.caption(f"Decision gate: **{stats['decision']}** · Model: {result.model} · Data source: {result.mode}")
     for warning in result.audit.warnings:
         st.warning(warning)
+    if result.mode == "demo":
+        with st.expander("Wolfram-validated heterogeneity example (FICTIONAL numbers)", expanded=False):
+            stats_q = inverse_variance_heterogeneity([0.4, -0.3], [0.15, 0.1])
+            st.error("SYNTHETIC: These invented effect sizes do NOT represent observed studies.")
+            x, y, z = st.columns(3)
+            x.metric("Pooled effect (not a conclusion)", f"{stats_q['pooled_effect']:.4f}")
+            y.metric("Cochran Q", f"{stats_q['Q']:.4f}")
+            z.metric("I²", f"{stats_q['I2'] * 100:.1f}%")
+            st.caption("High inconsistency: do NOT force consensus. Independently checked with Wolfram Language; no online Wolfram call is made by this app.")
     with st.expander("1 · Evidence catalogue", expanded=True):
         for p in result.papers:
             st.markdown(f"**{p.title}**  ·  {p.paper_id}  ·  {p.year}")
@@ -95,11 +96,7 @@ if result:
     approved = st.checkbox("I have reviewed the evidence, conflicts and limitations. Allow a DRAFT research plan.")
     if st.button("Generate cited plan", disabled=not approved or not result.hypotheses, type="primary"):
         try:
-            client = None
-            if result.mode == "live":
-                model_key = st.session_state.get("frontier_key") or os.getenv("MODEL_API_KEY")
-                client = MuseClient(api_key=model_key, model=st.session_state.get("frontier_model", DEFAULT_MODEL))
-            make_plan(result, model_client=client, approved=approved)
+            make_plan(result, model_client=None, approved=approved)
             st.success("Draft created. Human scientific review is still required.")
         except Exception as exc:
             st.error(f"Planning blocked: {exc}")
@@ -110,4 +107,4 @@ if result:
     st.download_button("Download complete provenance JSON", data=export_json(result),
                        file_name="frontierlab_audit.json", mime="application/json")
 else:
-    st.info("Begin with the fully labeled synthetic conflict fixture, then run live literature + Meta Muse synthesis when your API key is ready.")
+    st.info("Begin with the labeled fictional conflict fixture, or retrieve Europe PMC metadata. A Meta open-weight inference backend is being evaluated; this build makes NO paid Meta API calls.")
