@@ -1,3 +1,11 @@
+## 2026-10-27 · v0.3 — local Meta open-weight inference preparation
+
+- Introduced loopback-only llama.cpp client for official Muse Glimmer with real model-identity precheck.
+- Removed executable paid Meta API access; no keys or billing endpoints used.
+- Added free Kaggle/HF CPU resource preflight and explicit opt-in local serving script.
+- Added offline tests for remote-endpoint blocking, non-Meta checkpoint rejection, and HF CPU memory shortfall.
+- Meta checkpoint not yet loaded; live model inference and contest model-compliance evidence remain pending.
+
 ## 2026-10-27 · v0.2 — OpenClaw / OpenShell isolation experiment
 
 - Added a simulated fail-closed capability gate, three offline tests, and a clearly labeled demo.

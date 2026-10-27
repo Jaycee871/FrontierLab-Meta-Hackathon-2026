@@ -8,7 +8,7 @@
 
 FrontierLab transforms a scientific question into an evidence-gathering and hypothesis workflow with explicit, auditable decisions. It is not a general chatbot or an AI medical advisor.
 
-Research question → Europe PMC abstract retrieval → (planned) **Meta open-weight** Evidence Extraction Agent → deterministic citation / conflict audit → skeptical review → hypothesis generation → human approval gate → research planning → provenance JSON export. **Only the clearly synthetic audit and metadata retrieval are currently active; model inference is not yet connected.**
+Research question → Europe PMC abstract retrieval → (planned) **Meta open-weight** Evidence Extraction Agent → deterministic citation / conflict audit → skeptical review → hypothesis generation → human approval gate → research planning → provenance JSON export. **Only synthetic audit and metadata retrieval have been verified; the new local Muse Glimmer adapter is implemented but actual model inference is not yet tested.**
 
 The pipeline deliberately preserves conflicting claims and may abstain. Two distinct source IDs with verified-format claims are required before hypotheses; source-ID validation by itself does NOT verify scientific truth. Researchers must inspect full source papers, protocols, context, and all results before acting on any output.
 
@@ -27,9 +27,9 @@ For Windows, run run_windows.bat after installing Python. Never commit local key
 
 - **Synthetic audit demonstration:** Invented, explicitly labeled SYNTHETIC:A/B/C publications and hand-authored claims. Shows deterministic conflict handling and researcher approval. It makes no Meta API call. Synthetic papers are not scientific citations.
 - **Live Europe PMC without API key:** Retrieves source metadata and abstracts only. It will NOT fake a successful model result.
-- **Future Meta open-weight stage:** Muse Glimmer, subject to GPU feasibility tests. All real model-based extraction, skeptical review and planning remain UNIMPLEMENTED in the current Streamlit UI.
+- **Future Meta open-weight stage:** Muse Glimmer, subject to GPU feasibility tests. A local-only model client can now be selected in the UI, but its real inference and end-to-end reliability remain UNVERIFIED.
 
-A legacy Meta API client exists in source for traceability but is intentionally NOT called by the current application; do not use it for this run. Official Muse Glimmer open-weight model is preferred for Hackathon eligibility without Meta Model API billing.
+The historical paid Meta API client is disabled and raises an exception on use; paid calls are not available in this prototype. Official Muse Glimmer open-weight model is preferred for Hackathon eligibility without Meta Model API billing.
 
 ## Tests and guardrails
 
@@ -66,3 +66,8 @@ Project idea originally submitted by Pack Kwan Low (Jaycee). This repository is 
 ## 🦞 OpenClaw / NVIDIA OpenShell isolation research
 
 Added an optional offline permission-gate demonstration and host-only OpenShell launch/inspection/probe scripts. **Actual NVIDIA runtime has not been deployed or validated.** No Meta paid API calls, secrets or private repository mounts are involved. See [docs/OPENCLAW_OPENSHELL.md](docs/OPENCLAW_OPENSHELL.md). Run the clearly simulated demo with `python -m scripts.lobster_guard_demo`.
+
+
+## Optional real Meta open-weight inference (NO paid Meta API)
+
+A new localhost-only Muse Glimmer adapter is available as an experimental third UI mode. This connects to an already-running local llama.cpp server, and never to Meta Model API. The old paid API client is intentionally blocked at initialization. See [deployment notes](docs/META_OPENWEIGHT_HF_CPU.md) and the hardware checker at scripts/muse_hardware_check.py. The HF free CPU tier is too small for the 17GB model; use it for the frontend and research tools. No real checkpoint or GPU test has been completed.

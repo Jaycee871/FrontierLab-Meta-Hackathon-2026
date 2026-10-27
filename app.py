@@ -3,6 +3,7 @@ from __future__ import annotations
 import streamlit as st
 from frontierlab.demo_data import QUESTION, QUERY
 from frontierlab.quantitative import inverse_variance_heterogeneity
+from frontierlab.openweight import OpenWeightClient
 from frontierlab.pipeline import make_plan, run_research
 from frontierlab.reporting import export_json, summary
 
@@ -24,13 +25,16 @@ st.write("An evidence-grounded scientific research workflow that **records disag
 
 with st.sidebar:
     st.header("Engine")
-    mode_label = st.radio("Evidence mode", ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)"], index=0)
+    mode_label = st.radio("Evidence mode", ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)", "Live Europe PMC + local Meta model"], index=0)
     mode = "demo" if mode_label.startswith("Synthetic") else "live"
-    st.info("PAID META API DISABLED. This build makes no Meta Model API calls, even if a key exists in the environment.")
+    use_local_meta = mode_label == "Live Europe PMC + local Meta model"
+    st.info("PAID META API DISABLED. Optional Meta Muse Glimmer inference is restricted to a same-host, local llama.cpp server at 127.0.0.1:8080.")
     if mode == "demo":
         st.warning("SYNTHETIC DATA. Invented publications demonstrate auditing; none are real scientific evidence.")
+    elif use_local_meta:
+        st.warning("Experimental real open-weight model mode. Requires an actual Muse Glimmer checkpoint served on THIS machine; charges no Meta API credits. Never expose the local server publicly.")
     else:
-        st.info("Only Europe PMC metadata is fetched. Model-based claims and hypotheses remain disabled until a safe open-weight backend is tested.")
+        st.info("Europe PMC metadata only. No model inference, no paid API requests.")
     st.caption("No autonomous wet-lab execution, clinical advice or unverified study claims.")
 
 with st.form("research_form"):
@@ -42,7 +46,8 @@ with st.form("research_form"):
 if run_clicked:
     with st.spinner("Retrieving evidence and applying verification gates..."):
         try:
-            result = run_research(question, query, mode=mode, model_client=None, max_papers=n)
+            local_client = OpenWeightClient() if use_local_meta else None
+            result = run_research(question, query, mode=mode, model_client=local_client, max_papers=n)
             st.session_state["frontier_result"] = result
         except Exception as exc:
             st.error(f"Research run failed: {type(exc).__name__}: {exc}")
@@ -96,7 +101,8 @@ if result:
     approved = st.checkbox("I have reviewed the evidence, conflicts and limitations. Allow a DRAFT research plan.")
     if st.button("Generate cited plan", disabled=not approved or not result.hypotheses, type="primary"):
         try:
-            make_plan(result, model_client=None, approved=approved)
+            planner = OpenWeightClient() if result.mode == "live" and "muse-glimmer" in result.model.lower() else None
+            make_plan(result, model_client=planner, approved=approved)
             st.success("Draft created. Human scientific review is still required.")
         except Exception as exc:
             st.error(f"Planning blocked: {exc}")
@@ -107,4 +113,4 @@ if result:
     st.download_button("Download complete provenance JSON", data=export_json(result),
                        file_name="frontierlab_audit.json", mime="application/json")
 else:
-    st.info("Begin with the labeled fictional conflict fixture, or retrieve Europe PMC metadata. A Meta open-weight inference backend is being evaluated; this build makes NO paid Meta API calls.")
+    st.info("Begin with synthetic conflict fixtures or Europe PMC. Local Muse Glimmer inference is optional, requires a separately launched checkpoint, and NEVER contacts the paid Meta API.")

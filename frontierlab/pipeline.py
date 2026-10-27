@@ -42,8 +42,8 @@ def run_research(question: str, query: str, *, mode: str, model_client=None, max
         return Run(question, mode, "None", papers, audit, [], {"decision": "NO_EVIDENCE"}, log)
     if model_client is None:
         audit = validate_claims(papers, [])
-        audit.warnings.append("Meta API is not connected: references are retrieved, but AI stages have NOT run.")
-        log_step(log, "Meta AI", "BLOCKED", "No MODEL_API_KEY supplied")
+        audit.warnings.append("No local model attached: sources retrieved, AI extraction and synthesis have NOT run.")
+        log_step(log, "Meta AI", "BLOCKED", "No explicit local model was selected")
         return Run(question, mode, "None (not connected)", papers, audit, [],
                    {"decision": "MODEL_NOT_CONNECTED"}, log)
 
@@ -119,7 +119,7 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
         log_step(run.log, "Planning Agent", "SIMULATED", "Human-approved mock plan; no AI / laboratory execution")
         return run
     if model_client is None:
-        raise ValueError("Meta API connection required to generate a live plan")
+        raise ValueError("A valid local model is required to generate a live plan")
     proposed = model_client.json("Scientific Planning Agent", (
         "Write ONE cautious, research-review plan. Return JSON: "
         "{\"objective\": string, \"steps\": [strings], "
