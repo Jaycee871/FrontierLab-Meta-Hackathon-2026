@@ -86,3 +86,8 @@ A new read-only client for Springer Nature's Open Access API returns DOI-grounde
 ## Three-source metadata discovery (Springer Nature Meta API v2)
 
 The GitHub secret Meta_API_Key is wired into a manual-only Springer Nature Meta API v2 smoke test. A separate, opt-in three-source workflow retrieves small sets from Europe PMC, Springer Nature Meta API and Springer Nature Open Access API and merges by normalized DOI. The merged catalog preserves source names and records missing abstracts without inventing evidence. The public HF Space does not inherit GitHub Secrets, so it still runs its pre-existing Europe PMC interface. No paid Meta model API is used. See docs/SPRINGER_NATURE_META.md.
+
+
+## v0.6 · Claim-to-evidence audit / optional NVIDIA-hosted Muse Glimmer
+
+The existing synthetic research demo now includes a separate 10-case, HAND-LABELED, FICTIONAL claim-to-passage benchmark: source IDs, exact quote anchors, and comparison with human-authored labels are separate checks. No semantic truth can be inferred from quote matches. The optional NVIDIA NIM adapter is isolated from Meta Platforms' billed Model API, off by default, and can only be exercised in a manual GitHub Actions workflow with synthetic input. See [full experiment protocol](docs/CLAIM_VERIFICATION_AND_NIM.md). An HF Space rebuild is required for new UI code to appear.

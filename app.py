@@ -6,6 +6,8 @@ from frontierlab.quantitative import inverse_variance_heterogeneity
 from frontierlab.openweight import OpenWeightClient
 from frontierlab.pipeline import make_plan, run_research
 from frontierlab.reporting import export_json, summary
+from frontierlab.claim_benchmark import benchmark
+from frontierlab.claim_verification import audit_predictions, conflict_transparency
 
 st.set_page_config(page_title="FrontierLab | Research Intelligence", page_icon="🔬", layout="wide")
 st.markdown("""
@@ -72,6 +74,18 @@ if result:
             y.metric("Cochran Q", f"{stats_q['Q']:.4f}")
             z.metric("I²", f"{stats_q['I2'] * 100:.1f}%")
             st.caption("High inconsistency: do NOT force consensus. Independently checked with Wolfram Language; no online Wolfram call is made by this app.")
+    if result.mode == "demo":
+        with st.expander("Claim-to-passage audit benchmark (FICTIONAL · hand-labeled)", expanded=False):
+            fixture_papers, fixture_cases = benchmark()
+            verified = audit_predictions(fixture_papers, fixture_cases)
+            st.warning("All ten examples and predictions are HAND-AUTHORED FICTION. Scores do not represent Meta/NVIDIA model accuracy, nor prove scientific validity.")
+            x, y, z = st.columns(3)
+            x.metric("Known source IDs", f"{verified['source_id_coverage']:.0%}")
+            y.metric("Verbatim excerpt matches", f"{verified['verbatim_passage_coverage']:.0%}")
+            z.metric("Synthetic gold-label agreement", f"{verified['label_accuracy_vs_independent_gold']:.0%}")
+            st.caption("A quotation can exist yet be used to support a FALSE statement; genuine semantic verification needs independently annotated evidence.")
+            st.json({"cases": verified["cases"], "missing_conflict_detection_example":
+                     conflict_transparency([], [("SYNTHETIC:A","SYNTHETIC:B")])})
     with st.expander("1 · Evidence catalogue", expanded=True):
         for p in result.papers:
             st.markdown(f"**{p.title}**  ·  {p.paper_id}  ·  {p.year}")

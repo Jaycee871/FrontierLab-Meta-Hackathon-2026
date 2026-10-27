@@ -1,3 +1,11 @@
+## 2026-10-27 · v0.6 — Claim-to-passage audit & opt-in NVIDIA Meta inference
+
+- Added 10 synthetic hand-labeled examples illustrating source-ID, quotation and semantic support gaps.
+- Added strict benchmark scoring and conflict recall based on independently supplied annotations.
+- Added a fixed NVIDIA NIM Meta Muse Glimmer client and manual-only single-call trial (no Meta Platforms paid API).
+- Added synthetic benchmark expander to the Streamlit UI; HF Space rebuild still required.
+- No actual NVIDIA inference has run, and synthetic benchmark scores are NOT AI model accuracy.
+
 ## 2026-10-27 · v0.5 — Springer Nature Meta API v2 and three-source discovery
 
 - Added Meta v2 bibliographic adapter, secure manual API test, and offline source parsing tests.
