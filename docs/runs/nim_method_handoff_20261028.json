@@ -1,0 +1,24 @@
+{
+  "schema": "frontierlab.method-handoff.v1",
+  "status": "READY_FOR_RESEARCHER_METHOD_EVALUATION",
+  "source_run_url": "https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40574846326",
+  "validator_result": "PASS",
+  "verified_call_count": 2,
+  "verified_role_order": [
+    "Adversarial Skeptic Agent",
+    "Hypothesis Agent"
+  ],
+  "model": "meta/muse-glimmer-30b",
+  "provider": "nvidia-nim",
+  "human_review_dataset_id": "746c55247226e19e7b15",
+  "supported_source_ids": [
+    "PMC4314675",
+    "PMC6927761"
+  ],
+  "hypothesis_count": 2,
+  "method_selection_automated": false,
+  "planning_automated": false,
+  "scientific_accuracy_verified": false,
+  "next_gate": "RESEARCHER_METHOD_EVALUATION",
+  "note": "Execution boundary and provenance validated offline. Researcher must compare candidate methods and explicitly select or defer before planning."
+}
