@@ -1,0 +1,62 @@
+{
+  "schema": "frontierlab.method-evaluation-draft.v1",
+  "recorded_date_taipei": "2026-10-28",
+  "source_handoff": "docs/runs/nim_method_handoff_20261028.json",
+  "status": "DRAFT_FOR_RESEARCHER_REVIEW_NO_SELECTION",
+  "selected_candidate_id": null,
+  "selection_rationale": "Selection intentionally deferred until the researcher reviews the source-derived method comparison and unresolved reproducibility checks.",
+  "candidates": [
+    {
+      "candidate_id": "M1",
+      "name": "Directed evolution with yeast surface display and alternating-pH selection",
+      "evidence_ids": [
+        "PMC4314675"
+      ],
+      "scope": "Use a displayed Fcab library with positive selection for Her2 binding at pH 7.4 and negative selection/non-binding at pH 6.0, followed by clone-level pH-dependent binding characterization.",
+      "comparison": {
+        "expected_value": "Directly explores sequence space and can discover pH-sensitive variants without assuming histidine substitutions are required.",
+        "resources": "Yeast display library, flow cytometric sorting, recombinant Her2, soluble-expression workflow and downstream binding/stability assays.",
+        "validation": "Compare binding at pH 6.0 versus 7.4, then verify soluble-protein/cell binding and stability with independent repeats.",
+        "limitations": "Empirical and resource-intensive; findings may depend strongly on library design, target, antibody format and selection thresholds.",
+        "novelty": "Useful discovery-oriented comparator because it can reveal non-obvious pH-switching sequence solutions."
+      },
+      "reproducibility_checks": {
+        "data": "UNKNOWN_PENDING_FULL_TEXT_EXTRACTION",
+        "code": "NOT_APPLICABLE_OR_NOT_YET_IDENTIFIED",
+        "environment": "UNKNOWN_PENDING_FULL_TEXT_EXTRACTION",
+        "parameters": "PARTIALLY_DOCUMENTED_IN_SOURCE",
+        "protocol": "DOCUMENTED_IN_SOURCE_NOT_REPRODUCED",
+        "metrics": "DOCUMENTED_IN_SOURCE_NOT_REPRODUCED"
+      },
+      "executed_in_frontierlab": false
+    },
+    {
+      "candidate_id": "M2",
+      "name": "Structure-based dual-pH histidine-scanning computational design",
+      "evidence_ids": [
+        "PMC6927761"
+      ],
+      "scope": "Use a structure-based antibody design platform with dual-pH histidine-scanning mutagenesis to propose variants, then test Fab and full-size antibody binding across acidic and physiological pH.",
+      "comparison": {
+        "expected_value": "Provides a targeted, mechanism-guided design route that can reduce the experimental search space and optimize acidic-pH selectivity.",
+        "resources": "Antibody-antigen structural model, computational design platform, recombinant expression, binding assays, cell-based validation and functional spheroid assays.",
+        "validation": "Measure recombinant and cell-surface binding across pH, compare parental controls, inspect Her2-density effects and confirm functional activity under acidic versus physiological conditions.",
+        "limitations": "Depends on structural information and histidine-centered design assumptions; assay stoichiometry and avidity can affect apparent affinity estimates.",
+        "novelty": "Useful design-oriented comparator because it prospectively links structural modeling to pH-selective antibody engineering."
+      },
+      "reproducibility_checks": {
+        "data": "UNKNOWN_PENDING_FULL_TEXT_EXTRACTION",
+        "code": "UNKNOWN_PLATFORM_AVAILABILITY",
+        "environment": "UNKNOWN_PENDING_FULL_TEXT_EXTRACTION",
+        "parameters": "PARTIALLY_DOCUMENTED_IN_SOURCE",
+        "protocol": "DOCUMENTED_IN_SOURCE_NOT_REPRODUCED",
+        "metrics": "DOCUMENTED_IN_SOURCE_NOT_REPRODUCED"
+      },
+      "executed_in_frontierlab": false
+    }
+  ],
+  "automatic_selection": false,
+  "automatic_planning": false,
+  "scientific_execution_verified": false,
+  "note": "Source-derived comparison prepared for Stage 4. No candidate has been selected and no experiment has been executed."
+}
