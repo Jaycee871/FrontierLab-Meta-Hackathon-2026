@@ -5,7 +5,6 @@ import json
 from .evaluation import (CHECKS, CHECK_STATES, CRITERIA, allowed_sources,
                          blank_candidate, context_id, demo_candidates,
                          save_evaluation, suggest_methods, require_evaluation)
-from .openweight import OpenWeightClient
 
 CHECK_LABELS = {
     "data": "Data / inputs", "code": "Code / model version",
@@ -21,7 +20,7 @@ CRITERION_LABELS = {
 }
 
 
-def render_evaluation(run):
+def render_evaluation(run, *, model_client=None):
     import streamlit as st
     st.subheader("4 · Method evaluation")
     if not run.hypotheses:
@@ -49,9 +48,10 @@ def render_evaluation(run):
     )
     if run.mode == "demo":
         st.warning("FICTIONAL strategies and evidence. No model or laboratory experiment has run.")
-    elif st.button("Suggest methods with the local Meta model", key="suggest_" + ctx):
+    elif st.button("Suggest methods with this run's Meta backend", key="suggest_" + ctx,
+                   disabled=model_client is None):
         try:
-            proposals = suggest_methods(run, model_client=OpenWeightClient())
+            proposals = suggest_methods(run, model_client=model_client)
             st.session_state[state_key] = proposals
             st.session_state[revision_key] += 1
             st.success("Editable model proposals loaded. Inspect sources and review every field.")

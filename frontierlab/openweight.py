@@ -13,6 +13,7 @@ def validate_endpoint(url):
     return url.rstrip("/")
 
 class OpenWeightClient:
+    backend = "local"
     def __init__(self, endpoint="http://127.0.0.1:8080", session=None):
         self.endpoint = validate_endpoint(endpoint)
         self.session = session if session is not None else requests.Session()
@@ -55,3 +56,4 @@ class OpenWeightClient:
         if not isinstance(answer, dict):
             raise ValueError("Expected a JSON object")
         return answer
+
