@@ -1,3 +1,10 @@
+## 2026-10-28 · Legacy MUSE multilingual reference
+
+- Added a dedicated reference note for Facebook Research's archived MUSE multilingual word-embedding project.
+- Explicitly separated legacy **MUSE (Multilingual Unsupervised and Supervised Embeddings)** from the current **Meta Muse Glimmer 30B** model integration.
+- Documented a possible future Stage 2 multilingual query-expansion role without claiming the archived project is bundled, executed or validated in FrontierLab.
+- Kept upstream code and data out of the repository; the upstream repository declares CC BY-NC 4.0.
+
 ## 2026-10-28 · v0.16 — Researcher review and revision-bound HF deployment
 
 - Saved Jaycee871's explicit SUPPORTED judgments and supplied rationales for both core-extraction cases, bound to the original question, case IDs and source snapshots.
