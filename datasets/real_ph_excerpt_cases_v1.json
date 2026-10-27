@@ -1,0 +1,249 @@
+{
+  "schema": "frontierlab.real-excerpt-cases.v1",
+  "created_date": "2026-10-28",
+  "status": "PENDING_RESEARCHER_ANNOTATION",
+  "scope": "Twelve excerpt-level claim interpretation cases. Four published historical antibody-engineering papers. No new protein designs or de novo competition eligibility claims.",
+  "sources": [
+    {
+      "source_id": "PMC8686790",
+      "pmid": "34956814",
+      "doi": "10.1007/s13205-021-03079-x",
+      "title": "A stepwise mutagenesis approach using histidine and acidic amino acid to engineer highly pH-dependent protein switches",
+      "authors": [
+        "Wenjun Zou",
+        "Chuncui Huang",
+        "Qing Sun",
+        "Keli Zhao",
+        "Huanyu Gao",
+        "Rong Su",
+        "Yan Li"
+      ],
+      "publication_year_records": [
+        {
+          "type": "unspecified",
+          "year": "2021"
+        }
+      ],
+      "url": "https://europepmc.org/articles/PMC8686790",
+      "retrieval_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8686790/fullTextXML",
+      "retrieved_at_utc": "2026-10-27T18:25:23.466065+00:00",
+      "scope": "SHORT_EXCERPT_FROM_ABSTRACT",
+      "source_text": "Nine pH-dependent antibodies were isolated using single-acidic amino acid residue mutagenesis at the six hot-spot residue positions.",
+      "excerpt_sha256": "41a46b4e30474ef09c0d5c0db48e7009d9a86a391938f54f7c77579c5cf2a753",
+      "retrieved_abstract_sha256": "a390ab625c5b11685ba422a508b77a3a0e3730071b38154568daa7f3e0ac30a4",
+      "license_url": null,
+      "reuse_note": "Only a short attributed excerpt (at most 25 words) is redistributed; no full text is bundled. Check the original rights for further reuse."
+    },
+    {
+      "source_id": "PMC6927761",
+      "pmid": "31777319",
+      "doi": "10.1080/19420862.2019.1682866",
+      "title": "Structure-based engineering of pH-dependent antibody binding for selective targeting of solid-tumor microenvironment",
+      "authors": [
+        "Traian Sulea",
+        "Nazanin Rohani",
+        "Jason Baardsnes",
+        "Christopher R. Corbeil",
+        "Christophe Deprez",
+        "Yuneivy Cepero-Donates",
+        "Alma Robert",
+        "Joseph D. Schrag",
+        "Marie Parat",
+        "Mélanie Duchesne",
+        "Maria L. Jaramillo",
+        "Enrico O. Purisima",
+        "John C. Zwaagstra"
+      ],
+      "publication_year_records": [
+        {
+          "type": "collection",
+          "year": "2020"
+        },
+        {
+          "type": "epub",
+          "year": "2019"
+        }
+      ],
+      "url": "https://europepmc.org/articles/PMC6927761",
+      "retrieval_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6927761/fullTextXML",
+      "retrieved_at_utc": "2026-10-27T18:25:23.468370+00:00",
+      "scope": "SHORT_EXCERPT_FROM_ABSTRACT",
+      "source_text": "Binding selectivity toward acidic pH was improved by as much as 25-fold relative to the parental bH1-Fab.",
+      "excerpt_sha256": "c227eb75ef2fb49e175c5bf35c9c59ce507dd47bf1b75e781735f1e0d4f4f1a2",
+      "retrieved_abstract_sha256": "0ffba95c138fe65587d88c5022aea4c8f599cc1c1e4734663b16876c6112634d",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "reuse_note": "Only a short attributed excerpt (at most 25 words) is redistributed; no full text is bundled. Check the original rights for further reuse."
+    },
+    {
+      "source_id": "PMC4314675",
+      "pmid": "24964247",
+      "doi": "10.1002/biot.201300483",
+      "title": "Construction of pH-sensitive Her2-binding IgG1-Fc by directed evolution",
+      "authors": [
+        "Michael W Traxlmayr",
+        "Elisabeth Lobner",
+        "Christoph Hasenhindl",
+        "Gerhard Stadlmayr",
+        "Chris Oostenbrink",
+        "Florian Rüker",
+        "Christian Obinger"
+      ],
+      "publication_year_records": [
+        {
+          "type": "ppub",
+          "year": "2014"
+        },
+        {
+          "type": "epub",
+          "year": "2014"
+        }
+      ],
+      "url": "https://europepmc.org/articles/PMC4314675",
+      "retrieval_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4314675/fullTextXML",
+      "retrieved_at_utc": "2026-10-27T18:25:23.469326+00:00",
+      "scope": "SHORT_EXCERPT_FROM_ABSTRACT",
+      "source_text": "Interestingly, two of the three Fcabs did not contain a single histidine mutation",
+      "excerpt_sha256": "49cd4c396cdb62ceed8afd66641a8a5204871b75ac623a2d4e77ac01b570a5d6",
+      "retrieved_abstract_sha256": "9a3f77c22c621724f43ee9e1d7e87c50b12411be56826974cb907433682b2312",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "reuse_note": "Only a short attributed excerpt (at most 25 words) is redistributed; no full text is bundled. Check the original rights for further reuse."
+    },
+    {
+      "source_id": "PMC4622719",
+      "pmid": "25523975",
+      "doi": "10.4161/19420862.2014.985993",
+      "title": "A generic approach to engineer antibody pH-switches using combinatorial histidine scanning libraries and yeast display",
+      "authors": [
+        "Christian Schröter",
+        "Ralf Günther",
+        "Laura Rhiel",
+        "Stefan Becker",
+        "Lars Toleikis",
+        "Achim Doerner",
+        "Janine Becker",
+        "Andreas Schönemann",
+        "Daichi Nasu",
+        "Berend Neuteboom",
+        "Harald Kolmar",
+        "Björn Hock"
+      ],
+      "publication_year_records": [
+        {
+          "type": "collection",
+          "year": "2015"
+        },
+        {
+          "type": "epub",
+          "year": "2014"
+        }
+      ],
+      "url": "https://europepmc.org/articles/PMC4622719",
+      "retrieval_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4622719/fullTextXML",
+      "retrieved_at_utc": "2026-10-27T18:25:23.470633+00:00",
+      "scope": "SHORT_EXCERPT_FROM_ABSTRACT",
+      "source_text": "The strategy allows simultaneous screening for both, high affinity binding at pH 7.4 and pH-sensitivity, and excludes conventional negative selection steps.",
+      "excerpt_sha256": "9fabb781394d2368052fa5a2c37419a29bd701761484f5d9df4fdddc960c6173",
+      "retrieved_abstract_sha256": "f6997688bcbe811c97b6ec345ed667b41709ed24b3a5c12eb938704c66d42cfe",
+      "license_url": "https://creativecommons.org/licenses/by-nc/3.0/",
+      "reuse_note": "Only a short attributed excerpt (at most 25 words) is redistributed; no full text is bundled. Check the original rights for further reuse."
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "R01",
+      "source_id": "PMC8686790",
+      "claim": "The excerpt reports nine pH-dependent antibodies obtained through acidic-residue mutagenesis.",
+      "draft_reference_label": "SUPPORTED",
+      "draft_rationale": "The passage states nine antibodies and describes the mutagenesis approach.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R02",
+      "source_id": "PMC8686790",
+      "claim": "The excerpt reports only one pH-dependent antibody obtained through that mutagenesis.",
+      "draft_reference_label": "CONTRADICTED",
+      "draft_rationale": "The passage specifies nine rather than one.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R03",
+      "source_id": "PMC8686790",
+      "claim": "These nine antibodies were shown to improve survival in a randomized human trial.",
+      "draft_reference_label": "INSUFFICIENT",
+      "draft_rationale": "The supplied excerpt has no clinical trial or survival evidence.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R04",
+      "source_id": "PMC6927761",
+      "claim": "The excerpt reports up to a 25-fold improvement in acidic-pH binding selectivity over parental bH1-Fab.",
+      "draft_reference_label": "SUPPORTED",
+      "draft_rationale": "The reported direction, maximum magnitude and comparator match.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R05",
+      "source_id": "PMC6927761",
+      "claim": "The excerpt reports up to a 25-fold reduction in acidic-pH binding selectivity over parental bH1-Fab.",
+      "draft_reference_label": "CONTRADICTED",
+      "draft_rationale": "The passage reports improvement rather than reduction.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R06",
+      "source_id": "PMC6927761",
+      "claim": "The excerpt establishes that the same designs bind both human and mouse EGFR.",
+      "draft_reference_label": "INSUFFICIENT",
+      "draft_rationale": "The excerpt provides neither EGFR cross-species results nor those measurements.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R07",
+      "source_id": "PMC4314675",
+      "claim": "The excerpt states that two of three Fcabs had no histidine mutation.",
+      "draft_reference_label": "SUPPORTED",
+      "draft_rationale": "This is the scoped observation directly reported in the passage.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R08",
+      "source_id": "PMC4314675",
+      "claim": "The excerpt states that all three Fcabs contained a histidine mutation.",
+      "draft_reference_label": "CONTRADICTED",
+      "draft_rationale": "Two of three are explicitly reported without such a mutation.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R09",
+      "source_id": "PMC4314675",
+      "claim": "The excerpt gives an exact dissociation constant of 1 nanomolar for these Fcabs.",
+      "draft_reference_label": "INSUFFICIENT",
+      "draft_rationale": "The passage contains no dissociation constant.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R10",
+      "source_id": "PMC4622719",
+      "claim": "The excerpt describes screening at pH 7.4 without conventional negative selection steps.",
+      "draft_reference_label": "SUPPORTED",
+      "draft_rationale": "Both the pH condition and exclusion of negative selection are stated.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R11",
+      "source_id": "PMC4622719",
+      "claim": "The excerpt says conventional negative selection steps are required by this strategy.",
+      "draft_reference_label": "CONTRADICTED",
+      "draft_rationale": "The passage explicitly says conventional negative selection steps are excluded.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    },
+    {
+      "case_id": "R12",
+      "source_id": "PMC4622719",
+      "claim": "This screening strategy guarantees therapeutic efficacy in all tumor types.",
+      "draft_reference_label": "INSUFFICIENT",
+      "draft_rationale": "The provided passage gives no universal therapeutic efficacy evidence.",
+      "reference_origin": "AI_AUTHORED_PROVISIONAL_NOT_HUMAN_GOLD"
+    }
+  ]
+}

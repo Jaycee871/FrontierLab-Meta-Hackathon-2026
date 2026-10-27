@@ -13,6 +13,7 @@ from frontierlab.claim_verification import audit_predictions, conflict_transpare
 from frontierlab.integrity_trials import suite_report
 from frontierlab.evaluation_ui import render_evaluation
 from frontierlab.evaluation import require_evaluation
+from frontierlab.literature_pilot import load_dataset, reviewer_packet
 
 st.set_page_config(page_title="FrontierLab | Research Intelligence", page_icon="🔬", layout="wide")
 st.markdown("""
@@ -28,7 +29,7 @@ h1,h2,h3 {letter-spacing:-0.025em;}
 
 st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH THE FRONTIER")
 st.title("FrontierLab  /  Research Intelligence")
-st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.12")
+st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.13")
 st.write("An evidence-grounded scientific research workflow that **records disagreement instead of hiding it**.")
 
 with st.sidebar:
@@ -60,6 +61,14 @@ if run_clicked:
             st.session_state["frontier_result"] = result
         except Exception as exc:
             st.error(f"Research run failed: {type(exc).__name__}: {exc}")
+
+with st.expander("Published-literature pilot · 12 cases awaiting researcher annotation"):
+    pilot = load_dataset()
+    st.caption("Four published antibody-engineering papers; short abstract excerpts only. No model has classified these cases. Draft reference labels are excluded from the review download.")
+    st.download_button(
+        "Download literature reviewer packet", data=json.dumps(reviewer_packet(pilot), ensure_ascii=False, indent=2),
+        file_name="frontierlab_real_excerpt_review.json", mime="application/json")
+    st.markdown("[Pilot protocol and source attribution](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/blob/main/docs/REAL_LITERATURE_PILOT.md)")
 
 result = st.session_state.get("frontier_result")
 if result:

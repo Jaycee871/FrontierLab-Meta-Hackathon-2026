@@ -5,7 +5,7 @@
 
 FrontierLab helps researchers turn a scientific question into a testable hypothesis and a reviewable research plan. Its initial focus is biomedical research: collect literature, inspect supporting and conflicting evidence, examine uncertainty, and let the researcher intervene before moving forward.
 
-**Current implementation: v0.12 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Current implementation: v0.13 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
 The evidence retrieval and audit components have working software and recorded tests. Genuine Meta model inference and a complete live research run remain the main development milestones. Paid Meta Model API access is disabled.
 
@@ -32,12 +32,12 @@ Four principles guide the workflow: **transparent evidence, reproducibility, unc
 | **Human claim review** | Implemented and covered by offline tests. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
 | **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
 | **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **156 tests passed locally** for v0.12; prior CI passed 125 at `fe37546`. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
+| **Software checks** | **171 tests passed locally** for v0.13; prior CI passed 156 at `77210c4`. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
 | **Meta model inference** | **Not yet verified.** | Local Muse Glimmer adapter and an optional NVIDIA NIM trial client exist. Two recorded NVIDIA trials produced no final answer; revised settings await a new live trial. |
-| **Hosted interface** | Reported running in the project record. | The v0.12 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
+| **Hosted interface** | Reported running in the project record. | The v0.13 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
 | **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
 
-Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [pre-v0.12 125-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40555288548), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40527145564).
+Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [pre-v0.13 156-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40558113944), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40527145564).
 
 ## Run locally
 
@@ -85,6 +85,7 @@ See [method evaluation and planning](docs/METHOD_EVALUATION.md), [verbatim evide
 
 | Module | Purpose | Current boundary |
 | --- | --- | --- |
+| [Real literature pilot](docs/REAL_LITERATURE_PILOT.md) | Twelve excerpt-level cases from four published papers; blank reviewer packets and imported-output comparison. | Reference labels are AI-authored proposals awaiting researcher review; no model run or accuracy claim. |
 | [Claim-to-passage audit](docs/CLAIM_VERIFICATION_AND_NIM.md) | Separate source identity, quotation matching and semantic-label agreement. | Ten hand-authored fictional cases; not measured Meta model performance. |
 | [Research Failure Lab](docs/RESEARCH_FAILURE_LAB.md) | Exercise stale reviews, misattributed quotations, spoofed tool results and other handoff failures. | Twelve fictional software scenarios; not a biological or human-participant study. |
 | [BioNeMo tools](docs/BIONEMO_SCIENCE_TOOLS.md) | Prepare an optional scientific-computation step within Evaluation. | Protein-only Boltz-2 preflight and response-shape checks. ProteinMPNN, RFdiffusion and OpenFold3 are listed but not connected. |
@@ -108,7 +109,7 @@ python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
 ```
 
-The 156-test local suite includes two Streamlit interaction tests for method selection, planning and deferral; the prior 125-test CI result is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
+The 171-test local suite includes two Streamlit interaction tests and fifteen real-excerpt pilot tests; the prior 156-test CI result is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
 
 ## Repository guide
 

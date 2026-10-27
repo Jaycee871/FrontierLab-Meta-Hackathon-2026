@@ -1,3 +1,12 @@
+## 2026-10-28 · v0.13 — Published-excerpt pilot preparation
+
+- Added 12 passage-level cases from four real antibody-engineering papers, with short attributed quotations and source snapshots.
+- Kept AI-authored provisional reference labels separate from blind reviewer/model packets; no human gold or measured model accuracy is claimed.
+- Added offline packet export and imported-prediction comparison; label metrics remain absent until complete researcher-supplied review.
+- Preserved raw predictions and reported human corrections separately from automatic quote checks.
+- Added reviewer-packet download to Streamlit and 15 software tests; 171 tests pass locally.
+- No live model request, new secret workflow or HF deployment. Genuine Meta inference remains blocked pending manual trial launch.
+
 ## 2026-10-28 · v0.12 — Method evaluation before planning
 
 - Added source-bound candidate comparison, six reproducibility-documentation checks, uncertainty and explicit researcher selection or deferral.
