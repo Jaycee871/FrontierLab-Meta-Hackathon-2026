@@ -1,3 +1,10 @@
+## 2026-10-27 · v0.4 — Springer Nature Open Access connector
+
+- Added read-only Springer Nature OA metadata/abstract client, DOI provenance and bounded requests.
+- Added offline parsing and security tests; missing secrets and HTTP failures do not expose request URLs.
+- Added opt-in, manual-only GitHub Actions connection test referencing Open_Access_API.
+- No live credential request has been made; public HF Space does not inherit GitHub Secrets.
+
 ## 2026-10-27 · v0.3 — local Meta open-weight inference preparation
 
 - Introduced loopback-only llama.cpp client for official Muse Glimmer with real model-identity precheck.

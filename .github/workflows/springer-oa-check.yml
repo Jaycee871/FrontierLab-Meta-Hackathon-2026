@@ -1,0 +1,20 @@
+name: Springer Nature OA Connection Check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install small HTTP dependency
+        run: python -m pip install requests
+      - name: Verify OA metadata with one request
+        env:
+          SPRINGER_NATURE_OA_API_KEY: ${{ secrets.Open_Access_API }}
+        run: python -m scripts.smoke_springer_oa

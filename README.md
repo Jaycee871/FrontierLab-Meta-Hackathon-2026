@@ -76,3 +76,8 @@ A new localhost-only Muse Glimmer adapter is available as an experimental third 
 ## HF PRO Spaces deployment template
 
 For a no-hourly-cost public CPU Basic Docker demonstration, see [HF PRO setup](docs/HF_PRO_SETUP.md), [Space Dockerfile](deploy/hf-space/Dockerfile) and [Space README](deploy/hf-space/README.md). This has not been deployed to Hugging Face yet. The free CPU Space runs metadata retrieval and synthetic audits, not actual Meta Glimmer inference. An experimental Gradio ZeroGPU model Space would be a separate project.
+
+
+## Springer Nature Open Access connector (optional)
+
+A new read-only client for Springer Nature's Open Access API returns DOI-grounded publication metadata and available abstracts. It is covered by offline tests and will not call the API automatically. The user's GitHub secret named Open_Access_API is accessible only to explicitly configured GitHub Actions workflows, not to Hugging Face Spaces. The optional [manual connection check](.github/workflows/springer-oa-check.yml) makes one low-volume query, without printing the secret. See [configuration and licensing notes](docs/SPRINGER_NATURE_OA.md). Real credential-backed connectivity has not yet been verified.
