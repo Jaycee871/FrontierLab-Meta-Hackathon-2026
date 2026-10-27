@@ -1,0 +1,38 @@
+{
+  "record_type": "single_synthetic_meta_nim_smoke_test",
+  "recorded_date_taipei": "2026-10-28",
+  "github_run_url": "https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386",
+  "github_job_id": 122393870493,
+  "source": "Decoded GitHub Actions job log; no credentials or hidden reasoning included",
+  "receipt": {
+    "schema_version": 1,
+    "started_at_utc": "2026-10-27T18:40:49.629776+00:00",
+    "git_sha": "0e4c0e04bfafad91c9b08a352b48e6c929a599bb",
+    "github_run_id": "40562188386",
+    "github_run_attempt": "1",
+    "requested_model": "meta/muse-glimmer-30b",
+    "max_tokens": 2048,
+    "reasoning_effort": "low",
+    "synthetic_input_only": true,
+    "input_sha256": "bdfa7ae43a5c42003ab66df0f39214a18939e9419a6f6e11e28678d8fb065694",
+    "paid_meta_platforms_api_used": false,
+    "status": "REAL_INFERENCE_RETURNED",
+    "reported_model": "meta/muse-glimmer-30b",
+    "finish_reason": "stop",
+    "elapsed_seconds": 10.535,
+    "output_sha256": "05e31dfbf4aba0e1638f7d9a218186f9c1c044f8b3a15ef0fa78347a583ce9c3",
+    "output_excerpt": "No, the contradictory increase in buffer X and decrease in buffer Y do not justify a universal claim that the intervention always increases binding, and the buffer-dependent results leave the general effect uncertain.",
+    "usage": {
+      "prompt_tokens": 100,
+      "completion_tokens": 149,
+      "total_tokens": 249
+    }
+  },
+  "one_shot_trigger": {
+    "branch": "meta-trial-once-20261028",
+    "trigger_commit": "0e4c0e04bfafad91c9b08a352b48e6c929a599bb",
+    "disabled_commit": "b8047f43f03bb41a648562ee16d99d058a4c5d12",
+    "status": "DISABLED_AFTER_ONE_AUTHORIZED_CALL"
+  },
+  "scope": "One fictional prompt returned final text. This is not a real-literature benchmark, scientific validation, JSON integration test or complete live FrontierLab run."
+}

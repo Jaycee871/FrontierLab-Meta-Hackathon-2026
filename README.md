@@ -7,7 +7,7 @@ FrontierLab helps researchers turn a scientific question into a testable hypothe
 
 **Current implementation: v0.13 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
-The evidence retrieval and audit components have working software and recorded tests. Genuine Meta model inference and a complete live research run remain the main development milestones. Paid Meta Model API access is disabled.
+The evidence retrieval and audit components have working software and recorded tests. **One genuine Meta Muse Glimmer inference through NVIDIA NIM succeeded on a synthetic prompt**; the [run receipt](docs/runs/meta_nim_smoke_20261028.json) records the answer, model identity, timing and token use. A complete live research run remains pending. Paid Meta Model API access is disabled.
 
 [Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -17,7 +17,7 @@ The evidence retrieval and audit components have working software and recorded t
 | --- | --- | --- |
 | **1. Research** | Define the scientific question, scope and assumptions. | Question and literature-query inputs in Streamlit. |
 | **2. Evidence** | Retrieve papers and inspect citation-linked claims, quotations and disagreement. | Europe PMC retrieval; separate three-source discovery workflow; source and quotation checks. |
-| **3. Hypothesis** | Propose falsifiable hypotheses grounded in reviewed evidence. | Model workflow implemented with a mandatory human review gate; live Meta inference still unverified. |
+| **3. Hypothesis** | Propose falsifiable hypotheses grounded in reviewed evidence. | Model workflow implemented with a mandatory human review gate; live research synthesis still unverified. |
 | **4. Evaluation** | Compare candidate methods, reproducibility conditions and uncertainty. | Source-bound method comparison, six reproducibility-documentation checks, uncertainty and researcher selection/deferral; actual paper reproduction and scientific validation remain pending. |
 | **5. Planning** | Approve a draft with controls, measurements and falsification criteria. | Requires a current method evaluation and explicit approval; exports the selected method, rationale, unresolved checks and draft controls/metrics/replication/falsification. Live inference remains unverified. |
 
@@ -32,12 +32,12 @@ Four principles guide the workflow: **transparent evidence, reproducibility, unc
 | **Human claim review** | Implemented and covered by offline tests. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
 | **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
 | **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **171 tests passed locally** for v0.13; prior CI passed 156 at `77210c4`. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
-| **Meta model inference** | **Not yet verified.** | Local Muse Glimmer adapter and an optional NVIDIA NIM trial client exist. Two recorded NVIDIA trials produced no final answer; revised settings await a new live trial. |
+| **Software checks** | **171 tests passed in CI** at commit `bd3c6e8`. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
+| **Meta model inference** | **One synthetic smoke test succeeded.** | NVIDIA NIM reported meta/muse-glimmer-30b, finish_reason=stop, 10.535 seconds and 249 total tokens. This does not yet verify structured JSON, local inference, scientific accuracy or the full UI pipeline. [Run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386). |
 | **Hosted interface** | Reported running in the project record. | The v0.13 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
 | **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
 
-Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [pre-v0.13 156-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40558113944), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40527145564).
+Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386).
 
 ## Run locally
 
@@ -62,7 +62,7 @@ Choose a mode in the sidebar:
 
 The CPU Space hosts the interface and retrieval/audit tools; it does not have a loaded Muse Glimmer model. A remote Kaggle server is not reachable through the Space's localhost address. See [local inference notes](docs/META_OPENWEIGHT_HF_CPU.md) and [Space setup](docs/HF_PRO_SETUP.md).
 
-The NVIDIA trial is a **separate, manual GitHub Actions workflow**, not a backend currently wired into the Streamlit interface. GitHub Secrets are not automatically available inside Hugging Face Spaces. See [resource strategy](docs/RESOURCE_STRATEGY.md).
+The NVIDIA client is separate from the Streamlit backend. One explicitly authorized, branch-scoped GitHub-triggered smoke test has completed; its one-shot trigger is now disabled. The default-branch trial workflow remains manual. GitHub Secrets are not automatically available inside Hugging Face Spaces. See [resource strategy](docs/RESOURCE_STRATEGY.md).
 
 ## How evidence reaches a research plan
 
@@ -109,7 +109,7 @@ python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
 ```
 
-The 171-test local suite includes two Streamlit interaction tests and fifteen real-excerpt pilot tests; the prior 156-test CI result is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
+The 171-test suite includes two Streamlit interaction tests and fifteen real-excerpt pilot tests; its CI result is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
 
 ## Repository guide
 
@@ -130,7 +130,7 @@ Some setup documents preserve earlier implementation snapshots. Use the dated st
 
 ## Next milestones
 
-1. **Verify genuine Meta inference:** obtain a final model answer and preserve model identity, settings, timing and a reproducible run record.
+1. **Verify structured Meta inference:** build on the successful single-prompt smoke test, check JSON responses, and connect the model to the reviewed research workflow.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison:** use the same model and cases to compare no gate, source/quote checks, and checks plus human review; report abstention and intervention separately.
 4. **Stabilize the public demo:** confirm the deployed revision and record an approximately three-minute demonstration of actual behavior.

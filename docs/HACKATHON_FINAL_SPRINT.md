@@ -2,6 +2,10 @@
 
 **Prepared 2026-10-28 (Asia/Taipei) · Planning memo, NOT proof of completed inference or submission.**
 
+## Verified inference update — October 28, 2026
+
+One authorized synthetic Meta Muse Glimmer request through NVIDIA NIM returned final text: finish_reason=stop, 10.535 seconds, 249 tokens. See [run 40562188386](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386) and [receipt](runs/meta_nim_smoke_20261028.json). The dedicated one-shot branch trigger was disabled after the call. Structured JSON, real-literature evaluation, the local backend and a full live research run remain unverified. Next execution work is a bounded structured-output check and integration, subject to the existing cost policy.
+
 ## Official submission boundary
 
 - Official organizer schedule: https://dev.meta.ai/events/global-hackathon
@@ -19,7 +23,7 @@
 | Human review gate, version-bound annotations | SOFTWARE VERIFIED | Review decisions are not independent adjudicated expert ground truth |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
 | HF public Streamlit Space | REBUILT AND RUNNING AS SHOWN BY USER | Updated v0.11 demo panel has NOT been separately confirmed deployed |
-| Authentic Meta Muse Glimmer response | BLOCKED / NOT VERIFIED | Two earlier NVIDIA NIM workflow runs returned no final answer; revised v0.6.1 settings not yet exercised live |
+| Authentic Meta Muse Glimmer response | VERIFIED SINGLE SYNTHETIC RESPONSE | NVIDIA NIM run 40562188386; final text and model identity recorded. No scientific or full-pipeline performance claim. |
 | Live research claim-evaluation comparison | NOT STARTED | No authentic Meta output and independently adjudicated dataset yet |
 | Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
 | Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
