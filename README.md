@@ -120,3 +120,8 @@ Added 12 hand-authored, FICTIONAL fault-injection scenarios for version drift, w
 ## Current competition sprint (2026-10-28)
 
 The next priority is **verified Meta-model inference**, then a matched claim-error benchmark, an honest 3-minute demonstration and formal organizer submission; see [Final Sprint plan](docs/HACKATHON_FINAL_SPRINT.md). GitHub software tests alone do not prove Meta inference, scientific accuracy or submission.
+
+
+## Original project charter (do not drift)
+
+**FrontierLab's submitted vision is the five-stage workflow Research → Evidence → Hypothesis → Evaluation → Planning** for evidence-grounded biomedical research planning, with four principles: transparent evidence, reproducibility, uncertainty analysis and meaningful researcher intervention. BioNeMo and the Failure Lab are support modules—not replacement product goals. See the [original project charter](docs/ORIGINAL_PROJECT_CHARTER.md), reconstructed from the applicant's original 2026 application presentation script. This is an intent/scope record, not a claim of end-to-end live inference success.
