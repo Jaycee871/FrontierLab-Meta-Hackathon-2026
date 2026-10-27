@@ -99,6 +99,10 @@ def save_review(run: Run, decisions: list[dict]) -> dict:
     ) else "REVIEW_INCOMPLETE_OR_INSUFFICIENT"
     packet["independent_expert_adjudication_verified"]=False
     run.review=packet
+    # A changed/re-entered review requires downstream scientific decisions again.
+    run.hypotheses=[]
+    run.evaluation=None
+    run.plan=None
     return packet
 
 def approved_claims(run: Run) -> list:
@@ -110,3 +114,4 @@ def approved_claims(run: Run) -> list:
     accepted={c["case_id"] for c in packet["cases"] if c["review_label"]=="SUPPORTED"}
     index={c["case_id"]:i for i,c in enumerate(review_packet(run)["cases"])}
     return [run.audit.verified_claims[index[k]] for k in index if k in accepted]
+

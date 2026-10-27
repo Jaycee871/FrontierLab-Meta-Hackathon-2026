@@ -11,6 +11,8 @@ from frontierlab.reporting import export_json, summary
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.claim_verification import audit_predictions, conflict_transparency
 from frontierlab.integrity_trials import suite_report
+from frontierlab.evaluation_ui import render_evaluation
+from frontierlab.evaluation import require_evaluation
 
 st.set_page_config(page_title="FrontierLab | Research Intelligence", page_icon="🔬", layout="wide")
 st.markdown("""
@@ -26,6 +28,7 @@ h1,h2,h3 {letter-spacing:-0.025em;}
 
 st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH THE FRONTIER")
 st.title("FrontierLab  /  Research Intelligence")
+st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.12")
 st.write("An evidence-grounded scientific research workflow that **records disagreement instead of hiding it**.")
 
 with st.sidebar:
@@ -42,6 +45,7 @@ with st.sidebar:
         st.info("Europe PMC metadata only. No model inference, no paid API requests.")
     st.caption("No autonomous wet-lab execution, clinical advice or unverified study claims.")
 
+st.subheader("1 · Research question")
 with st.form("research_form"):
     question = st.text_area("Scientific research question", value=QUESTION, height=85)
     query = st.text_input("Europe PMC search query", value=QUERY, disabled=(mode == "demo"))
@@ -113,13 +117,13 @@ if result:
                 file_name="frontierlab_v011_failure_lab_fictional.json",
                 mime="application/json",
             )
-    with st.expander("1 · Evidence catalogue", expanded=True):
+    with st.expander("2 · Evidence catalogue", expanded=True):
         for p in result.papers:
             st.markdown(f"**{p.title}**  ·  {p.paper_id}  ·  {p.year}")
             st.caption(f"{p.authors} · {p.source} · {'SYNTHETIC / NO LINK' if p.synthetic else p.url}")
             st.write(p.abstract)
             st.divider()
-    with st.expander("2 · Extracted claims and citation checks", expanded=True):
+    with st.expander("Evidence claims and citation checks", expanded=True):
         if not result.audit.verified_claims:
             st.info("No claims have passed the source-ID gate. This is not evidence that a scientific claim is false.")
         for claim in result.audit.verified_claims:
@@ -133,7 +137,7 @@ if result:
         st.caption("Valid source IDs and verbatim excerpts are NOT independent scientific fact-checking or semantic entailment. Compare claims against the original article and methods.")
         if result.audit.rejected_claims:
             st.json(result.audit.rejected_claims)
-    with st.expander("3 · Conflict review & skeptic", expanded=True):
+    with st.expander("Evidence conflicts and skeptical review", expanded=True):
         if result.audit.conflicts:
             st.error("Incompatible directions detected. Do not report consensus.")
             st.json(result.audit.conflicts)
@@ -205,11 +209,17 @@ if result:
                             st.success("Provisional human-gated draft created; scientific validation is still needed.")
                         except (ValueError, PermissionError, RuntimeError) as exc:
                             st.error(f"Synthesis remains blocked: {type(exc).__name__}: {exc}")
-    with st.expander("4 · Falsifiable hypotheses", expanded=True):
+    with st.expander("3 · Falsifiable hypotheses", expanded=True):
         st.json(result.hypotheses)
+    render_evaluation(result)
     st.subheader("5 · Research plan approval gate")
+    try:
+        require_evaluation(result)
+        evaluation_ready = True
+    except (ValueError, PermissionError):
+        evaluation_ready = False
     approved = st.checkbox("I have reviewed the evidence, conflicts and limitations. Allow a DRAFT research plan.")
-    if st.button("Generate cited plan", disabled=not approved or not result.hypotheses, type="primary"):
+    if st.button("Generate cited plan", disabled=not approved or not result.hypotheses or not evaluation_ready, type="primary"):
         try:
             planner = OpenWeightClient() if result.mode == "live" and "muse-glimmer" in result.model.lower() else None
             make_plan(result, model_client=planner, approved=approved)
@@ -224,3 +234,4 @@ if result:
                        file_name="frontierlab_audit.json", mime="application/json")
 else:
     st.info("Begin with synthetic conflict fixtures or Europe PMC. Local Muse Glimmer inference is optional, requires a separately launched checkpoint, and NEVER contacts the paid Meta API.")
+

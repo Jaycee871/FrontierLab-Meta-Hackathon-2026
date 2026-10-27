@@ -4,6 +4,7 @@ from frontierlab.models import Paper
 from frontierlab.pipeline import make_plan, run_research, continue_after_review
 from frontierlab.review import review_packet, save_review
 from frontierlab.meta import parse_json_response
+from frontierlab.evaluation import blank_candidate, demo_candidates, save_evaluation
 import pytest
 
 
@@ -19,6 +20,8 @@ def test_human_approval_is_required():
     run = run_research(QUESTION, "not used", mode="demo")
     with pytest.raises(PermissionError):
         make_plan(run)
+    save_evaluation(run, demo_candidates(), selected_id="M1",
+                    rationale="Illustrate the matched-condition strategy only.")
     make_plan(run, approved=True)
     assert run.plan["status"] == "SYNTHETIC_TEST_ONLY"
 
@@ -64,7 +67,10 @@ class StubMuse:
         if role == "Hypothesis Agent":
             return {"hypotheses": [{"text": "Control buffer variation", "evidence_ids": ["PMID:1", "PMID:2"], "rationale": "Tension"}]}
         if role == "Scientific Planning Agent":
-            return {"objective": "Test replicability", "steps": ["Include controls"], "evidence_ids": ["PMID:1"], "limitations": "Pending human review"}
+            return {"objective": "Test replicability", "steps": ["Include controls"],
+                    "controls": ["Negative controls"], "metrics": ["Assay response"],
+                    "replication": ["Independent repeats"], "falsification": ["No effect after control"],
+                    "evidence_ids": ["PMID:1"], "limitations": "Pending human review"}
         raise ValueError(role)
 
 
@@ -85,6 +91,13 @@ def test_full_multiagent_pipeline_with_stub_not_live_api():
     continue_after_review(run, model_client=StubMuse())
     assert len(run.hypotheses) == 1
     assert run.skeptic["decision"] == "REVIEW_CONFLICT"
+    methods = []
+    for i in (1, 2):
+        candidate = blank_candidate(f"M{i}", f"Mock method {i}")
+        candidate.update(evidence_ids=[f"PMID:{i}"], scope="Mock assay scope")
+        candidate["comparison"] = {key: "Not assessed in this mocked flow" for key in candidate["comparison"]}
+        methods.append(candidate)
+    save_evaluation(run, methods, selected_id="M1", rationale="Mock comparison for pipeline testing")
     make_plan(run, model_client=StubMuse(), approved=True)
     assert run.plan["status"] == "DRAFT_FOR_RESEARCHER_REVIEW"
 
@@ -173,3 +186,4 @@ def test_pipeline_never_calls_skeptic_or_hypothesis_before_human_review():
     with pytest.raises(PermissionError, match="Complete all claim reviews"):
         continue_after_review(run,model_client=model)
     assert calls==["Evidence Extraction Agent"]*2
+

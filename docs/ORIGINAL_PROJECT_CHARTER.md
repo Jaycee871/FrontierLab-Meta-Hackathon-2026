@@ -31,15 +31,15 @@
 
 The original application showcased the applicant's work in an Anthropic × Adaptyv pH-switchable protein-binder challenge: RFdiffusion backbone generation, ProteinMPNN sequence design, Boltz-2 structure prediction / screening, PROPKA pH-related residue-property analysis, novelty checking and human/mouse target comparison. This was the **earlier project used to demonstrate skills**, not proof that FrontierLab has performed successful biological design or a new wet-lab validation.
 
-## Current development mapping (v0.11, 2026-10-28)
+## Current development mapping (v0.12, 2026-10-28)
 
 | Original promise | Current verified implementation | Important gap |
 | --- | --- | --- |
 | Research question | Question input / modes in Streamlit | End-user usability to be checked on latest deployed image |
 | Evidence | Europe PMC public abstracts, plus tested small Springer Nature discovery workflows; source-ID/quote checks | Source quality, full-text rights and claim semantics require independent review |
 | Hypothesis | Synthetic illustration and human-gated live pipeline code | Genuine Meta model inference not yet verified |
-| Evaluation | Verbatim excerpt gate, human annotations, failure lab, offline BioNeMo preflight | Real model outputs, candidate comparisons, actual reproducibility and independent evaluation missing |
-| Planning | Synthetic demonstration plan and coded human-approved draft path | End-to-end live approved plan using genuine Meta outputs not yet demonstrated |
+| Evaluation | Verbatim excerpt gate, human annotations, source-bound method comparison, reproducibility-documentation review, selection/deferral, failure lab and offline BioNeMo preflight | Real model outputs, executed paper reproduction and independently validated method comparisons remain missing |
+| Planning | Synthetic demonstration and human-approved draft path requiring a current method evaluation; selected-method constraints, controls, metrics, replication and falsification are retained | End-to-end live approved plan using genuine Meta outputs not yet demonstrated |
 
 ## How newer work must relate to the original contract
 
@@ -64,3 +64,8 @@ The original application showcased the applicant's work in an Anthropic × Adapt
 **Question:** Which of the five original stages and four principles does this improve, and what measurable demonstration will show that? If neither can be answered, defer the feature until after the hackathon.
 
 Original plan remembered and preserved, while research methodology and truthful verification may continue to evolve. Never equate this charter with completion of all promised features.
+
+## v0.12 scope completion work
+
+[Method evaluation and planning](METHOD_EVALUATION.md) adds the missing explicit fourth stage. Method documentation and comparisons are researcher-assessed; optional model suggestions remain unverified live. This closes a software workflow gap, not the empirical validation gap. Original five-stage scope and four principles remain unchanged.
+

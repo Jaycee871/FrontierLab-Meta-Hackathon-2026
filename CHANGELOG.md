@@ -1,3 +1,12 @@
+## 2026-10-28 · v0.12 — Method evaluation before planning
+
+- Added source-bound candidate comparison, six reproducibility-documentation checks, uncertainty and explicit researcher selection or deferral.
+- Added an optional local Meta Method Evaluation Agent proposal path; no genuine inference is claimed.
+- Plans require a current evaluation, preserve selected-method constraints and include controls, metrics, replication and falsification.
+- Changed human review or regenerated hypotheses invalidate downstream results.
+- Added protein-design evaluation context from official Proteinbase materials; no claim about Meta admission reasons or biological success.
+- Local suite passes 156 tests, including two Streamlit interaction tests. HF rebuild and live Meta model testing remain separate milestones.
+
 ## 2026-10-28 · Single-call inference receipt hardening
 
 - Added UTC start time, elapsed time, input/output hashes and filtered GitHub run/revision identifiers to the manual NVIDIA smoke-test receipt.
@@ -109,3 +118,4 @@
 - Introduced fictional synthetic fixture clearly separated from real literature and live model output.
 - Added eight passing offline unit tests, a Windows run script, and GitHub Actions test workflow.
 - External API connectivity, hosted UI, factual validation and end-to-end live Meta model calls: NOT YET VERIFIED.
+

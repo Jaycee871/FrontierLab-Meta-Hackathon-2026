@@ -133,6 +133,8 @@ def continue_after_review(run: Run, *, model_client=None) -> Run:
         audit.warnings.append(f"Rejected {len(rejected)} hypotheses with unsupported source IDs.")
     log_step(log, "Hypothesis Agent", "COMPLETE", f"{len(hypotheses)} citation-linked hypotheses survived audit")
     run.hypotheses = hypotheses
+    run.evaluation = None
+    run.plan = None
     run.skeptic = skeptic
     run.model = model_client.model
     return run
@@ -153,6 +155,17 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
             raise PermissionError("Live planning requires two human-reviewed supporting sources")
     if risk_decision(run.audit) == "INSUFFICIENT_EVIDENCE":
         raise ValueError("Cannot plan from fewer than two sources with valid evidence claims")
+    from copy import deepcopy
+    from .evaluation import require_evaluation, selected_method
+    evaluation = require_evaluation(run)
+    method = selected_method(evaluation)
+    evaluation_context = {
+        "evaluation_id": evaluation["evaluation_id"],
+        "selected_candidate_id": method["candidate_id"],
+        "selected_method": deepcopy(method),
+        "selection_rationale": evaluation["rationale"],
+        "uncertainty": deepcopy(evaluation["uncertainty"]),
+    }
     if run.mode == "demo":
         run.plan = {
             "status": "SYNTHETIC_TEST_ONLY",
@@ -164,6 +177,11 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
             ],
             "evidence_ids": ["SYNTHETIC:A", "SYNTHETIC:B", "SYNTHETIC:C"],
             "limitations": "Entire scenario is fictional and not a validated scientific protocol.",
+            "controls": ["Fictional negative and matched-condition controls."],
+            "metrics": ["Prespecified condition-dependent response and its uncertainty."],
+            "replication": ["Propose independent repeats before interpreting effects."],
+            "falsification": ["Defer if matched conditions remove the apparent pH effect."],
+            **evaluation_context,
         }
         log_step(run.log, "Planning Agent", "SIMULATED", "Human-approved mock plan; no AI / laboratory execution")
         return run
@@ -175,17 +193,39 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
     proposed = model_client.json("Scientific Planning Agent", (
         "Write ONE cautious, research-review plan. Return JSON: "
         "{\"objective\": string, \"steps\": [strings], "
+        "\"controls\": [strings], \"metrics\": [strings], "
+        "\"replication\": [strings], \"falsification\": [strings], "
         "\"evidence_ids\": [existing source IDs], \"limitations\": string}. "
         "Focus on controls, replication, measurement, falsification and human oversight. "
+        "Use the researcher-selected method and explicitly address its unresolved checks. "
+        "Cite every source attached to that method. Do not report proposed tests as executed. "
         "This is a conceptual research proposal, not medical advice or automated laboratory instructions."
     ), {"question": run.question, "hypotheses": run.hypotheses,
         "claims": [c.__dict__ for c in permitted_claims],
         "conflicts": run.audit.conflicts, "skeptic": run.skeptic,
-        "allowed_evidence_ids": sorted(permitted_ids)})
+        "allowed_evidence_ids": sorted(permitted_ids),
+        "method_evaluation": evaluation_context})
     accepted, rejected = enforce_citations([proposed], permitted_papers)
     if rejected or not accepted:
         log_step(run.log, "Citation Gate", "BLOCKED", "Planning Agent used missing/invalid source IDs")
         raise ValueError("Plan references invalid citations; generation stopped")
-    run.plan = {"status": "DRAFT_FOR_RESEARCHER_REVIEW", **proposed}
+    for key in ("objective", "limitations"):
+        if not isinstance(proposed.get(key), str) or not proposed[key].strip():
+            raise ValueError("Plan requires nonempty " + key)
+    for key in ("steps", "controls", "metrics", "replication", "falsification"):
+        values = proposed.get(key)
+        if not isinstance(values, list) or not values or any(
+            not isinstance(value, str) or not value.strip() for value in values
+        ):
+            raise ValueError("Plan requires nonempty " + key)
+    if not set(method["evidence_ids"]).issubset(proposed["evidence_ids"]):
+        raise ValueError("Plan must cite the selected method's sources")
+    # The model cannot overwrite the reviewed decision, constraints or draft status.
+    run.plan = {key: proposed[key] for key in (
+        "objective", "steps", "controls", "metrics", "replication",
+        "falsification", "evidence_ids", "limitations")}
+    run.plan.update(evaluation_context)
+    run.plan["status"] = "DRAFT_FOR_RESEARCHER_REVIEW"
     log_step(run.log, "Planning Agent", "COMPLETE", "Cited plan drafted following human approval")
     return run
+

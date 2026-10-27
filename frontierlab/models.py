@@ -49,6 +49,8 @@ class Run:
     log: list[dict]
     plan: dict | None = None
     review: dict | None = None
+    evaluation: dict | None = None
 
     def as_dict(self) -> dict:
         return asdict(self)
+

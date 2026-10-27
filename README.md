@@ -5,11 +5,11 @@
 
 FrontierLab helps researchers turn a scientific question into a testable hypothesis and a reviewable research plan. Its initial focus is biomedical research: collect literature, inspect supporting and conflicting evidence, examine uncertainty, and let the researcher intervene before moving forward.
 
-**Current implementation: v0.11 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Current implementation: v0.12 prototype · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
 The evidence retrieval and audit components have working software and recorded tests. Genuine Meta model inference and a complete live research run remain the main development milestones. Paid Meta Model API access is disabled.
 
-[Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Latest verified test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40552640111)
+[Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
 ## The research workflow
 
@@ -18,8 +18,8 @@ The evidence retrieval and audit components have working software and recorded t
 | **1. Research** | Define the scientific question, scope and assumptions. | Question and literature-query inputs in Streamlit. |
 | **2. Evidence** | Retrieve papers and inspect citation-linked claims, quotations and disagreement. | Europe PMC retrieval; separate three-source discovery workflow; source and quotation checks. |
 | **3. Hypothesis** | Propose falsifiable hypotheses grounded in reviewed evidence. | Model workflow implemented with a mandatory human review gate; live Meta inference still unverified. |
-| **4. Evaluation** | Compare candidate methods, reproducibility conditions and uncertainty. | Evidence checks, quantitative example and fictional failure tests; real method comparisons and scientific validation remain pending. |
-| **5. Planning** | Approve a draft with controls, measurements and falsification criteria. | Explicit approval, citation checks and JSON export; demonstrated with synthetic data, awaiting a complete live model run. |
+| **4. Evaluation** | Compare candidate methods, reproducibility conditions and uncertainty. | Source-bound method comparison, six reproducibility-documentation checks, uncertainty and researcher selection/deferral; actual paper reproduction and scientific validation remain pending. |
+| **5. Planning** | Approve a draft with controls, measurements and falsification criteria. | Requires a current method evaluation and explicit approval; exports the selected method, rationale, unresolved checks and draft controls/metrics/replication/falsification. Live inference remains unverified. |
 
 Four principles guide the workflow: **transparent evidence, reproducibility, uncertainty analysis and meaningful researcher intervention**. BioNeMo and the Research Failure Lab support these stages.
 
@@ -30,13 +30,14 @@ Four principles guide the workflow: **transparent evidence, reproducibility, unc
 | **Literature discovery** | Recorded three-source run succeeded. | Europe PMC, Springer Nature Meta API v2 and Springer Nature Open Access API each returned two records: six total, four with abstracts. The Streamlit retrieval interface currently uses Europe PMC. |
 | **Evidence checks** | Implemented and covered by offline tests. | Source-ID validation and a contiguous, verbatim 24–500-character quotation from the cited abstract; invalid claims are rejected. |
 | **Human claim review** | Implemented and covered by offline tests. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
+| **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
 | **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **116 tests passed** at commit `bcbf532`. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
+| **Software checks** | **156 tests passed locally** for v0.12; prior CI passed 125 at `fe37546`. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
 | **Meta model inference** | **Not yet verified.** | Local Muse Glimmer adapter and an optional NVIDIA NIM trial client exist. Two recorded NVIDIA trials produced no final answer; revised settings await a new live trial. |
-| **Hosted interface** | Reported running in the project record. | The latest v0.11 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
+| **Hosted interface** | Reported running in the project record. | The v0.12 UI deployment has not been independently confirmed. A Space rebuild is separate from a GitHub update. |
 | **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
 
-Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [116-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40552640111), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40527145564).
+Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [pre-v0.12 125-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40555288548), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40527145564).
 
 ## Run locally
 
@@ -70,14 +71,15 @@ The NVIDIA trial is a **separate, manual GitHub Actions workflow**, not a backen
 3. Reject invalid source references and quotations that do not match the cited abstract.
 4. Stop for human judgments: **supported, contradicted or insufficient**.
 5. Resume skeptical review and hypothesis generation only after all claims are reviewed and at least two distinct sources are human-supported.
-6. Require explicit approval before drafting a cited research plan.
-7. Export the evidence and decision trail for inspection.
+6. Compare candidate methods, document reproducibility gaps and uncertainty, then select a method with a rationale or defer.
+7. Require a current saved evaluation and explicit approval before drafting a cited research plan.
+8. Export the evidence, evaluation and decision trail for inspection.
 
 Changed source records or a changed question invalidate the previous review. Insufficient evidence stops synthesis.
 
 **A matching quotation establishes that text exists in a source; it does not establish that the text supports the model's interpretation.** Human labels are review decisions, not independently adjudicated scientific ground truth. Conflict detection also depends on fallible model-supplied claim keys. Outputs are research drafts, with no validated clinical or wet-lab execution capability.
 
-See [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) and [human review protocol](docs/HUMAN_REVIEW_GATE.md).
+See [method evaluation and planning](docs/METHOD_EVALUATION.md), [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) and [human review protocol](docs/HUMAN_REVIEW_GATE.md).
 
 ## Supporting experiments and tools
 
@@ -106,7 +108,7 @@ python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
 ```
 
-The 116-test result above is tied to a recorded commit and run. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
+The 156-test local suite includes two Streamlit interaction tests for method selection, planning and deferral; the prior 125-test CI result is linked above. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
 
 ## Repository guide
 
@@ -142,3 +144,4 @@ Created by **Pack Kwan Low (Jaycee)**. Competition-period implementation began o
 - [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon)
 - [Meta developer platform](https://dev.meta.ai/)
 - [Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md)
+
