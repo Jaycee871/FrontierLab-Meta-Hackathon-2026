@@ -111,3 +111,7 @@ The live pipeline stops at HUMAN_CLAIM_REVIEW_REQUIRED after excerpt validation,
 ## v0.10 · NVIDIA BioNeMo scientific tools (offline preflight)
 
 Optional [BioNeMo adapter](frontierlab/bionemo.py): four documented scientific tools, with **protein-only Boltz-2 input preflight and response schema checking** implemented; no hosted API, model loading, billed inference, or extra HF Space deployment. The preflight requires human-reviewed evidence plus an explicit authorization in research mode and writes a sequence-redacted provenance manifest. For real scientific work, results still require independent validation. Run `python -m scripts.bionemo_preflight`. See [integration limitations and permissions](docs/BIONEMO_SCIENCE_TOOLS.md).
+
+## v0.11 · Research Failure Lab — off-line, fictional handoff tests
+
+Added 12 hand-authored, FICTIONAL fault-injection scenarios for version drift, wrong quotes, human-review veto, spoofed scientific-tool output, exact peptide-group holdout and observed human pre/post scores. Human-reviewed claims now bind to source snapshots and the research question: changed article metadata or abstract invalidates an old approval. Streamlit synthetic mode displays JSON of deterministic guard results. These are **software tests**, NOT actual Meta model performance, biological validation or an experiment with humans. No model calls or new secrets. Run `python -m scripts.research_failure_lab` and see docs/RESEARCH_FAILURE_LAB.md. Public HF Space needs separate rebuild for UI changes.

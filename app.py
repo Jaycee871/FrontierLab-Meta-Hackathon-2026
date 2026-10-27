@@ -10,6 +10,7 @@ from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.claim_verification import audit_predictions, conflict_transparency
+from frontierlab.integrity_trials import suite_report
 
 st.set_page_config(page_title="FrontierLab | Research Intelligence", page_icon="🔬", layout="wide")
 st.markdown("""
@@ -88,6 +89,30 @@ if result:
             st.caption("A quotation can exist yet be used to support a FALSE statement; genuine semantic verification needs independently annotated evidence.")
             st.json({"cases": verified["cases"], "missing_conflict_detection_example":
                      conflict_transparency([], [("SYNTHETIC:A","SYNTHETIC:B")])})
+    if result.mode == "demo":
+        with st.expander("Research Failure Lab · 12 fictional failure injections", expanded=False):
+            lab = suite_report()
+            st.warning(
+                "OFFLINE HAND-AUTHORED POLICY TESTS ONLY: no actual Meta inference, "
+                "real biomedical model call, independent scientific assessment or "
+                "human learning experiment has occurred."
+            )
+            u, v, w = st.columns(3)
+            u.metric("Policy test cases", lab["total"])
+            v.metric("Expected guard decisions matched", lab["matched_expectations"])
+            w.metric("Real model calls", lab["model_calls"])
+            st.caption(
+                "Cross-stage scenarios: stale source snapshots, unsupported excerpts, "
+                "unverified BioNeMo origin, train/test peptide leakage, and human teachability evidence. "
+                "A quote that exists can still be semantically wrong."
+            )
+            st.json(lab["cases"])
+            st.download_button(
+                "Download fictional failure-injection results",
+                data=json.dumps(lab, indent=2, ensure_ascii=False),
+                file_name="frontierlab_v011_failure_lab_fictional.json",
+                mime="application/json",
+            )
     with st.expander("1 · Evidence catalogue", expanded=True):
         for p in result.papers:
             st.markdown(f"**{p.title}**  ·  {p.paper_id}  ·  {p.year}")

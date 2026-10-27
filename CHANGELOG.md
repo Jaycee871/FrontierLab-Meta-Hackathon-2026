@@ -1,3 +1,11 @@
+## 2026-10-28 · v0.11 — Cross-stage research failure injection
+
+- Created 12 fictional failure scenarios across evidence, computation, dataset holdout and human teachability.
+- Bound prior human review decisions to full source record versions and research question.
+- Added deterministic checks for source mismatch, misattributed quotations, spoofed tool output and peptide group overlaps.
+- Added a simulated Research Failure Lab panel to Streamlit with JSON export.
+- No scientifically validated findings, real Meta model execution or real human learning scores are claimed.
+
 ## 2026-10-28 · v0.10 — BioNeMo offline scientific-tool adapter
 
 - Added BioNeMo tool registry with status flags; only Boltz-2 protein preflight is available.

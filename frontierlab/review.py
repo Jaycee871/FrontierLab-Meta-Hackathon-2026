@@ -13,6 +13,14 @@ from .models import Run
 VERDICTS = ("PENDING", "SUPPORTED", "CONTRADICTED", "INSUFFICIENT")
 SCHEMA = "frontierlab.human-review.v1"
 
+def source_fingerprint(paper) -> str:
+    """Fingerprint complete selected scientific record and abstract revision."""
+    fields = [paper.paper_id, paper.title, paper.year, paper.authors,
+              paper.abstract, paper.url, paper.doi, paper.source, paper.synthetic]
+    return hashlib.sha256(json.dumps(fields, ensure_ascii=False,
+                                      separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
 def review_packet(run: Run) -> dict:
     if run.mode != "live":
         raise ValueError("Researcher review packets require a live evidence run")
@@ -31,11 +39,12 @@ def review_packet(run: Run) -> dict:
             "claim_key":claim.claim_key, "claim":claim.statement,
             "model_proposed_stance":claim.stance, "evidence_quote":claim.evidence_quote,
             "abstract_available":bool(paper.abstract.strip()),
+            "source_snapshot_sha256":source_fingerprint(paper),
             "verbatim_quote_matched":True,
             "review_label":"PENDING", "review_note":"",
         })
     dataset_id = hashlib.sha256(json.dumps(
-        [(c["case_id"],c["paper_id"]) for c in cases],
+        [run.question, [(c["case_id"], c["paper_id"], c["source_snapshot_sha256"]) for c in cases]],
         separators=(",",":")).encode("utf-8")).hexdigest()[:20]
     return {
         "schema":SCHEMA, "dataset_id":dataset_id,
