@@ -45,6 +45,27 @@ It also requires FRONTIERLAB_EXTRACTION_TRIAL=YES and the research backend owner
 
 For a real full-session demonstration, configure the actual deployment, verify its source revision, have a researcher review the extracted claims and method comparison, then continue under the same backend. The existing 12-case pilot still awaits independently assessed reference labels.
 
+## Prepared bounded continuation after human review
+
+The completed two-claim review can now be reattached to the exact recorded extraction without repeating the original extraction calls. The runner:
+
+```bash
+python -m scripts.nim_research_continue_trial
+```
+
+requires both `FRONTIERLAB_NIM_RESEARCH=YES` and `FRONTIERLAB_CONTINUATION_TRIAL=YES`, plus the server-side NVIDIA credential. Before any request it rehydrates the frozen extraction, recomputes the current review packet, checks dataset ID, case IDs, paper IDs, source fingerprints, claims and quotations, and rejects stale or pending review data.
+
+A fresh `CallBudget(limit=2)` then permits only:
+
+1. **Adversarial Skeptic Agent**
+2. **Hypothesis Agent**
+
+The runner deliberately stops with `evaluation=None` and `plan=None`. Method comparison, method selection and planning therefore remain separate researcher-controlled steps rather than being silently automated.
+
+A manual GitHub workflow is available at `.github/workflows/nim-research-continuation-trial.yml`. It does not run on push and does not auto-retry. Its output is preserved only as a workflow artifact. The workflow has **not** yet been used for a real continuation call.
+
+Offline tests cover correct rehydration, the exact two-role sequence, the stop-before-method boundary, stale dataset rejection and pending-label rejection. GitHub Actions run 40573319812 passed the full **217-test** suite.
+
 ## Reproduction
 
 ```bash
@@ -61,4 +82,4 @@ No default-branch automatic inference workflow is introduced. Model-backed actio
 
 [Full receipt](runs/nim_research_extraction_20261028.json) · [Pending reviewer packet](runs/nim_claim_review_pending_20261028.json).
 
-This verifies the NIM-backed core extraction and pause boundary on fixed excerpts. All five interface stages are verified with mocked transport, while the actual reviewer-controlled continuation and HF deployment remain pending.
+This verifies the NIM-backed core extraction and pause boundary on fixed excerpts. The completed researcher review is now source-bound and the bounded continuation path is CI-tested, while the actual real skeptic/hypothesis continuation remains pending. The HF v0.16 interface deployment has been separately verified; NIM remains owner-disabled there.
