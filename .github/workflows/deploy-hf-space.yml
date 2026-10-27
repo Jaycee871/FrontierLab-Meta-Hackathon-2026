@@ -1,6 +1,8 @@
 name: Deploy FrontierLab to existing HF Space
 on:
-  workflow_dispatch:
+  push:
+    branches: [hf-deploy-once-20261028]
+    paths: [.github/workflows/deploy-hf-space.yml]
 permissions:
   contents: read
 concurrency:
@@ -8,6 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
+    if: github.run_attempt == 1 && github.event.head_commit.message == 'Deploy authorized HF v0.16 snapshot 20261028'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
