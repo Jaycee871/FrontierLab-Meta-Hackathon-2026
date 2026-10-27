@@ -13,7 +13,7 @@ FrontierLab now has several dated genuine Meta Muse Glimmer / NVIDIA NIM records
 - both core claims were subsequently reviewed by Jaycee871 as SUPPORTED with written rationales;
 - a source-bound continuation runner now revalidates that completed review and permits exactly two further calls: Adversarial Skeptic Agent and Hypothesis Agent.
 
-The continuation runner is software-verified but **has not yet been executed against the live NIM endpoint**. Method evaluation, researcher selection and planning therefore remain downstream milestones rather than claimed completed work. GitHub Actions run 40573319812 passed 217 tests.
+The reviewed continuation has been executed successfully in GitHub Actions run 40574846326. Two citation-linked hypotheses were preserved from the exact live artifact. The researcher has now selected M2, and the canonical method evaluation passes the Planning eligibility reconstruction check. Planning remains deliberately unapproved. GitHub Actions run 40578886168 passed 224 tests.
 
 ## Official submission boundary
 
@@ -27,24 +27,25 @@ The continuation runner is software-verified but **has not yet been executed aga
 
 | Deliverable | Status | Evidence / limitation |
 | --- | --- | --- |
-| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.17 codebase; GitHub Actions run 40573319812 passed 217 tests, including the recorded-review continuation boundary |
+| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.19 codebase; GitHub Actions run 40578886168 passed 224 tests, including exact method-evaluation reconstruction and Planning-gate eligibility |
 | Manuscript-to-abstract source matching | SOFTWARE VERIFIED | Valid DOI and verbatim excerpt checks are not semantic entailment |
 | Human review gate, version-bound annotations | SOFTWARE + RECORDED REVIEW VERIFIED | Two real core claims have explicit researcher SUPPORTED judgments; these are not independent expert gold labels |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
 | HF public Streamlit Space | v0.16 DEPLOYED AND VERIFIED RUNNING | CPU Basic frontend is revision-bound and shows the completed human review; NIM remains owner-disabled there |
 | Authentic Meta Muse Glimmer response | MULTIPLE RECORDED NIM RUNS | Synthetic smoke, strict JSON, 12-case batch and two-call core extraction recorded; no scientific accuracy claim |
-| Human-reviewed live continuation | PREPARED, NOT EXECUTED | Two-call skeptic → hypothesis runner is source-bound and CI-tested; real continuation has not been triggered |
+| Human-reviewed live continuation | EXECUTED AND RECORDED | Run 40574846326 completed the bounded skeptic → hypothesis continuation; artifact provenance validated and exact outputs preserved |
+| Researcher method selection | COMPLETED | M2 selected; M1 retained as comparator; canonical evaluation bound to exact live hypotheses and human rationale stored separately |
 | Live research claim-evaluation comparison | NOT COMPLETED | 12-case real model outputs exist, but independently adjudicated reference labels and controlled A/B/C comparison remain pending |
 | Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
 | Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
 
-## Priority 1: complete Stage 4 Method Evaluation — highest priority
+## Priority 1: prepare Stage 5 Planning gate — highest priority
 
-1. Review the two source-derived candidate methods in `docs/runs/method_evaluation_draft_20261028.json`.
-2. Inspect the original papers' protocol, parameters, validation readouts and known limitations before selecting or deferring.
-3. Keep method selection as a separate researcher decision; the model-generated hypotheses do not authorize a method automatically.
-4. Only after a current saved evaluation and explicit approval should Planning be allowed to draft controls, metrics, replication and falsification criteria.
-5. Continue to distinguish a validated execution trace from validated scientific truth.
+1. Preserve M2 as the selected method and keep M1 as a comparator for histidine-independent alternatives.
+2. Carry M2's unresolved checks into Planning: design-input provenance, executable/alternative ADAPT implementation, computational environment and protonation/modeling parameters.
+3. Require orthogonal affinity validation where feasible, such as SPR on monomeric Fab, to separate intrinsic affinity from avidity/stoichiometry effects.
+4. Do **not** invoke the Planning Agent until the researcher explicitly approves Stage 5 planning.
+5. Continue to distinguish a validated execution trace and a reasoned method choice from validated scientific truth.
 
 ## Priority 2: controlled claim-error benchmark
 
