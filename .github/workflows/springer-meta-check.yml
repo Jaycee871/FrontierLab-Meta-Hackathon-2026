@@ -1,0 +1,20 @@
+name: Springer Nature Meta API v2 Connection Check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install metadata client
+        run: python -m pip install requests
+      - name: Read 2 Springer Nature Meta v2 records
+        env:
+          SPRINGER_NATURE_META_API_KEY: ${{ secrets.META_API_KEY }}
+        run: python -m scripts.smoke_springer_meta

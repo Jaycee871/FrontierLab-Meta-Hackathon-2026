@@ -81,3 +81,8 @@ For a no-hourly-cost public CPU Basic Docker demonstration, see [HF PRO setup](d
 ## Springer Nature Open Access connector (optional)
 
 A new read-only client for Springer Nature's Open Access API returns DOI-grounded publication metadata and available abstracts. It is covered by offline tests and will not call the API automatically. The user's GitHub secret named Open_Access_API is accessible only to explicitly configured GitHub Actions workflows, not to Hugging Face Spaces. The optional [manual connection check](.github/workflows/springer-oa-check.yml) makes one low-volume query, without printing the secret. See [configuration and licensing notes](docs/SPRINGER_NATURE_OA.md). Real credential-backed connectivity has not yet been verified.
+
+
+## Three-source metadata discovery (Springer Nature Meta API v2)
+
+The GitHub secret Meta_API_Key is wired into a manual-only Springer Nature Meta API v2 smoke test. A separate, opt-in three-source workflow retrieves small sets from Europe PMC, Springer Nature Meta API and Springer Nature Open Access API and merges by normalized DOI. The merged catalog preserves source names and records missing abstracts without inventing evidence. The public HF Space does not inherit GitHub Secrets, so it still runs its pre-existing Europe PMC interface. No paid Meta model API is used. See docs/SPRINGER_NATURE_META.md.

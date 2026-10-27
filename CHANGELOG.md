@@ -1,3 +1,11 @@
+## 2026-10-27 · v0.5 — Springer Nature Meta API v2 and three-source discovery
+
+- Added Meta v2 bibliographic adapter, secure manual API test, and offline source parsing tests.
+- Added DOI-normalized provenance-preserving deduplication and explicit missing-abstract accounting.
+- Added opt-in GitHub Actions three-source Europe PMC / Springer Nature Meta / Open Access discovery run.
+- No private keys are printed; published HF Space still does not have publisher API credentials.
+- Live Meta v2 connection and three-source runs are pending manual invocation.
+
 ## 2026-10-27 · v0.4 — Springer Nature Open Access connector
 
 - Added read-only Springer Nature OA metadata/abstract client, DOI provenance and bounded requests.

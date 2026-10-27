@@ -1,0 +1,21 @@
+name: FrontierLab Three-Source Discovery Audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install API dependencies
+        run: python -m pip install requests
+      - name: Query three scholarly sources and DOI-deduplicate
+        env:
+          SPRINGER_NATURE_META_API_KEY: ${{ secrets.META_API_KEY }}
+          SPRINGER_NATURE_OA_API_KEY: ${{ secrets.Open_Access_API }}
+        run: python -m scripts.smoke_multisource
