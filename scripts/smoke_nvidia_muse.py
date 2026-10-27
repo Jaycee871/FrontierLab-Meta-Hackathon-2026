@@ -1,7 +1,4 @@
-"""One synthetic-only Muse Glimmer sample. Manual opt-in and NO retry.
-
-Do not put private/subscription full texts in prompts or CI logs.
-"""
+"""Single opt-in fictional-data call to NVIDIA trial model; no automatic retry."""
 import hashlib
 import json
 import os
@@ -15,27 +12,27 @@ PROMPT = (
 )
 
 def main():
-    if os.environ.get("FRONTIERLAB_NVIDIA_TRIAL") != "YES":
-        print("TRIAL_NOT_AUTHORIZED: no API call made")
+    if os.getenv("FRONTIERLAB_NVIDIA_TRIAL") != "YES":
+        print("TRIAL_NOT_AUTHORIZED: no call made")
         return 2
     try:
-        client=NvidiaMuseClient()
-        response=client.complete(PROMPT,max_tokens=192)
+        result = NvidiaMuseClient().complete(PROMPT, max_tokens=2048)
     except (RuntimeError, ValueError, PermissionError) as exc:
-        print("NIM_CHECK_FAILED:",str(exc))
+        print("NIM_CHECK_FAILED:", str(exc))
         return 1
-    text=response["content"]
+    answer = result["content"]
     print(json.dumps({
-        "status":"REAL_INFERENCE_RETURNED",
-        "requested_model":MODEL,
-        "reported_model":response["model"],
-        "synthetic_input_only":True,
-        "output_sha256":hashlib.sha256(text.encode("utf-8")).hexdigest(),
-        "output_excerpt":text[:350],
-        "usage":response["usage"],
-        "paid_meta_platforms_api_used":False
-    },ensure_ascii=False,indent=2))
+        "status": "REAL_INFERENCE_RETURNED",
+        "requested_model": MODEL,
+        "reported_model": result["model"],
+        "finish_reason": result["finish_reason"],
+        "synthetic_input_only": True,
+        "output_sha256": hashlib.sha256(answer.encode("utf-8")).hexdigest(),
+        "output_excerpt": answer[:350],
+        "usage": result["usage"],
+        "paid_meta_platforms_api_used": False,
+    }, ensure_ascii=False, indent=2))
     return 0
 
-if __name__=="__main__":
+if __name__ == "__main__":
     raise SystemExit(main())

@@ -1,3 +1,11 @@
+## 2026-10-27 · v0.6.1 — Correct empty Muse Glimmer trial answers
+
+- Two user-triggered NVIDIA NIM trial runs (40527133709, 40527145564) received API responses but returned no final text with the former 192-token budget.
+- Per NVIDIA official documentation, model reasoning consumes the same completion-token budget, so low budgets can end before user-facing output.
+- Set low reasoning strength, recommended non-greedy temperature, and a 2048-token output budget; no automatic retries.
+- Record only safe finish_reason/token counts on empty answer, never private reasoning or API credentials.
+- Live model output remains pending one new manually triggered trial.
+
 ## 2026-10-27 · v0.6 — Claim-to-passage audit & opt-in NVIDIA Meta inference
 
 - Added 10 synthetic hand-labeled examples illustrating source-ID, quotation and semantic support gaps.

@@ -1,6 +1,6 @@
 # FrontierLab · Claim-to-Evidence Evaluation and Meta Model Path
 
-Date: 2026-10-27. Code baseline status: synthetic benchmark and NVIDIA Muse Glimmer NIM client ready for **manual** trial. Genuine Meta inference has NOT run yet.
+Date: 2026-10-27. Code baseline status: synthetic benchmark and NVIDIA Muse Glimmer NIM client ready for **manual** trial. Two real NVIDIA API requests were made, but neither returned final-answer text; genuine model output is NOT yet verified.
 
 ## Research foundation (PDFs in Undermind workspace)
 
@@ -28,7 +28,7 @@ https://build.nvidia.com/meta/muse-glimmer-30b
 Use the one-request, synthetic-only GitHub Actions workflow:
 https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/nvidia-muse-trial.yml
 
-It uses the existing repository secret **NVIDIA_API_KEY**. The workflow must be manually triggered. It sends one short FICTIONAL prompt to the fixed HTTPS endpoint https://integrate.api.nvidia.com/v1/chat/completions with max_tokens=192 and no retries. No Nature+ paid full texts, HIPAA/PII, or actual secret values are sent in the prompt. There is no Meta Platforms API call. NVIDIA's developer free prototype tier may have quotas, changing terms and account-specific restrictions; verify your account does not permit overage charges before running.
+It uses the existing repository secret **NVIDIA_API_KEY**. The workflow must be manually triggered. It sends one short FICTIONAL prompt to the fixed HTTPS endpoint https://integrate.api.nvidia.com/v1/chat/completions with max_tokens=2048, low reasoning effort, model-recommended sampling and no retries. No Nature+ paid full texts, HIPAA/PII, or actual secret values are sent in the prompt. There is no Meta Platforms API call. NVIDIA's developer free prototype tier may have quotas, changing terms and account-specific restrictions; verify your account does not permit overage charges before running.
 
 If the run returns REAL_INFERENCE_RETURNED and a model label / cryptographic output digest, it shows a real Meta model call at NVIDIA's endpoint, but does **not** yet demonstrate research accuracy or hackathon compliance. A more complete benchmark must then perform blinded human-supported claim entailment on open-licensed source excerpts.
 
