@@ -92,8 +92,11 @@ See [method evaluation and planning](docs/METHOD_EVALUATION.md), [verbatim evide
 | [BioNeMo tools](docs/BIONEMO_SCIENCE_TOOLS.md) | Prepare an optional scientific-computation step within Evaluation. | Protein-only Boltz-2 preflight and response-shape checks. ProteinMPNN, RFdiffusion and OpenFold3 are listed but not connected. |
 | Quantitative heterogeneity example | Illustrate disagreement using inverse-variance estimates, Cochran Q and I². | Fictional inputs; Python results cross-checked with Wolfram during development. |
 | [OpenCode](docs/OPENCODE_DEVELOPER.md) / [OpenShell exploration](docs/OPENCLAW_OPENSHELL.md) | Support local development and isolation experiments. | OpenCode configuration and simulated permission checks; real OpenShell runtime isolation unverified. |
+| [Legacy Facebook Research MUSE](docs/LEGACY_MUSE_MULTILINGUAL.md) | Historical cross-lingual embedding alignment reference for a future multilingual Evidence layer. | Archived upstream project, distinct from Meta Muse Glimmer; no upstream code/data bundled or executed. |
 
 These modules support the five-stage product. Their offline results do not demonstrate successful Meta inference or scientific discovery.
+
+**Muse naming note:** the archived Facebook Research **MUSE** project (Multilingual Unsupervised and Supervised Embeddings) is a separate legacy research project from **Meta Muse Glimmer 30B**. FrontierLab tracks the former only as an optional multilingual-evidence reference; it is not part of the current runtime. See [the MUSE reference note](docs/LEGACY_MUSE_MULTILINGUAL.md).
 
 ## Tests and reproducibility
 
