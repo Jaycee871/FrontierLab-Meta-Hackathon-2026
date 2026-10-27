@@ -1,3 +1,10 @@
+## 2026-10-28 · Single-call inference receipt hardening
+
+- Added UTC start time, elapsed time, input/output hashes and filtered GitHub run/revision identifiers to the manual NVIDIA smoke-test receipt.
+- Truncated answers and missing model identities now fail the smoke test instead of receiving a success status.
+- Added nine offline receipt tests; the client and smoke-test subset passes 20 tests locally.
+- No live model result is claimed; manual-only execution and the single-request/no-retry policy remain in place.
+
 ## 2026-10-28 · v0.11 — Cross-stage research failure injection
 
 - Created 12 fictional failure scenarios across evidence, computation, dataset holdout and human teachability.
