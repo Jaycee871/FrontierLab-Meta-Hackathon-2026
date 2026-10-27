@@ -1,29 +1,12 @@
-name: Authorized one-time Meta trial 2026-10-28
+# User-authorized one-shot trigger is disabled; retained as an audit record.
+name: Disabled completed one-time Meta trial 2026-10-28
 on:
-  push:
-    branches:
-      - meta-trial-once-20261028
-    paths:
-      - .github/workflows/meta-trial-once.yml
+  workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: frontierlab-authorized-single-trial-20261028
-  cancel-in-progress: false
 jobs:
-  trial:
-    if: github.run_attempt == 1 && github.event.head_commit.message == 'Run explicitly authorized single Meta trial 20261028'
+  disabled:
+    if: ${{ false }}
     runs-on: ubuntu-latest
-    timeout-minutes: 4
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install HTTP client dependency
-        run: python -m pip install requests
-      - name: One authorized synthetic-only Meta request; no retries
-        env:
-          FRONTIERLAB_NVIDIA_TRIAL: 'YES'
-          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-        run: python -m scripts.smoke_nvidia_muse
+      - run: echo "One-shot trigger is disabled. No model call."
