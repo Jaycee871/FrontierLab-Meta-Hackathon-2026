@@ -1,0 +1,159 @@
+{
+  "schema": "frontierlab.method-evaluation.v1",
+  "context_id": "70fc6840f9712c2d1c63c06ff06abdb2b8394d07521b7fcfd1fa0cba31c70bf0",
+  "status": "READY_FOR_DRAFT_PLANNING",
+  "origin": "RESEARCHER_ASSESSED",
+  "candidates": [
+    {
+      "candidate_id": "M1",
+      "name": "Directed evolution with yeast surface display and alternating-pH selection",
+      "evidence_ids": [
+        "PMC4314675"
+      ],
+      "scope": "Use a displayed Fcab library with positive selection for Her2 binding at pH 7.4 and negative selection/non-binding at pH 6.0, followed by clone-level pH-dependent binding characterization.",
+      "checks": {
+        "data": {
+          "status": "unknown",
+          "detail": "Underlying clone-level screening and selection datasets have not been independently retrieved for FrontierLab.",
+          "reference": ""
+        },
+        "code": {
+          "status": "not_applicable",
+          "detail": "The evaluated route is primarily an experimental directed-evolution workflow; no required computational code artifact has been established from the current source review.",
+          "reference": ""
+        },
+        "environment": {
+          "status": "unknown",
+          "detail": "Laboratory platform details and instrument settings have not been independently normalized into a reproducible FrontierLab environment record.",
+          "reference": ""
+        },
+        "parameters": {
+          "status": "documented",
+          "detail": "The source-derived comparison identifies alternating selection at pH 7.4 for binding and pH 6.0 for non-binding as central design parameters.",
+          "reference": "PMC4314675 / doi:10.1002/biot.201300483"
+        },
+        "protocol": {
+          "status": "documented",
+          "detail": "The published study reports directed evolution using yeast surface display followed by characterization of isolated pH-sensitive Fcab variants.",
+          "reference": "PMC4314675 / doi:10.1002/biot.201300483"
+        },
+        "metrics": {
+          "status": "documented",
+          "detail": "The source reports pH-dependent binding characterization and downstream assessment of isolated variants; FrontierLab has not reproduced these measurements.",
+          "reference": "PMC4314675 / doi:10.1002/biot.201300483"
+        }
+      },
+      "comparison": {
+        "expected_value": "Explores sequence space without requiring a predefined histidine-centered mechanism and can reveal non-obvious pH-switching variants.",
+        "resources": "Requires a physical display library, sorting workflow, recombinant target and downstream clone expression and characterization.",
+        "validation": "Compare binding across acidic and physiological pH, then verify isolated variants with independent soluble-protein or cell-based assays.",
+        "limitations": "Experimentally intensive and sensitive to library composition, target format, selection pressure and sorting thresholds; AI is supportive rather than central to the core search loop.",
+        "novelty": "Strong comparator for mechanism diversity because the reported Fcab examples include pH-sensitive variants without histidine mutations."
+      },
+      "reproducibility_status": "INCOMPLETE_DOCUMENTATION",
+      "open_checks": [
+        {
+          "item": "data",
+          "status": "unknown",
+          "reason": "Underlying clone-level screening and selection datasets have not been independently retrieved for FrontierLab."
+        },
+        {
+          "item": "environment",
+          "status": "unknown",
+          "reason": "Laboratory platform details and instrument settings have not been independently normalized into a reproducible FrontierLab environment record."
+        }
+      ]
+    },
+    {
+      "candidate_id": "M2",
+      "name": "Structure-based dual-pH histidine-scanning computational design",
+      "evidence_ids": [
+        "PMC6927761"
+      ],
+      "scope": "Use an antibody-antigen structural model to perform dual-pH histidine-scanning design, prioritize variants in silico, and then validate Fab, cell-surface and full-antibody behavior across acidic and physiological pH.",
+      "checks": {
+        "data": {
+          "status": "unknown",
+          "detail": "The complete design inputs, intermediate candidate-ranking outputs and raw validation datasets have not yet been independently packaged for FrontierLab.",
+          "reference": ""
+        },
+        "code": {
+          "status": "unknown",
+          "detail": "Availability and reproducibility of the original ADAPT implementation or an equivalent executable design stack have not yet been independently verified.",
+          "reference": ""
+        },
+        "environment": {
+          "status": "unknown",
+          "detail": "The exact computational environment, protonation/modeling settings and dependency versions have not yet been reconstructed.",
+          "reference": ""
+        },
+        "parameters": {
+          "status": "documented",
+          "detail": "The source-derived method centers on structure-based dual-pH histidine scanning and comparison of acidic versus physiological pH binding behavior.",
+          "reference": "PMC6927761 / doi:10.1080/19420862.2019.1682866"
+        },
+        "protocol": {
+          "status": "documented",
+          "detail": "The published workflow links computational design to Fab and full-antibody validation, including cell-based and functional assays.",
+          "reference": "PMC6927761 / doi:10.1080/19420862.2019.1682866"
+        },
+        "metrics": {
+          "status": "documented",
+          "detail": "Reported validation includes pH-dependent binding/selectivity readouts; FrontierLab has not reproduced these measurements and must treat apparent cell-binding affinity cautiously where avidity or stoichiometry can confound interpretation.",
+          "reference": "PMC6927761 / doi:10.1080/19420862.2019.1682866"
+        }
+      },
+      "comparison": {
+        "expected_value": "Provides a targeted in-silico-to-in-vitro design path in which AI can assist structure interpretation, candidate prioritization and explicit reasoning over pH-dependent design constraints before laboratory validation.",
+        "resources": "Requires a structural model, a reproducible design implementation or equivalent computational stack, recombinant expression and orthogonal binding and functional validation.",
+        "validation": "Validate prioritized variants across pH using Fab-level measurements, cell-based assays and full-antibody tests; add an orthogonal biophysical assay such as SPR on monomeric Fab where feasible to separate intrinsic affinity from avidity effects.",
+        "limitations": "Depends on structural-model quality and a histidine-centered search assumption; apparent cell-binding affinity can be influenced by avidity/stoichiometry, so orthogonal validation is required before mechanistic interpretation.",
+        "novelty": "Best fit for the FrontierLab demo because it exposes a complete AI-assisted design-to-validation chain while making uncertainty, experimental handoff and falsification visible."
+      },
+      "reproducibility_status": "INCOMPLETE_DOCUMENTATION",
+      "open_checks": [
+        {
+          "item": "data",
+          "status": "unknown",
+          "reason": "The complete design inputs, intermediate candidate-ranking outputs and raw validation datasets have not yet been independently packaged for FrontierLab."
+        },
+        {
+          "item": "code",
+          "status": "unknown",
+          "reason": "Availability and reproducibility of the original ADAPT implementation or an equivalent executable design stack have not yet been independently verified."
+        },
+        {
+          "item": "environment",
+          "status": "unknown",
+          "reason": "The exact computational environment, protonation/modeling settings and dependency versions have not yet been reconstructed."
+        }
+      ]
+    }
+  ],
+  "selected_candidate_id": "M2",
+  "rationale": "Researcher selected M2 because its structure-based computational design creates the clearest in-silico-to-in-vitro AI-for-Science demonstration: an AI agent can reason over a structural model, prioritize dual-pH histidine-scanning variants, and hand candidates to experimental Fab, cell, full-antibody and functional validation. This produces a stronger end-to-end FrontierLab narrative than M1, whose core search loop depends more heavily on physical library generation and FACS screening. M1 is retained as a comparator because it can reveal histidine-independent pH-switching solutions and therefore exposes the selected method's histidine-centered bias. M2's assay limitations are treated as a validation requirement rather than ignored: downstream planning should include an orthogonal biophysical check such as SPR on monomeric Fab where feasible to distinguish intrinsic affinity from avidity/stoichiometry effects.",
+  "uncertainty": {
+    "source_count": 2,
+    "machine_flagged_tensions": [],
+    "source_scope": "Abstract-level claim review; method records are researcher assertions.",
+    "method_references_independently_checked": false,
+    "confidence_calibrated": false,
+    "scientific_execution_verified": false,
+    "note": "Selection is a reasoned draft decision, not a probability of success or proven superiority."
+  },
+  "evaluation_id": "58a884bd149570895c9cb37d38b86ca37836499db7e1a12c43a8ce3ba29f6da0",
+  "researcher_decision": {
+    "reviewer": "Jaycee871",
+    "recorded_date_taipei": "2026-10-28",
+    "decision": "SELECT_M2",
+    "automatic_selection": false,
+    "planning_approved": false,
+    "key_reasoning": [
+      "M2 provides the strongest in-silico-to-in-vitro AI-for-Science demonstration space.",
+      "M2 supports a clearer end-to-end computational-design-to-biological-validation storyline.",
+      "M1 remains useful as a comparator but depends more heavily on physical library generation and FACS screening.",
+      "Avidity/stoichiometry limitations should become explicit downstream validation checks rather than be hidden."
+    ],
+    "proposed_downstream_check": "Where feasible, use an orthogonal assay such as SPR on monomeric Fab to distinguish intrinsic affinity from avidity effects."
+  }
+}
