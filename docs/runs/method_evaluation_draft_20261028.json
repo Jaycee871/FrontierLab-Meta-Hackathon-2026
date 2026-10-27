@@ -2,9 +2,9 @@
   "schema": "frontierlab.method-evaluation-draft.v1",
   "recorded_date_taipei": "2026-10-28",
   "source_handoff": "docs/runs/nim_method_handoff_20261028.json",
-  "status": "DRAFT_FOR_RESEARCHER_REVIEW_NO_SELECTION",
-  "selected_candidate_id": null,
-  "selection_rationale": "Selection intentionally deferred until the researcher reviews the source-derived method comparison and unresolved reproducibility checks.",
+  "status": "RESEARCHER_SELECTED_M2_READY_FOR_FORMAL_EVALUATION",
+  "selected_candidate_id": "M2",
+  "selection_rationale": "Researcher selected M2 because its structure-based computational design creates the clearest in-silico-to-in-vitro AI-for-Science demonstration: an AI agent can reason over a structural model, prioritize dual-pH histidine-scanning variants, and hand candidates to experimental Fab, cell, full-antibody and functional validation. This produces a stronger end-to-end FrontierLab narrative than M1, whose core search loop depends more heavily on physical library generation and FACS screening. M1 is retained as a comparator because it can reveal histidine-independent pH-switching solutions and therefore exposes the selected method's histidine-centered bias. M2's assay limitations are treated as a validation requirement rather than ignored: downstream planning should include an orthogonal biophysical check such as SPR on monomeric Fab where feasible to distinguish intrinsic affinity from avidity/stoichiometry effects.",
   "candidates": [
     {
       "candidate_id": "M1",
@@ -58,5 +58,19 @@
   "automatic_selection": false,
   "automatic_planning": false,
   "scientific_execution_verified": false,
-  "note": "Source-derived comparison prepared for Stage 4. No candidate has been selected and no experiment has been executed."
+  "note": "Stage 4 researcher selection recorded. M2 is selected for the FrontierLab demo path; M1 remains a comparator. Planning remains unapproved and blocked.",
+  "researcher_decision": {
+    "reviewer": "Jaycee871",
+    "recorded_date_taipei": "2026-10-28",
+    "decision": "SELECT_M2",
+    "automatic_selection": false,
+    "planning_approved": false,
+    "key_reasoning": [
+      "M2 provides the strongest in-silico-to-in-vitro AI-for-Science demonstration space.",
+      "M2 supports a clearer end-to-end computational-design-to-biological-validation storyline.",
+      "M1 remains useful as a comparator but depends more heavily on physical library generation and FACS screening.",
+      "Avidity/stoichiometry limitations should become explicit downstream validation checks rather than be hidden."
+    ],
+    "proposed_downstream_check": "Where feasible, use an orthogonal assay such as SPR on monomeric Fab to distinguish intrinsic affinity from avidity effects."
+  }
 }
