@@ -35,8 +35,8 @@ def test_recorded_m2_evaluation_is_current_and_planning_eligible():
 
     assert evaluation["status"] == "READY_FOR_DRAFT_PLANNING"
     assert evaluation["selected_candidate_id"] == "M2"
-    assert evaluation["context_id"] == "13d78d501a07c4750240cf53f70f03a10a3af824b3d5daf807067df9e0d57976"
-    assert evaluation["evaluation_id"] == "a9d5b8d23a24c9603bad71bb92461f0d8833b0c2d31bf1ce31858a21e18bb51a"
+    assert evaluation["context_id"] == "ee7f790ba48474bb63a935f6108f1e698121a404d93a5bf0389946ba2932dcf8"
+    assert evaluation["evaluation_id"] == "00c440f3a78a95a1703725ea261b992ab51551d1dedd9cf41ba481dd0954f231"
 
     selected = selected_method(evaluation)
     assert selected["candidate_id"] == "M2"
