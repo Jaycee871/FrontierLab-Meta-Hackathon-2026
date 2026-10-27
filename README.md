@@ -115,3 +115,8 @@ Optional [BioNeMo adapter](frontierlab/bionemo.py): four documented scientific t
 ## v0.11 · Research Failure Lab — off-line, fictional handoff tests
 
 Added 12 hand-authored, FICTIONAL fault-injection scenarios for version drift, wrong quotes, human-review veto, spoofed scientific-tool output, exact peptide-group holdout and observed human pre/post scores. Human-reviewed claims now bind to source snapshots and the research question: changed article metadata or abstract invalidates an old approval. Streamlit synthetic mode displays JSON of deterministic guard results. These are **software tests**, NOT actual Meta model performance, biological validation or an experiment with humans. No model calls or new secrets. Run `python -m scripts.research_failure_lab` and see docs/RESEARCH_FAILURE_LAB.md. Public HF Space needs separate rebuild for UI changes.
+
+
+## Current competition sprint (2026-10-28)
+
+The next priority is **verified Meta-model inference**, then a matched claim-error benchmark, an honest 3-minute demonstration and formal organizer submission; see [Final Sprint plan](docs/HACKATHON_FINAL_SPRINT.md). GitHub software tests alone do not prove Meta inference, scientific accuracy or submission.
