@@ -49,7 +49,25 @@ material remains under its own terms.
    Users who obtain and run these models must comply with the LFM Open
    License v1.0 and keep its required notices.
 
-5. External services
+5. DetectorScope
+
+   DetectorScope (https://github.com/google-deepmind/detectorscope; PyPI
+   package "detectorscope") is Copyright 2026 Google LLC. Its software is
+   licensed under the Apache License 2.0, and its other materials under the
+   Creative Commons Attribution 4.0 International License. The released
+   detector checkpoints (for example liamdugan/detector-scope and the
+   peer-review variants on Hugging Face) are fine-tuned from Google's
+   gemma-2-2b and are published under the Gemma terms of use
+   (https://ai.google.dev/gemma/terms). They are used only through the optional
+   output-audit lens (frontierlab/detectorscope_audit.py), which expects a
+   detector the user has already loaded. No DetectorScope code, Gemma weights
+   or sparse-autoencoder weights are bundled in this repository, none are
+   listed in requirements.txt, and nothing is downloaded automatically. Users
+   who install and run them must comply with those terms, and the DetectorScope
+   authors' disclaimer applies: the detectors make mistakes and must not be
+   used for decisions about individuals.
+
+6. External services
 
    NVIDIA NIM, Europe PMC, the Springer Nature Meta API and the Springer Nature
    Open Access API are used as remote services. Their use is governed by
