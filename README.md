@@ -78,13 +78,14 @@ No keys are needed for the synthetic demo or Europe PMC retrieval. Model-backed 
 | --- | --- |
 | `NVIDIA_API_KEY` | NVIDIA NIM access to Meta Muse Glimmer. |
 | `FRONTIERLAB_NIM_RESEARCH=YES` | Owner opt-in that enables the **Meta via NVIDIA** research mode. |
-| `SPRINGER_NATURE_META_API_KEY` | Springer Nature Meta API v2. This is a bibliographic metadata API, not Meta Platforms model inference. |
-| `SPRINGER_NATURE_OA_API_KEY` | Springer Nature Open Access API. |
+| `SPRINGER_NATURE_META_API_KEY` | Springer Nature Meta API v2. This is a bibliographic metadata API, not Meta Platforms model inference. `META_API_KEY` is accepted as a fallback. |
+| `SPRINGER_NATURE_OA_API_KEY` | Springer Nature Open Access API. `Open_Access_API` is accepted as a fallback. |
 | `FRONTIERLAB_NVIDIA_TRIAL`, `FRONTIERLAB_META_JSON_TRIAL`, `FRONTIERLAB_META_PILOT_TRIAL`, `FRONTIERLAB_EXTRACTION_TRIAL`, `FRONTIERLAB_CONTINUATION_TRIAL` | Explicit `YES` opt-ins for the bounded trial scripts in `scripts/`. |
 | `FRONTIERLAB_DOWNLOAD_OK=YES` | Allows `scripts/start_muse_local.sh` to download the ~17 GB local checkpoint. |
 | `HF_TOKEN1`, `FRONTIERLAB_HF_DEPLOY=YES` | Used only by the Hugging Face deploy script. |
+| `GITHUB_SHA`, `GITHUB_RUN_ID`, `GITHUB_RUN_ATTEMPT` | Set automatically by GitHub Actions and recorded in run receipts; don't set them by hand. |
 
-GitHub Secrets are **not** automatically available inside Hugging Face Spaces. See the [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) and [resource strategy](docs/RESOURCE_STRATEGY.md) docs.
+[`.env.example`](.env.example) lists every variable, grouped and commented. The app does not load `.env` files automatically, so export the variables or use your host's secret settings. GitHub Secrets are **not** automatically available inside Hugging Face Spaces. See the [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) and [resource strategy](docs/RESOURCE_STRATEGY.md) docs.
 
 ### 3. Run the app
 
