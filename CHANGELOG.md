@@ -1,3 +1,14 @@
+## 2026-10-28 · v0.20 — Optional d1-2B multimodal evidence gate
+
+- Added a strict optional adapter for Liquid AI `d1-2B` using its documented `system_one(state, questions, media=...)` decision interface rather than treating it as a chat model.
+- Scientific figure inspection asks typed questions for relevance, support, contradiction, evidence localization and visible-value extraction in one pass.
+- d1 probabilities remain model signals; no scientific entailment label is produced automatically and no default 0.5 support threshold is assumed.
+- Local threshold calibration and researcher review remain mandatory before a d1 signal can influence the research workflow.
+- The default FrontierLab installation does not add Torch/Transformers, download a 2B checkpoint or change the public HF CPU Space.
+- Added an offline preflight that performs zero network calls and a dedicated documentation note for the optional extension.
+- GitHub Actions run 40655646863 passed **230 tests**.
+- No live d1 scientific inference has been executed; Meta Muse Glimmer remains the central hackathon reasoning model.
+
 ## 2026-10-28 · v0.19 — Researcher-selected M2 method evaluation
 
 - Recorded the researcher's explicit selection of **M2 — Structure-based dual-pH histidine-scanning computational design**; M1 remains a comparator rather than being discarded.
