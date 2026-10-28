@@ -55,6 +55,14 @@ The reviewed continuation has been executed successfully in GitHub Actions run 4
 - Record per-case outcome, citations, reject/abstain, latency, token usage, false positives and false negatives. A reviewer correction is not automatically evidence the model corrected itself.
 - Do not present 12 offline fictional rule tests as model benchmark outcomes.
 
+## Optional frontier extension: Muse Spark Open frontier backend
+
+- Provider-neutral software adapter is implemented for Meta Muse Spark Open, including text/image/audio/video request contracts and provenance controls.
+- Do not make Spark a submission blocker: the verified Glimmer path remains the stable demo baseline.
+- If hosted Spark access is obtained, use one bounded multimodal evidence case tied to M2 (for example, a structure or assay figure) and preserve the provider/model receipt.
+- Liquid d1-2B remains a lightweight evidence-verification option; Spark is the Meta-native frontier reasoning layer.
+- No live Spark inference is currently claimed.
+
 ## Priority 3: judge-operable demo
 
 - Build a 3-minute story: research question → live evidence retrieval → a model makes an overly strong claim → citation/excerpt check and/or researcher challenges it → app abstains or limits the conclusion → accessible provenance trail and download.
