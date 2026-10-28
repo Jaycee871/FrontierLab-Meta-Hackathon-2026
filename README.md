@@ -207,6 +207,10 @@ FrontierLab was built for the [Meta Global AI Developer Hackathon](https://cereb
 
 See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repository and hosting a demo do not count as formal submission.
 
+## License
+
+The original code and documentation are released under the [MIT License](LICENSE), copyright (c) 2026 Pack Kwan Low (Jaycee871). Third-party material keeps its own terms; see [NOTICE](NOTICE). This includes the published excerpts in `datasets/`, which stay under their original licenses, as well as Meta Muse Glimmer (Apache 2.0, not bundled) and the referenced legacy MUSE project (CC BY-NC 4.0, not included).
+
 ## Credits
 
 Created by **Pack Kwan Low (Jaycee)**.

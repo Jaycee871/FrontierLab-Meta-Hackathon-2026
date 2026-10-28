@@ -1,0 +1,46 @@
+FrontierLab
+Copyright (c) 2026 Pack Kwan Low (Jaycee871)
+
+The original source code and documentation in this repository were written by
+Pack Kwan Low (Jaycee871) and are licensed under the MIT License (see LICENSE).
+
+The MIT License does NOT cover the third-party material described below. That
+material remains under its own terms.
+
+1. Published excerpts in datasets/real_ph_excerpt_cases_v1.json
+
+   This file contains short, attributed excerpts (at most 25 words each) from
+   the abstracts of the published papers listed below. Each excerpt remains
+   under its source's original license, exactly as recorded in the dataset.
+   No full text is bundled.
+
+   - PMC8686790: "A stepwise mutagenesis approach using histidine and acidic amino acid to engineer highly pH-dependent protein switches" (DOI 10.1007/s13205-021-03079-x)
+     License: None listed in the dataset record (license_url: null). Check the original rights before any further reuse.
+   - PMC6927761: "Structure-based engineering of pH-dependent antibody binding for selective targeting of solid-tumor microenvironment" (DOI 10.1080/19420862.2019.1682866)
+     License: https://creativecommons.org/licenses/by-nc/4.0/
+   - PMC4314675: "Construction of pH-sensitive Her2-binding IgG1-Fc by directed evolution" (DOI 10.1002/biot.201300483)
+     License: https://creativecommons.org/licenses/by/3.0/
+   - PMC4622719: "A generic approach to engineer antibody pH-switches using combinatorial histidine scanning libraries and yeast display" (DOI 10.4161/19420862.2014.985993)
+     License: https://creativecommons.org/licenses/by-nc/3.0/
+
+2. Meta Muse Glimmer
+
+   Meta Muse Glimmer (meta/muse-glimmer-30b) is licensed under Apache 2.0 by
+   Meta (https://dev.meta.ai/models/muse-glimmer). No model weights are
+   bundled in this repository. The model is called as a service through
+   NVIDIA NIM, or downloaded at runtime by scripts/start_muse_local.sh when the
+   user explicitly opts in.
+
+3. Legacy Facebook Research MUSE
+
+   The archived Facebook Research MUSE project (Multilingual Unsupervised and
+   Supervised Embeddings; https://github.com/facebookresearch/MUSE) is licensed
+   under CC BY-NC 4.0. It is only referenced in docs/LEGACY_MUSE_MULTILINGUAL.md.
+   None of its code, embeddings or data are included in this repository.
+
+4. External services
+
+   NVIDIA NIM, Europe PMC, the Springer Nature Meta API and the Springer Nature
+   Open Access API are used as remote services. Their use is governed by
+   each provider's own terms. No provider code or data is relicensed here,
+   beyond the dataset excerpts listed in section 1.
