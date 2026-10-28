@@ -1,3 +1,14 @@
+## 2026-10-28 · v0.22 — Muse2-230M edge structured worker
+
+- Added `Muse-research/Muse2-230M` as an optional **Edge Structured Worker**, not as a scientific reasoning model.
+- Allowed tasks are restricted to metadata normalization, log-to-JSON extraction, schema formatting and lightweight routing.
+- Scientific/medical truth-decision fields such as supported, contradicted, entailment, diagnosis, treatment, efficacy and safety are rejected before generation.
+- Added strict output-schema/type validation plus SHA-256 provenance for input text, schema and validated output; raw input text is not stored in receipts.
+- Kept the default FrontierLab installation unchanged: no PyTorch, Muse runtime or checkpoint is added to `requirements.txt`.
+- Added a zero-network preflight and documentation for the injected local runtime boundary.
+- GitHub Actions run 40663293839 passed **253 tests**.
+- No real Muse2 inference has been executed; the model card itself warns that this scale hallucinates facts readily and is unsuitable for factual-reliance or medical/safety-critical judgment.
+
 ## 2026-10-28 · v0.21.1 — Hosted Spark capability matrix corrected
 
 - Rechecked the current hosted-provider catalogs rather than assuming every Muse Spark deployment exposes every native modality.
