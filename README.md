@@ -54,7 +54,7 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 | Sphere | Human review gate and other researcher decisions (claim review, method selection) |
 | Cube | The reviewable research plan (Stage 5) |
 
-Dashed lines in the diagram mark optional paths.
+Dashed lines in the diagram mark optional paths. The dimension markers at the top follow the lift from a point (the question) through a line and a square to a cube (the reviewed plan).
 
 <details>
 <summary>Text version of the pipeline (Mermaid)</summary>
@@ -141,7 +141,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The suite has **224 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction and single/batch output validation. GitHub Actions run [40578886168](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40578886168) passed all 224. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
+The suite has **259 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction and single/batch output validation. GitHub Actions run [40578886168](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40578886168) passed all 224 tests that existed at the time. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -273,4 +273,4 @@ Created by **Pack Kwan Low (Jaycee)**.
 - [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon)
 - [Meta developer platform](https://dev.meta.ai/)
 - Literature data: Europe PMC and Springer Nature APIs. The pilot excerpts carry their own citation and rights metadata in [`datasets/`](datasets/real_ph_excerpt_cases_v1.json).
-- Visual theme: an homage to Edwin A. Abbott's *Flatland: A Romance of Many Dimensions* (1884, public domain). The hero epigraph, "Upward, not Northward", is quoted from the book.
+- Visual theme: an homage to Edwin A. Abbott's *Flatland: A Romance of Many Dimensions* (1884, public domain). The epigraphs "Upward, not Northward" and "May aspire yet higher and higher" are quoted from the book (Project Gutenberg eBook #97). All artwork is original.

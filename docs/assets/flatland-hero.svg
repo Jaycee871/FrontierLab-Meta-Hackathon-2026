@@ -1,77 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="hero-title hero-desc">
   <title id="hero-title">FrontierLab: From Flatland to Spaceland</title>
-  <desc id="hero-desc">A line segment, a triangle, a square and a hexagon rise from a flat plane toward a sphere, an homage to Edwin A. Abbott's Flatland. The shapes stand for FrontierLab's model roles; the sphere is the human review gate.</desc>
+  <desc id="hero-desc">Black-and-white book-plate banner, an homage to Edwin A. Abbott's Flatland. A riveted line segment, a triangle, a square and a hexagon filled with gears, belts, circuit traces and a heartbeat motif rise from a flat plane toward a sphere. The shapes stand for FrontierLab's model roles; the sphere is the human review gate. Markers show no, one, two and three dimensions.</desc>
+  <defs><clipPath id="hc-tri"><polygon points="785,216 824.8,285 745.2,285"/></clipPath><clipPath id="hc-sq"><polygon points="860,170 930,170 930,240 860,240"/></clipPath><clipPath id="hc-hex"><polygon points="1050,150 1030,184.6 990,184.6 970,150 990,115.4 1030,115.4"/></clipPath></defs>
   <style>
-    .ink { fill: none; stroke: #1F1B16; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
-    .thin { fill: none; stroke: #1F1B16; stroke-width: 0.8; }
-    .faint { fill: none; stroke: #1F1B16; stroke-width: 0.8; stroke-dasharray: 2 4; opacity: 0.55; }
-    .accent { fill: none; stroke: #9C3D24; stroke-width: 1.8; }
-    .serif { font-family: Georgia, 'Times New Roman', Times, serif; fill: #1F1B16; }
-    .label { font-family: Georgia, 'Times New Roman', Times, serif; font-size: 13px; font-style: italic; fill: #1F1B16; }
+    .ln { fill: none; stroke: #F2F2F2; stroke-linejoin: round; stroke-linecap: round; }
+    text { font-family: Georgia, 'Times New Roman', Times, serif; fill: #F2F2F2; stroke: none; }
+    .h { font-size: 15px; font-weight: bold; }
+    .s { font-size: 13px; fill: #CFCFCF; }
+    .it { font-size: 13px; font-style: italic; fill: #CFCFCF; }
+    .sc { font-size: 10px; letter-spacing: 1px; fill: #CFCFCF; }
+    .band { font-size: 12px; letter-spacing: 3px; }
   </style>
-
-  <!-- paper and book-page frame -->
-  <rect x="0" y="0" width="1200" height="400" fill="#F4EFE3"/>
-  <rect x="12" y="12" width="1176" height="376" class="thin" stroke-width="1.2"/>
-  <rect x="18" y="18" width="1164" height="364" class="thin" stroke-width="0.5"/>
-
-  <!-- title block -->
-  <text x="70" y="86" class="serif" font-size="14" letter-spacing="4" fill="#9C3D24" style="fill:#9C3D24">FROM FLATLAND TO SPACELAND</text>
-  <text x="66" y="160" class="serif" font-size="72">FrontierLab</text>
-  <text x="70" y="204" class="serif" font-size="19" font-style="italic">Evidence-grounded, human-gated multi-agent AI</text>
-  <text x="70" y="230" class="serif" font-size="19" font-style="italic">that lifts biomedical questions off the flat page</text>
-  <text x="70" y="256" class="serif" font-size="19" font-style="italic">into reviewable research plans.</text>
-  <line x1="70" y1="288" x2="470" y2="288" class="thin"/>
-  <text x="70" y="320" class="serif" font-size="16" font-style="italic">“Upward, not Northward.”</text>
-  <text x="70" y="344" class="serif" font-size="12.5">— Edwin A. Abbott, Flatland: A Romance of Many Dimensions (1884)</text>
-
-  <!-- the plane: Flatland, a sheet of text seen edge-on -->
-  <polygon points="590,352 1160,352 1124,312 626,312" class="thin"/>
-  <text x="636" y="346" class="label" font-size="12">Flatland · one model, flat text</text>
-
-  <!-- flat "shadows": how each figure looks from inside the plane -->
-  <g class="ink" stroke-width="2.2">
-    <line x1="667" y1="323" x2="713" y2="323"/>
-    <line x1="766" y1="323" x2="814" y2="323"/>
-    <line x1="866" y1="323" x2="914" y2="323"/>
-    <line x1="957" y1="323" x2="1013" y2="323"/>
-    <line x1="1035" y1="323" x2="1135" y2="323"/>
-  </g>
-
-  <!-- projection lines from each figure down to its shadow -->
-  <g class="faint">
-    <line x1="690" y1="300" x2="690" y2="319"/>
-    <line x1="790" y1="274" x2="790" y2="319"/>
-    <line x1="890" y1="236" x2="890" y2="319"/>
-    <line x1="985" y1="200" x2="985" y2="319"/>
-    <line x1="1085" y1="172" x2="1085" y2="319"/>
-  </g>
-
-  <!-- path of ascent -->
-  <path d="M 636 238 C 740 206, 880 138, 1031 90" class="accent" stroke-width="1.2" stroke-dasharray="1 6" stroke-linecap="round"/>
-
-  <!-- line segment: Llama 3.1 8B baseline -->
-  <line x1="665" y1="268" x2="715" y2="268" class="ink" stroke-width="2.6"/>
-  <line x1="665" y1="262" x2="665" y2="274" class="ink"/>
-  <line x1="715" y1="262" x2="715" y2="274" class="ink"/>
-  <text x="690" y="292" class="label" text-anchor="middle">baseline</text>
-
-  <!-- triangle: Muse2 edge worker -->
-  <polygon points="790,212 815,254 765,254" class="ink"/>
-  <text x="790" y="270" class="label" text-anchor="middle">edge</text>
-
-  <!-- square: d1 evidence gate -->
-  <rect x="868" y="160" width="44" height="44" class="ink"/>
-  <text x="890" y="226" class="label" text-anchor="middle">evidence gate</text>
-
-  <!-- hexagon: reasoning agents -->
-  <polygon points="1013,150 999,125.8 971,125.8 957,150 971,174.2 999,174.2" class="ink"/>
-  <text x="985" y="194" class="label" text-anchor="middle">reasoning</text>
-
-  <!-- the Sphere: human review gate -->
-  <circle cx="1085" cy="98" r="50" class="accent"/>
-  <ellipse cx="1085" cy="98" rx="50" ry="13" class="accent" stroke-width="0.9" stroke-dasharray="3 3"/>
-  <ellipse cx="1085" cy="98" rx="17" ry="50" class="accent" stroke-width="0.9"/>
-  <text x="1085" y="166" class="label" text-anchor="middle">human review</text>
+  <rect width="1200" height="400" fill="#1E1E1E"/>
+  <text x="600" y="36" text-anchor="middle" class="it" font-size="14">“Upward, not Northward.”</text>
+  <text x="102.4" y="148" text-anchor="start" font-size="60" font-weight="bold" letter-spacing="7" transform="skewX(-16)" style="fill:none;stroke:#F2F2F2;stroke-width:3.6;stroke-linejoin:round">FRONTIERLAB</text><text x="102.4" y="148" text-anchor="start" font-size="60" font-weight="bold" letter-spacing="7" transform="skewX(-16)" style="fill:#1E1E1E;stroke:none">FRONTIERLAB</text>
+  <text x="64" y="190" font-size="17" letter-spacing="3">A ROMANCE OF MANY AGENTS</text>
+  <text x="64" y="220" text-anchor="start" class="it" font-size="16">Evidence-grounded, human-gated multi-agent AI</text>
+  <text x="64" y="242" text-anchor="start" class="it" font-size="16">for reviewable biomedical research plans</text>
+  <g class="ln"><text x="100" y="286" text-anchor="middle" class="sc">NO DIMENSIONS</text><g class="ln"><circle cx="100" cy="305" r="2.6" fill="#F2F2F2" stroke="none"/></g><text x="100" y="326" text-anchor="middle" class="it" font-size="12">point · question</text><text x="240" y="286" text-anchor="middle" class="sc">ONE DIMENSION</text><g class="ln"><line x1="226" y1="305" x2="254" y2="305" stroke-width="1.6"/></g><text x="240" y="326" text-anchor="middle" class="it" font-size="12">line · baseline</text><text x="380" y="286" text-anchor="middle" class="sc">TWO DIMENSIONS</text><g class="ln"><rect x="373" y="298" width="14" height="14" stroke-width="1.3"/></g><text x="380" y="326" text-anchor="middle" class="it" font-size="12">square · Flatland</text><text x="520" y="286" text-anchor="middle" class="sc">THREE DIMENSIONS</text><g class="ln"><rect x="513" y="300" width="12" height="12" stroke-width="1.2"/><polyline points="513,300 518,295 530,295 525,300" stroke-width="1.2"/><polyline points="530,295 530,307 525,312" stroke-width="1.2"/></g><text x="520" y="326" text-anchor="middle" class="it" font-size="12">cube · Spaceland</text></g>
+  <g class="ln"><polygon points="630,360 1170,360 1134,322 666,322" stroke-width="0.9"/><line x1="665" y1="334" x2="715" y2="334" stroke-width="2"/><line x1="738" y1="334" x2="832" y2="334" stroke-width="2"/><line x1="855" y1="334" x2="935" y2="334" stroke-width="2"/><line x1="964" y1="334" x2="1056" y2="334" stroke-width="2"/><line x1="1066" y1="334" x2="1170" y2="334" stroke-width="2"/><line x1="785" y1="311" x2="785" y2="330" stroke-width="0.7" stroke-dasharray="1.5 4" opacity="0.6"/><line x1="895" y1="269" x2="895" y2="330" stroke-width="0.7" stroke-dasharray="1.5 4" opacity="0.6"/><line x1="1010" y1="215" x2="1010" y2="330" stroke-width="0.7" stroke-dasharray="1.5 4" opacity="0.6"/><line x1="1118" y1="166" x2="1118" y2="330" stroke-width="0.7" stroke-dasharray="1.5 4" opacity="0.6"/><path d="M 640 262 C 730 222, 860 132, 1060 76" stroke-width="1" stroke-dasharray="1 6" opacity="0.8"/><rect x="665" y="292.5" width="50" height="7" stroke-width="1.6"/><line x1="665" y1="287" x2="665" y2="305" stroke-width="1.6"/><line x1="715" y1="287" x2="715" y2="305" stroke-width="1.6"/><circle cx="681.7" cy="296" r="1.2" fill="#F2F2F2" stroke="none"/><circle cx="698.3" cy="296" r="1.2" fill="#F2F2F2" stroke="none"/><polygon points="785,208 831.8,289 738.2,289" stroke-width="2.0"/><polygon points="785,216 824.8,285 745.2,285" stroke-width="0.8"/><g clip-path="url(#hc-tri)"><polygon points="784.6,272.4 787.4,272.8 787.4,275.8 784.6,276.1 783.7,279 785.7,281 783.9,283.4 781.5,282 779,283.8 779.5,286.6 776.7,287.5 775.5,285 772.4,285 771.2,287.5 768.4,286.6 768.9,283.8 766.4,282 764,283.4 762.2,281 764.3,279 763.3,276.1 760.5,275.8 760.5,272.8 763.3,272.4 764.3,269.5 762.2,267.6 764,265.2 766.4,266.5 768.9,264.7 768.4,262 771.2,261.1 772.4,263.6 775.5,263.6 776.7,261.1 779.5,262 779,264.7 781.5,266.5 783.9,265.2 785.7,267.6 783.7,269.5" stroke-width="1.0"/><circle cx="774" cy="274.3" r="2.4" stroke-width="1.0"/><circle cx="774" cy="274.3" r="7.4" stroke-width="0.8"/><line x1="775.7" y1="276" x2="779.2" y2="279.5" stroke-width="0.8"/><line x1="772.2" y1="276" x2="768.7" y2="279.5" stroke-width="0.8"/><line x1="772.2" y1="272.6" x2="768.7" y2="269" stroke-width="0.8"/><line x1="775.7" y1="272.6" x2="779.2" y2="269" stroke-width="0.8"/><circle cx="801" cy="278" r="6.8" stroke-width="1.0"/><circle cx="801" cy="278" r="3" stroke-width="0.8"/><circle cx="801" cy="278" r="1" fill="#F2F2F2" stroke="none"/><line x1="773.1" y1="281.6" x2="800.2" y2="284.7" stroke-width="0.8"/><line x1="775.1" y1="267" x2="802" y2="271.3" stroke-width="0.8"/><polyline points="782.5,230.1 782.5,244.8 792.4,254.6" stroke-width="0.9"/><circle cx="792.4" cy="254.6" r="1.6" stroke-width="0.9"/><polyline points="788.7,230.1 788.7,239.9 797.3,247.3 802.2,260.8" stroke-width="0.9"/><circle cx="802.2" cy="260.8" r="1.3" stroke-width="0.9"/><line x1="760.5" y1="286.5" x2="812" y2="286.5" stroke-width="0.8"/></g><polygon points="855,165 935,165 935,245 855,245" stroke-width="2.0"/><polygon points="860,170 930,170 930,240 860,240" stroke-width="0.8"/><g clip-path="url(#hc-sq)"><polygon points="893.9,216.1 897.3,216.4 897.3,219.4 893.9,219.8 893.1,222.8 895.8,224.8 894.3,227.4 891.2,226.1 889,228.3 890.4,231.4 887.8,232.9 885.8,230.2 882.8,231 882.4,234.3 879.4,234.3 879,231 876,230.2 874,232.9 871.4,231.4 872.7,228.3 870.5,226.1 867.4,227.4 865.9,224.8 868.6,222.8 867.8,219.8 864.5,219.4 864.5,216.4 867.8,216.1 868.6,213.1 865.9,211 867.4,208.4 870.5,209.8 872.7,207.6 871.4,204.5 874,203 876,205.7 879,204.9 879.4,201.5 882.4,201.5 882.8,204.9 885.8,205.7 887.8,203 890.4,204.5 889,207.6 891.2,209.8 894.3,208.4 895.8,211 893.1,213.1" stroke-width="1.0"/><circle cx="880.9" cy="217.9" r="3" stroke-width="1.0"/><circle cx="880.9" cy="217.9" r="9.1" stroke-width="0.8"/><line x1="883" y1="220" x2="887.3" y2="224.3" stroke-width="0.8"/><line x1="878.8" y1="220" x2="874.5" y2="224.3" stroke-width="0.8"/><line x1="878.8" y1="215.8" x2="874.5" y2="211.5" stroke-width="0.8"/><line x1="883" y1="215.8" x2="887.3" y2="211.5" stroke-width="0.8"/><path d="M 910.3 202.9 C 906.8 199.9 900.3 195.9 900.3 191.4 C 900.3 186.9 905.8 184.9 910.3 189.4 C 914.8 184.9 920.3 186.9 920.3 191.4 C 920.3 195.9 913.8 199.9 910.3 202.9 Z" fill="#F2F2F2" stroke="none"/><polyline points="902.3,194.4 907.3,194.4 908.5,191.9 909.8,197.4 911.3,189.4 912.5,194.4 918.3,194.4" stroke="#1E1E1E" stroke-width="1.2" fill="none"/><circle cx="913.8" cy="225" r="5.9" stroke-width="1.0"/><circle cx="913.8" cy="225" r="2.6" stroke-width="0.8"/><circle cx="913.8" cy="225" r="1" fill="#F2F2F2" stroke="none"/><line x1="879.8" y1="226.9" x2="913.1" y2="230.8" stroke-width="0.8"/><line x1="883.6" y1="209.3" x2="915.6" y2="219.4" stroke-width="0.8"/><polyline points="860.9,179.1 878.5,179.1 885.6,186.2 893.8,186.2" stroke-width="0.9"/><circle cx="893.8" cy="186.2" r="1.6" stroke-width="0.9"/><polyline points="860.9,188.5 871.5,188.5 871.5,197.9" stroke-width="0.9"/><circle cx="871.5" cy="197.9" r="1.3" stroke-width="0.9"/><polyline points="929.1,208.5 904.4,208.5" stroke-width="0.9"/><circle cx="904.4" cy="208.5" r="1.3" stroke-width="0.9"/></g><polygon points="1056,150 1033,189.8 987,189.8 964,150 987,110.2 1033,110.2" stroke-width="2.0"/><polygon points="1050,150 1030,184.6 990,184.6 970,150 990,115.4 1030,115.4" stroke-width="0.8"/><g clip-path="url(#hc-hex)"><polygon points="1014.5,150.6 1018,150.9 1018,153.7 1014.5,154 1013.9,156.7 1016.9,158.5 1015.7,161 1012.4,159.8 1010.7,161.9 1012.6,164.9 1010.5,166.6 1008,164.1 1005.5,165.3 1005.9,168.8 1003.3,169.4 1002.2,166 999.4,166 998.3,169.4 995.7,168.8 996.1,165.3 993.6,164.1 991.1,166.6 989,164.9 990.9,161.9 989.2,159.8 985.9,161 984.7,158.5 987.7,156.7 987.1,154 983.6,153.7 983.6,150.9 987.1,150.6 987.7,147.9 984.7,146.1 985.9,143.6 989.2,144.8 990.9,142.7 989,139.7 991.1,138 993.6,140.5 996.1,139.3 995.7,135.8 998.3,135.2 999.4,138.6 1002.2,138.6 1003.3,135.2 1005.9,135.8 1005.5,139.3 1008,140.5 1010.5,138 1012.6,139.7 1010.7,142.7 1012.4,144.8 1015.7,143.6 1016.9,146.1 1013.9,147.9" stroke-width="1.0"/><circle cx="1000.8" cy="152.3" r="3.1" stroke-width="1.0"/><circle cx="1000.8" cy="152.3" r="9.5" stroke-width="0.8"/><line x1="1003" y1="154.5" x2="1007.5" y2="159" stroke-width="0.8"/><line x1="998.6" y1="154.5" x2="994.1" y2="159" stroke-width="0.8"/><line x1="998.6" y1="150.1" x2="994.1" y2="145.6" stroke-width="0.8"/><line x1="1003" y1="150.1" x2="1007.5" y2="145.6" stroke-width="0.8"/><polygon points="1032.2,133.6 1034.1,133.9 1034.1,136.2 1032.2,136.5 1031.4,138.6 1032.7,140.1 1031.2,141.8 1029.6,140.8 1027.6,141.9 1027.6,143.8 1025.4,144.2 1024.8,142.4 1022.6,142 1021.4,143.5 1019.4,142.4 1020.1,140.6 1018.6,138.8 1016.8,139.2 1016,137.1 1017.7,136.2 1017.7,133.9 1016,133 1016.8,130.9 1018.6,131.3 1020.1,129.5 1019.4,127.7 1021.4,126.6 1022.6,128.1 1024.8,127.7 1025.4,125.9 1027.6,126.3 1027.6,128.2 1029.6,129.3 1031.2,128.3 1032.7,130 1031.4,131.5" stroke-width="1.0"/><circle cx="1025" cy="135.1" r="1.7" stroke-width="1.0"/><circle cx="1029.5" cy="167.2" r="6.9" stroke-width="1.0"/><circle cx="1029.5" cy="167.2" r="3.1" stroke-width="0.8"/><circle cx="1029.5" cy="167.2" r="1" fill="#F2F2F2" stroke="none"/><line x1="997.1" y1="161.1" x2="1026.9" y2="173.6" stroke-width="0.8"/><line x1="1005.9" y1="144.2" x2="1033.2" y2="161.4" stroke-width="0.8"/><path d="M 990.5 135.8 C 988.2 133.9 984.1 131.4 984.1 128.6 C 984.1 125.7 987.6 124.4 990.5 127.3 C 993.3 124.4 996.8 125.7 996.8 128.6 C 996.8 131.4 992.7 133.9 990.5 135.8 Z" fill="#F2F2F2" stroke="none"/><polyline points="985.4,130.4 988.6,130.4 989.3,128.9 990.1,132.3 991.1,127.3 991.8,130.4 995.5,130.4" stroke="#1E1E1E" stroke-width="0.9" fill="none"/><polyline points="970.9,161.5 980.1,161.5 980.1,175.3 993.9,175.3" stroke-width="0.9"/><circle cx="993.9" cy="175.3" r="1.3" stroke-width="0.9"/><polyline points="1012.3,110.9 1012.3,122.4 1003.1,129.3" stroke-width="0.9"/><circle cx="1003.1" cy="129.3" r="1.3" stroke-width="0.9"/><polyline points="1049.1,147.7 1037.6,147.7 1037.6,154.6" stroke-width="0.9"/><circle cx="1037.6" cy="154.6" r="1.3" stroke-width="0.9"/></g><circle cx="1118" cy="90" r="52" stroke-width="1.8"/><circle cx="1118" cy="90" r="48" stroke-width="0.81"/><ellipse cx="1118" cy="90" rx="48" ry="13.5" stroke-width="0.9" stroke-dasharray="3 3"/><ellipse cx="1118" cy="90" rx="17.7" ry="48" stroke-width="0.9"/><ellipse cx="1118" cy="90" rx="36.4" ry="48" stroke-width="0.63"/></g>
+  <text x="676" y="353" text-anchor="start" class="it" font-size="11.5">Flatland · one model, flat text</text>
+  <text x="690" y="318" text-anchor="middle" class="it" font-size="12">baseline</text>
+  <text x="785" y="306" text-anchor="middle" class="it" font-size="12">edge</text>
+  <text x="895" y="264" text-anchor="middle" class="it" font-size="12">evidence gate</text>
+  <text x="1010" y="210" text-anchor="middle" class="it" font-size="12">reasoning</text>
+  <text x="1118" y="161" text-anchor="middle" class="it" font-size="12">human review</text>
+  <text x="600" y="386" text-anchor="middle" class="it" font-size="12.5">“May aspire yet higher and higher” — Edwin A. Abbott, Flatland (1884)</text>
 </svg>
