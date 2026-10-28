@@ -20,8 +20,24 @@ CANONICAL_MODEL = "meta-models/Muse-Spark-Open-816B-A42B"
 MAX_CONTEXT_TOKENS = 1_048_576
 
 PROVIDERS = {
-    "together": "meta-models/muse-spark-open",
-    "fireworks": "accounts/fireworks/models/muse-spark-open",
+    "together": {
+        "model": "meta-models/Muse-Spark-Open-816B-A42B",
+        "serverless": True,
+        "media": {"image", "audio", "video"},
+        "temporary_promo": False,
+    },
+    "together-promo": {
+        "model": "meta-models/muse-spark-open-816b-promo",
+        "serverless": True,
+        "media": {"image", "audio", "video"},
+        "temporary_promo": True,
+    },
+    "fireworks": {
+        "model": "accounts/fireworks/models/muse-spark-open",
+        "serverless": True,
+        "media": {"image"},
+        "temporary_promo": False,
+    },
 }
 
 RESEARCH_ROLES = {
@@ -58,11 +74,21 @@ class SparkCallBudget:
             return self.limit - self.used
 
 
-def provider_model(provider: str) -> str:
+def provider_config(provider: str) -> dict:
     try:
-        return PROVIDERS[provider]
+        config = PROVIDERS[provider]
     except KeyError:
         raise ValueError("Unsupported Muse Spark hosted provider") from None
+    return {
+        "model": config["model"],
+        "serverless": bool(config["serverless"]),
+        "media": set(config["media"]),
+        "temporary_promo": bool(config["temporary_promo"]),
+    }
+
+
+def provider_model(provider: str) -> str:
+    return provider_config(provider)["model"]
 
 
 def _unique(pairs):
@@ -160,7 +186,8 @@ class MuseSparkHostedClient:
         if transport is None or not callable(getattr(transport, "complete", None)):
             raise TypeError("Muse Spark provider transport must expose complete()")
         self.provider = provider
-        self.model = provider_model(provider)
+        self.capabilities = provider_config(provider)
+        self.model = self.capabilities["model"]
         self.backend = "muse-spark-" + provider
         self._transport = transport
         self._budget = budget or SparkCallBudget()
@@ -169,6 +196,9 @@ class MuseSparkHostedClient:
             "backend": self.backend,
             "model": self.model,
             "canonical_model": CANONICAL_MODEL,
+            "serverless": self.capabilities["serverless"],
+            "supported_media": sorted(self.capabilities["media"]),
+            "temporary_promo": self.capabilities["temporary_promo"],
             "process_call_limit": self._budget.limit,
             "attempted_calls": 0,
             "receipts": [],
@@ -189,7 +219,13 @@ class MuseSparkHostedClient:
             "Distinguish observed evidence from proposed work and explicitly preserve uncertainty.\n"
             "ROLE: " + role + "\nTASK: " + task + "\nSOURCE DATA:\n" + source_data
         )
-        blocks = build_request_content(prompt, media)
+        normalized_media = _validate_media(media)
+        unsupported = sorted({item["type"] for item in normalized_media} - self.capabilities["media"])
+        if unsupported:
+            raise ValueError(
+                "Provider does not advertise these Muse Spark media types: " + ", ".join(unsupported)
+            )
+        blocks = build_request_content(prompt, normalized_media)
         request_fingerprint = json.dumps(
             {
                 "provider": self.provider,
@@ -211,7 +247,7 @@ class MuseSparkHostedClient:
             "provider": self.provider,
             "requested_model": self.model,
             "canonical_model": CANONICAL_MODEL,
-            "media_types": [item["type"] for item in _validate_media(media)],
+            "media_types": [item["type"] for item in normalized_media],
             "input_sha256": _sha(request_fingerprint),
         }
         self.provenance["receipts"].append(receipt)
