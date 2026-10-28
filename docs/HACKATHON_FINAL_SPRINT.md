@@ -76,6 +76,13 @@ The reviewed continuation has been executed successfully in GitHub Actions run 4
 - Report JSON validity, abstention, citation validity, quotation validity, researcher intervention, latency and cost/size proxies separately.
 - Do not turn the competition demo into a model leaderboard; the core story remains evidence-grounded, human-gated scientific research.
 
+## Optional audit extension: DetectorScope output-audit lens
+
+- Use DetectorScope only to explain detector features in model-generated scientific prose; it is outside the scientific truth path.
+- Never use its label or `p_ai` for academic-integrity, authorship, publication, hiring or person-level decisions.
+- A future controlled model-scale study may compare recurring interpretable linguistic features across Muse2-230M, Llama 3.1 8B, Muse Glimmer and Muse Spark outputs.
+- Keep this extension non-blocking for submission; the five-stage evidence/human-review pipeline remains the core demo.
+
 ## Priority 3: judge-operable demo
 
 - Build a 3-minute story: research question → live evidence retrieval → a model makes an overly strong claim → citation/excerpt check and/or researcher challenges it → app abstains or limits the conclusion → accessible provenance trail and download.
