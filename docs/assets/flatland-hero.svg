@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">FrontierLab: From Flatland to Spaceland</title>
+  <desc id="hero-desc">A line segment, a triangle, a square and a hexagon rise from a flat plane toward a sphere, an homage to Edwin A. Abbott's Flatland. The shapes stand for FrontierLab's model roles; the sphere is the human review gate.</desc>
+  <style>
+    .ink { fill: none; stroke: #1F1B16; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
+    .thin { fill: none; stroke: #1F1B16; stroke-width: 0.8; }
+    .faint { fill: none; stroke: #1F1B16; stroke-width: 0.8; stroke-dasharray: 2 4; opacity: 0.55; }
+    .accent { fill: none; stroke: #9C3D24; stroke-width: 1.8; }
+    .serif { font-family: Georgia, 'Times New Roman', Times, serif; fill: #1F1B16; }
+    .label { font-family: Georgia, 'Times New Roman', Times, serif; font-size: 13px; font-style: italic; fill: #1F1B16; }
+  </style>
+
+  <!-- paper and book-page frame -->
+  <rect x="0" y="0" width="1200" height="400" fill="#F4EFE3"/>
+  <rect x="12" y="12" width="1176" height="376" class="thin" stroke-width="1.2"/>
+  <rect x="18" y="18" width="1164" height="364" class="thin" stroke-width="0.5"/>
+
+  <!-- title block -->
+  <text x="70" y="86" class="serif" font-size="14" letter-spacing="4" fill="#9C3D24" style="fill:#9C3D24">FROM FLATLAND TO SPACELAND</text>
+  <text x="66" y="160" class="serif" font-size="72">FrontierLab</text>
+  <text x="70" y="204" class="serif" font-size="19" font-style="italic">Evidence-grounded, human-gated multi-agent AI</text>
+  <text x="70" y="230" class="serif" font-size="19" font-style="italic">that lifts biomedical questions off the flat page</text>
+  <text x="70" y="256" class="serif" font-size="19" font-style="italic">into reviewable research plans.</text>
+  <line x1="70" y1="288" x2="470" y2="288" class="thin"/>
+  <text x="70" y="320" class="serif" font-size="16" font-style="italic">“Upward, not Northward.”</text>
+  <text x="70" y="344" class="serif" font-size="12.5">— Edwin A. Abbott, Flatland: A Romance of Many Dimensions (1884)</text>
+
+  <!-- the plane: Flatland, a sheet of text seen edge-on -->
+  <polygon points="590,352 1160,352 1124,312 626,312" class="thin"/>
+  <text x="636" y="346" class="label" font-size="12">Flatland · one model, flat text</text>
+
+  <!-- flat "shadows": how each figure looks from inside the plane -->
+  <g class="ink" stroke-width="2.2">
+    <line x1="667" y1="323" x2="713" y2="323"/>
+    <line x1="766" y1="323" x2="814" y2="323"/>
+    <line x1="866" y1="323" x2="914" y2="323"/>
+    <line x1="957" y1="323" x2="1013" y2="323"/>
+    <line x1="1035" y1="323" x2="1135" y2="323"/>
+  </g>
+
+  <!-- projection lines from each figure down to its shadow -->
+  <g class="faint">
+    <line x1="690" y1="300" x2="690" y2="319"/>
+    <line x1="790" y1="274" x2="790" y2="319"/>
+    <line x1="890" y1="236" x2="890" y2="319"/>
+    <line x1="985" y1="200" x2="985" y2="319"/>
+    <line x1="1085" y1="172" x2="1085" y2="319"/>
+  </g>
+
+  <!-- path of ascent -->
+  <path d="M 636 238 C 740 206, 880 138, 1031 90" class="accent" stroke-width="1.2" stroke-dasharray="1 6" stroke-linecap="round"/>
+
+  <!-- line segment: Llama 3.1 8B baseline -->
+  <line x1="665" y1="268" x2="715" y2="268" class="ink" stroke-width="2.6"/>
+  <line x1="665" y1="262" x2="665" y2="274" class="ink"/>
+  <line x1="715" y1="262" x2="715" y2="274" class="ink"/>
+  <text x="690" y="292" class="label" text-anchor="middle">baseline</text>
+
+  <!-- triangle: Muse2 edge worker -->
+  <polygon points="790,212 815,254 765,254" class="ink"/>
+  <text x="790" y="270" class="label" text-anchor="middle">edge</text>
+
+  <!-- square: d1 evidence gate -->
+  <rect x="868" y="160" width="44" height="44" class="ink"/>
+  <text x="890" y="226" class="label" text-anchor="middle">evidence gate</text>
+
+  <!-- hexagon: reasoning agents -->
+  <polygon points="1013,150 999,125.8 971,125.8 957,150 971,174.2 999,174.2" class="ink"/>
+  <text x="985" y="194" class="label" text-anchor="middle">reasoning</text>
+
+  <!-- the Sphere: human review gate -->
+  <circle cx="1085" cy="98" r="50" class="accent"/>
+  <ellipse cx="1085" cy="98" rx="50" ry="13" class="accent" stroke-width="0.9" stroke-dasharray="3 3"/>
+  <ellipse cx="1085" cy="98" rx="17" ry="50" class="accent" stroke-width="0.9"/>
+  <text x="1085" y="166" class="label" text-anchor="middle">human review</text>
+</svg>

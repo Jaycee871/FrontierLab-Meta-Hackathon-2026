@@ -38,7 +38,18 @@ material remains under its own terms.
    under CC BY-NC 4.0. It is only referenced in docs/LEGACY_MUSE_MULTILINGUAL.md.
    None of its code, embeddings or data are included in this repository.
 
-4. External services
+4. Liquid AI d1 / LFM models
+
+   Liquid AI's d1 models (for example d1-2B, built on LFM3-VL-2B) and other
+   LFM models are licensed under the LFM Open License v1.0 by Liquid AI
+   (https://www.liquid.ai/lfm-license). They are used only through the
+   optional multimodal evidence gate (frontierlab/multimodal_evidence.py),
+   which expects a model the user has already loaded. No model weights are
+   bundled in this repository, and nothing is downloaded automatically.
+   Users who obtain and run these models must comply with the LFM Open
+   License v1.0 and keep its required notices.
+
+5. External services
 
    NVIDIA NIM, Europe PMC, the Springer Nature Meta API and the Springer Nature
    Open Access API are used as remote services. Their use is governed by
