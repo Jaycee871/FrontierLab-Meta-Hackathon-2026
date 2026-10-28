@@ -52,6 +52,9 @@ def test_snapshot_allowlist_revision_and_no_secret_or_hardware_mutations():
     metadata = json.loads(files["deployment.json"])
     assert metadata["source_sha"] == "a" * 40
     assert "docs/runs/nim_claim_review_completed_20261028.json" in files
+    assert {".streamlit/config.toml", "docs/assets/flatland-hero.svg",
+            "docs/assets/flatland-sphere-icon.png"} <= set(files)
+    assert b"COPY --chown=user:user .streamlit/" in files["Dockerfile"]
     assert all(not p.startswith((".github/", ".git/", "scripts/", "tests/")) for p in files)
     assert all("secret" not in p.lower() and ".env" not in p for p in files)
     assert b"git clone" not in files["Dockerfile"]

@@ -1,0 +1,8 @@
+# Black-and-white "Flatland book plate" theme, matching docs/assets/flatland-*.svg.
+[theme]
+base = "dark"
+primaryColor = "#F2F2F2"
+backgroundColor = "#1E1E1E"
+secondaryBackgroundColor = "#262626"
+textColor = "#F2F2F2"
+font = "serif"
