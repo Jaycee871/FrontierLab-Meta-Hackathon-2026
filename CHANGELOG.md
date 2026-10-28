@@ -1,3 +1,15 @@
+## 2026-10-28 · v0.24 — DetectorScope explainability / output-audit lens
+
+- Added an optional DetectorScope adapter for interpretable AI-text detector diagnostics across FrontierLab model outputs.
+- Records detector label, `p_ai`, logit, bias, active feature descriptions, per-feature importance and token-level highlights when available.
+- Added a strict diagnostic-only boundary: academic-integrity, student-discipline, hiring, publication, authorship-attribution and scientific-truth uses are rejected before the detector is called.
+- Supports DetectorScope's published `tau` grid from 0.00 to 0.95 in 0.05 increments and the logreg / XGBoost head choices.
+- Raw audited text is not copied into the audit record; only a SHA-256 input hash and normalized feature evidence are stored.
+- Added comparison summaries for cross-model linguistic-feature audits without optimizing text to evade detection.
+- The default installation remains unchanged; no DetectorScope, Gemma, SAE weights or PyTorch dependency is added to `requirements.txt`.
+- GitHub Actions run 40730431308 passed **265 tests**.
+- No real DetectorScope inference has been executed; the authors' disclaimer against high-stakes individual decisions is preserved in FrontierLab's runtime contract.
+
 ## 2026-10-28 · v0.23 — Llama 3.1 8B local baseline worker
 
 - Added `meta-llama/Llama-3.1-8B-Instruct` as an optional medium-size local baseline / general-purpose worker.
