@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def source_files(root: Path) -> dict[str, bytes]:
     """Allow-list public application assets; never upload a working directory."""
     files = {name: (root / name).read_bytes()
-             for name in ("app.py", "requirements.txt", ".streamlit/config.toml")}
+             for name in ("app.py", "requirements.txt", ".streamlit/config.toml", "LICENSE", "NOTICE")}
     for folder, suffixes in (("frontierlab", {".py"}), ("datasets", {".json"}),
                              ("docs", {".md", ".json"}), ("docs/assets", {".svg", ".png"})):
         for path in sorted((root / folder).rglob("*")):

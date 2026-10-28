@@ -20,6 +20,8 @@ An optional NVIDIA-hosted Meta Muse Glimmer backend requires the Space owner's s
 
 Source: https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026
 
+License: original code and documentation are MIT (`LICENSE`); third-party material, including optional Llama 3.1, Liquid AI LFM and DetectorScope/Gemma terms, keeps its own licence (`NOTICE`). Both files ship with this Space.
+
 Backend setup and verified scope: https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/blob/main/docs/NIM_RESEARCH_BACKEND.md
 
 A running interface is not evidence of a completed live scientific workflow or formal competition submission.
