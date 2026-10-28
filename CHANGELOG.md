@@ -1,3 +1,15 @@
+## 2026-10-28 · v0.21 — Muse Spark Open frontier multimodal backend
+
+- Added a provider-neutral `MuseSparkHostedClient` for Meta Muse Spark Open while preserving the existing `.json(role, task, payload)` research interface.
+- Added `.multimodal_json(..., media=[...])` for text plus image, audio and video evidence without changing the five-stage scientific governance pipeline.
+- Recorded Meta-listed hosted model strings for Together AI and Fireworks AI, while keeping provider SDKs, endpoints and credentials outside the core adapter.
+- Added process-local call budgeting, no automatic retries, provider/model identity checks, strict JSON parsing, media-type bounds and input/output hash provenance.
+- Raw media references are not copied into provenance receipts.
+- Added a zero-network preflight; FrontierLab does not self-host or auto-download the 816B checkpoint.
+- Meta Muse Glimmer remains the verified stable backend; Muse Spark Open is an optional frontier mode and Liquid d1 remains a lightweight evidence verifier.
+- GitHub Actions run 40656773225 passed **237 tests**.
+- No live Muse Spark hosted inference has been executed by this integration.
+
 ## 2026-10-28 · v0.20 — Optional d1-2B multimodal evidence gate
 
 - Added a strict optional adapter for Liquid AI `d1-2B` using its documented `system_one(state, questions, media=...)` decision interface rather than treating it as a chat model.
