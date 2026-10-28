@@ -5,7 +5,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.22 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Codebase: v0.23 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -169,10 +169,24 @@ FrontierLab deliberately separates model capability from scientific governance:
 - **Meta Muse Spark Open** — optional frontier multimodal backend with provider-specific capability enforcement. Together is the preferred first live Spark path for full text/image/audio/video serverless; Fireworks is retained as an image-first serverless fallback.
 - **Liquid AI d1-2B** — optional lightweight typed multimodal evidence verifier for localization/extraction/decision signals.
 - **Muse Research Muse2-230M** — optional edge/on-device structured worker for metadata normalization, log-to-JSON, schema formatting and routing. It is explicitly blocked from scientific entailment or clinical truth judgments.
+- **Meta Llama 3.1 8B Instruct** — optional medium-size local general-purpose baseline / worker. It can run the same bounded structured JSON contract for controlled comparisons, but every receipt is marked baseline-only and cannot bypass scientific governance.
 
-All three remain subordinate to the same evidence, human-review, stale-context, method-selection and planning gates. A more capable model does not bypass the research governance layer.
+All model layers remain subordinate to the same evidence, human-review, stale-context, method-selection and planning gates. A more capable model does not bypass the research governance layer.
+
+### Model-scale ladder
+
+| Model | Approx. scale | FrontierLab role |
+| --- | ---: | --- |
+| Muse2-230M | 0.23B | Edge structured preprocessing |
+| Llama 3.1 8B Instruct | 8B | Local general-purpose baseline / worker |
+| Muse Glimmer 30B | 30B | Verified scientific reasoning backend |
+| Muse Spark Open | 816B total / 42B active | Frontier multimodal reasoning backend |
+
+The planned comparison is not a size leaderboard. The goal is to measure the smallest model that can reliably perform each bounded task under the same evidence and human-review constraints.
 
 ## Supporting experiments and tools
+
+- [Llama 3.1 8B Local Baseline Worker](docs/LLAMA31_BASELINE.md) — optional medium-size text baseline for structured reliability/cost comparisons; no new Llama 3.1 inference has been executed in FrontierLab.
 
 - [Muse2-230M Edge Structured Worker](docs/MUSE2_EDGE_WORKER.md) — optional local preprocessing for strict JSON/metadata/routing; no real Muse2 inference has been executed in FrontierLab.
 
