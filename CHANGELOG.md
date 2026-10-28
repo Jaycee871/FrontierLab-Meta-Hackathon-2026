@@ -1,3 +1,14 @@
+## 2026-10-29 · v0.25 — Provenance-tagged evidence graph
+
+- Added `frontierlab/evidence_graph.py`, a plain-dict graph that links a run's plan steps back to the literature (Paper ← Passage ← Claim ← Hypothesis ← PlanStep). Edges are tagged EXTRACTED, INFERRED or AMBIGUOUS.
+- EXTRACTED is assigned only when a claim passed the verbatim evidence gate and its quote is located in the cited abstract, with character offsets. Model stances without an anchored quote are INFERRED. Conflicting labels (mixed or inconclusive stances, opposite stances from the same source, or a reviewer CONTRADICTED / INSUFFICIENT verdict) are AMBIGUOUS.
+- New plan-step path gate: a step can be approved only if every reachable edge is EXTRACTED and every cited source is reached. This adds to the existing gates and does not replace or relax any of them.
+- `claim_verification` now exposes the shared anchor check (`quote_anchored`, `locate_quote`). `audit_predictions` uses it with unchanged behaviour.
+- `Run.evidence_graph` is included in the provenance JSON export. The app adds section 6 with provenance counts, a monochrome line-art view, the surfaced non-evidence links, a step gate table and approval form, and a `graph.json` download.
+- `load_graph()` re-anchors passages and EXTRACTED edges, and fails closed on a tampered or stale graph.
+- The provenance vocabulary is inspired by Graphify (Graphify Labs, Apache-2.0), credited in the docs. No dependency was added and no NOTICE entry is needed.
+- The local suite passed **289 tests**.
+
 ## 2026-10-28 · v0.24 — DetectorScope explainability / output-audit lens
 
 - Added an optional DetectorScope adapter for interpretable AI-text detector diagnostics across FrontierLab model outputs.

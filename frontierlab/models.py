@@ -52,6 +52,7 @@ class Run:
     evaluation: dict | None = None
     backend: str = "none"
     inference: dict | None = None
+    evidence_graph: dict | None = None
 
     def as_dict(self) -> dict:
         return asdict(self)

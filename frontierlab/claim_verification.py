@@ -14,6 +14,54 @@ LABELS = {"SUPPORTED", "CONTRADICTED", "INSUFFICIENT"}
 def normalize_excerpt(s: str) -> str:
     return re.sub(r"\s+", " ", str(s).strip()).casefold()
 
+def quote_anchored(abstract: str, quote: str) -> bool:
+    """The anchor check: a nonempty quote occurs in the abstract (whitespace/case-insensitive).
+
+    Shared by audit_predictions and the evidence graph so both apply one rule.
+    """
+    q = normalize_excerpt(quote)
+    return bool(q and q in normalize_excerpt(abstract))
+
+def locate_quote(abstract: str, quote: str) -> tuple[int, int] | None:
+    """Character span [start, end) of an anchored quote within the ORIGINAL abstract.
+
+    Returns None unless quote_anchored() passes and the normalized match can be mapped
+    back onto the original text exactly (fail closed on any mapping doubt).
+    """
+    if not isinstance(abstract, str) or not isinstance(quote, str):
+        return None
+    if not quote_anchored(abstract, quote):
+        return None
+    lead = len(abstract) - len(abstract.lstrip())
+    body = abstract.strip()
+    chars: list[str] = []
+    origin: list[int] = []
+    i = 0
+    while i < len(body):
+        if re.match(r"\s", body[i]):
+            j = i
+            while j < len(body) and re.match(r"\s", body[j]):
+                j += 1
+            chars.append(" ")
+            origin.append(lead + i)
+            i = j
+            continue
+        for folded in body[i].casefold():
+            chars.append(folded)
+            origin.append(lead + i)
+        i += 1
+    normalized = "".join(chars)
+    if normalized != normalize_excerpt(abstract):
+        return None
+    q = normalize_excerpt(quote)
+    at = normalized.find(q)
+    if at < 0:
+        return None
+    start, end = origin[at], origin[at + len(q) - 1] + 1
+    if normalize_excerpt(abstract[start:end]) != q:
+        return None
+    return start, end
+
 def audit_predictions(papers: list[Paper], rows: list[dict]) -> dict:
     """Test predictions against externally authored ground-truth labels.
 
@@ -36,8 +84,7 @@ def audit_predictions(papers: list[Paper], rows: list[dict]) -> dict:
             raise ValueError("Missing or unrecognized model label")
         paper_id = str(row.get("paper_id", ""))
         paper = catalog.get(paper_id)
-        quote = normalize_excerpt(row.get("quote", ""))
-        anchor = bool(paper and quote and quote in normalize_excerpt(paper.abstract))
+        anchor = bool(paper and quote_anchored(paper.abstract, row.get("quote", "")))
         # Fail closed: without a quote from the named source, no affirmative
         # 'supports' or 'contradicts' model label is permitted past the gate.
         published = predicted if anchor else "INSUFFICIENT"

@@ -32,6 +32,7 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 - **Multi-agent synthesis with Meta Muse Glimmer 30B** (`meta/muse-glimmer-30b`) through NVIDIA NIM. Roles include the Evidence Extraction Agent, Adversarial Skeptic Agent and Hypothesis Agent, plus optional method-proposal and planning calls. Every call has a hard budget, and there are no automatic retries.
 - **Method evaluation.** The researcher compares candidate methods and records reproducibility documentation (data, code, environment, parameters, protocol, metrics) and uncertainty. They then select a method with a rationale or defer.
 - **Planning gate.** A draft plan needs a current saved evaluation and explicit approval. The draft includes controls, metrics, replication and falsification criteria.
+- **Evidence graph.** Each run builds a plain-dict provenance graph (Paper ← Passage ← Claim ← Hypothesis ← Plan step). Every edge is tagged EXTRACTED (quote located in the abstract, or a checked ID reference), INFERRED (model stance without an anchored quote) or AMBIGUOUS (conflicting labels). A plan step can be approved only if its whole path back to a paper is EXTRACTED. The graph can be downloaded as `graph.json`. See [evidence graph](docs/EVIDENCE_GRAPH.md).
 - **Audit trail export.** Source records, claim checks, review judgments, workflow decisions and drafts can be exported as JSON with per-request model receipts (role, model ID, input/output hashes, timing, tokens).
 - **Invalidation on change.** If source records or the question change, earlier reviews, hypotheses, evaluations and plans are invalidated.
 
@@ -86,7 +87,7 @@ flowchart TD
 | **4. Evaluation** | Compare candidate methods, reproducibility conditions and uncertainty. | **Researcher decision completed.** M2 selected; M1 retained as comparator. The canonical evaluation is bound to the exact live hypothesis trace and passes `require_evaluation()`. Open reproducibility checks remain for data, code and environment. |
 | **5. Planning** | Approve a draft with controls, measurements and falsification criteria. | Requires a current method evaluation and explicit approval. Exports the selected method, rationale, unresolved checks and draft controls, metrics, replication and falsification criteria. Live inference for this stage is unverified. |
 
-Core modules live in [`frontierlab/`](frontierlab): `pipeline.py` (research pipeline), `evidence.py` / `claim_verification.py` (quotation and source checks), `review.py` (human review packets), `evaluation.py` / `evaluation_ui.py` (method evaluation), `research_backend.py` / `nvidia_muse.py` / `openweight.py` (model backends), `discovery.py` / `multisource.py` / `springer_meta.py` / `springer_oa.py` (retrieval), and `audit.py` / `reporting.py` (export).
+Core modules live in [`frontierlab/`](frontierlab): `pipeline.py` (research pipeline), `evidence.py` / `claim_verification.py` (quotation and source checks), `review.py` (human review packets), `evidence_graph.py` (provenance graph and plan-step path gate), `evaluation.py` / `evaluation_ui.py` (method evaluation), `research_backend.py` / `nvidia_muse.py` / `openweight.py` (model backends), `discovery.py` / `multisource.py` / `springer_meta.py` / `springer_oa.py` (retrieval), and `audit.py` / `reporting.py` (export).
 
 ## Quickstart
 
@@ -253,7 +254,7 @@ These modules support the five-stage product. Their offline results do not show 
 | `.github/workflows/` | Automated tests (`tests.yml`) and manual-only connection, trial and deploy workflows. |
 | [CHANGELOG.md](CHANGELOG.md) | Version-by-version development history. |
 
-Key docs: [project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) · [method evaluation](docs/METHOD_EVALUATION.md) · [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) · [human review gate](docs/HUMAN_REVIEW_GATE.md) · [structured Meta runs](docs/META_STRUCTURED_RUNS.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [resource strategy](docs/RESOURCE_STRATEGY.md) · [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
+Key docs: [project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) · [method evaluation](docs/METHOD_EVALUATION.md) · [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) · [human review gate](docs/HUMAN_REVIEW_GATE.md) · [evidence graph](docs/EVIDENCE_GRAPH.md) · [structured Meta runs](docs/META_STRUCTURED_RUNS.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [resource strategy](docs/RESOURCE_STRATEGY.md) · [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
 
 Some setup documents keep earlier implementation snapshots. To judge what has actually been verified, use the dated status and run records linked above.
 
@@ -280,4 +281,5 @@ Created by **Pack Kwan Low (Jaycee)**.
 - [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon)
 - [Meta developer platform](https://dev.meta.ai/)
 - Literature data: Europe PMC and Springer Nature APIs. The pilot excerpts carry their own citation and rights metadata in [`datasets/`](datasets/real_ph_excerpt_cases_v1.json).
+- Evidence-graph provenance tags (EXTRACTED / INFERRED / AMBIGUOUS) are inspired by [Graphify](https://github.com/Graphify-Labs/graphify) (Graphify Labs, Apache-2.0). This is an idea credit only; no Graphify code is used or bundled.
 - Visual theme: an homage to Edwin A. Abbott's *Flatland: A Romance of Many Dimensions* (1884, public domain). The epigraphs "Upward, not Northward" and "May aspire yet higher and higher" are quoted from the book (Project Gutenberg eBook #97). All artwork is original.
