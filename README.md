@@ -1,56 +1,98 @@
 # FrontierLab
-### Evidence-grounded scientific research agents
+### Evidence-grounded multi-agent AI for scientific research
 
 **Meta Global AI Developer Hackathon 2026 · Indie Developer Track · Push the Frontier**
 
-FrontierLab helps researchers turn a scientific question into a testable hypothesis and a reviewable research plan. Its initial focus is biomedical research: collect literature, inspect supporting and conflicting evidence, examine uncertainty, and let the researcher intervene before moving forward.
+FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Current codebase: v0.19 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Codebase: v0.19 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
-The evidence retrieval and audit components have working software and recorded tests. **One genuine Meta Muse Glimmer inference through NVIDIA NIM succeeded on a synthetic prompt**; the [run receipt](docs/runs/meta_nim_smoke_20261028.json) records the answer, model identity, timing and token use. A single published-excerpt JSON check, a 12-case joint-context batch and a two-call core extraction have also completed; see [structured run records](docs/META_STRUCTURED_RUNS.md) and the [NIM research backend](docs/NIM_RESEARCH_BACKEND.md). Both extracted core claims now have explicit researcher SUPPORTED judgments. A genuine human-reviewed Meta continuation has completed through the Skeptic and Hypothesis stages. The researcher then selected **M2 — Structure-based dual-pH histidine-scanning computational design** as the primary method, with M1 retained as a comparator. The canonical method evaluation is source-bound and passes the Planning eligibility check. Planning remains intentionally unapproved and incomplete. Paid Meta Model API access is disabled.
+[Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
-[Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
+---
 
-## The research workflow
+## The problem
+
+When an LLM writes about scientific literature, it can cite a real DOI and still make a statement the paper never supports. Its output can also sound more certain than the evidence is. Most literature assistants jump from search straight to synthesis. They don't show what each source actually says, where the sources disagree, or where a researcher needs to step in.
+
+FrontierLab treats literature-to-plan work as an **auditable, human-gated pipeline**. Model agents propose claims, critiques, hypotheses and plans. Deterministic checks and explicit researcher decisions decide what moves forward. The initial domain is biomedical research, with a focus on whether a protein-design method merits further testing.
+
+It follows four principles: **transparent evidence, reproducibility, uncertainty analysis and meaningful researcher intervention.**
+
+## Key features
+
+- **Five-stage workflow** (Research → Evidence → Hypothesis → Evaluation → Planning) in a Streamlit interface.
+- **Literature discovery** from Europe PMC (used by the app), plus a separate three-source workflow that adds Springer Nature Meta API v2 and Springer Nature Open Access API.
+- **Verbatim evidence gate.** Every model claim must cite a retrieved source ID and include a contiguous, verbatim 24–500-character quotation from that paper's abstract. Claims that fail are rejected before synthesis.
+- **Human review gate.** Each accepted claim needs a reviewer verdict: SUPPORTED, CONTRADICTED or INSUFFICIENT. Synthesis resumes only when every claim is reviewed and at least two distinct papers are judged supportive. Reviews are bound to source snapshots and the research question.
+- **Multi-agent synthesis with Meta Muse Glimmer 30B** (`meta/muse-glimmer-30b`) through NVIDIA NIM. Roles include the Evidence Extraction Agent, Adversarial Skeptic Agent and Hypothesis Agent, plus optional method-proposal and planning calls. Every call has a hard budget, and there are no automatic retries.
+- **Method evaluation.** The researcher compares candidate methods and records reproducibility documentation (data, code, environment, parameters, protocol, metrics) and uncertainty. They then select a method with a rationale or defer.
+- **Planning gate.** A draft plan needs a current saved evaluation and explicit approval. The draft includes controls, metrics, replication and falsification criteria.
+- **Audit trail export.** Source records, claim checks, review judgments, workflow decisions and drafts can be exported as JSON with per-request model receipts (role, model ID, input/output hashes, timing, tokens).
+- **Invalidation on change.** If source records or the question change, earlier reviews, hypotheses, evaluations and plans are invalidated.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    Q[1. Research<br/>question, scope, assumptions] --> R[2. Evidence: retrieval<br/>Europe PMC · Springer Nature Meta / OA]
+    R --> X[Evidence Extraction Agent<br/>claims + source ID + exact quote]
+    X --> G{Verbatim evidence gate<br/>valid source ID? quote in that abstract?}
+    G -- no --> REJ[Claim rejected]
+    G -- yes --> H{Human review gate<br/>all claims reviewed?<br/>≥2 distinct sources SUPPORTED?}
+    H -- no --> STOP[Synthesis stops]
+    H -- yes --> S[3. Hypothesis<br/>Adversarial Skeptic Agent → Hypothesis Agent]
+    S --> E[4. Evaluation<br/>candidate methods, reproducibility checks,<br/>researcher selects or defers]
+    E --> P{Planning gate<br/>current evaluation + explicit approval}
+    P -- yes --> PL[5. Planning<br/>draft with controls, metrics,<br/>replication, falsification]
+    PL --> A[(JSON audit trail export)]
+```
 
 | Stage | Researcher-facing goal | Current implementation |
 | --- | --- | --- |
 | **1. Research** | Define the scientific question, scope and assumptions. | Question and literature-query inputs in Streamlit. |
 | **2. Evidence** | Retrieve papers and inspect citation-linked claims, quotations and disagreement. | Europe PMC retrieval; separate three-source discovery workflow; source and quotation checks. |
-| **3. Hypothesis** | Propose falsifiable hypotheses grounded in reviewed evidence. | **Real reviewed continuation completed:** two Meta Muse Glimmer calls ran after human review, producing two citation-linked hypotheses and a skeptical uncertainty analysis; execution boundary validated. |
-| **4. Evaluation** | Compare candidate methods, reproducibility conditions and uncertainty. | **Completed researcher decision:** M2 selected; M1 retained as comparator. Canonical evaluation is bound to the exact live hypothesis trace and passes `require_evaluation()`; open reproducibility checks remain for data, code and environment. |
-| **5. Planning** | Approve a draft with controls, measurements and falsification criteria. | Requires a current method evaluation and explicit approval; exports the selected method, rationale, unresolved checks and draft controls/metrics/replication/falsification. Live inference remains unverified. |
+| **3. Hypothesis** | Propose falsifiable hypotheses grounded in reviewed evidence. | **Real reviewed continuation completed.** After human review, two Meta Muse Glimmer calls produced two citation-linked hypotheses and a skeptical uncertainty analysis. The execution boundary was validated. |
+| **4. Evaluation** | Compare candidate methods, reproducibility conditions and uncertainty. | **Researcher decision completed.** M2 selected; M1 retained as comparator. The canonical evaluation is bound to the exact live hypothesis trace and passes `require_evaluation()`. Open reproducibility checks remain for data, code and environment. |
+| **5. Planning** | Approve a draft with controls, measurements and falsification criteria. | Requires a current method evaluation and explicit approval. Exports the selected method, rationale, unresolved checks and draft controls, metrics, replication and falsification criteria. Live inference for this stage is unverified. |
 
-Four principles guide the workflow: **transparent evidence, reproducibility, uncertainty analysis and meaningful researcher intervention**. BioNeMo and the Research Failure Lab support these stages.
+Core modules live in [`frontierlab/`](frontierlab): `pipeline.py` (research pipeline), `evidence.py` / `claim_verification.py` (quotation and source checks), `review.py` (human review packets), `evaluation.py` / `evaluation_ui.py` (method evaluation), `research_backend.py` / `nvidia_muse.py` / `openweight.py` (model backends), `discovery.py` / `multisource.py` / `springer_meta.py` / `springer_oa.py` (retrieval), and `audit.py` / `reporting.py` (export).
 
-## What is working today?
-
-| Component | Verified status | Scope |
-| --- | --- | --- |
-| **Literature discovery** | Recorded three-source run succeeded. | Europe PMC, Springer Nature Meta API v2 and Springer Nature Open Access API each returned two records: six total, four with abstracts. The Streamlit retrieval interface currently uses Europe PMC. |
-| **Evidence checks** | Implemented and covered by offline tests. | Source-ID validation and a contiguous, verbatim 24–500-character quotation from the cited abstract; invalid claims are rejected. |
-| **Human claim review** | Implemented; both recorded core claims explicitly reviewed SUPPORTED by Jaycee871. | Every accepted claim must be reviewed, with at least two distinct papers judged supportive before synthesis resumes. Reviews bind to source snapshots and the research question. |
-| **Method evaluation** | Implemented with offline and Streamlit interaction tests. | Researcher-assessed candidate dossiers and optional local-model proposals; documented materials are not claimed to have been executed. [Protocol](docs/METHOD_EVALUATION.md). |
-| **Audit trail** | Implemented. | Source records, claim checks, review judgments, workflow decisions and draft outputs can be exported as JSON. |
-| **Software checks** | **224 tests passed in GitHub CI** for the current codebase, including exact live-trace method-evaluation reconstruction and Planning-gate eligibility. | Tests cover deterministic rules, parsers, adapters and mocked or fictional scenarios; this count is not a model-accuracy score. |
-| **Meta model inference** | **Recorded smoke, JSON, 12-case, core extraction and reviewed continuation runs.** | Run [40574846326](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40574846326) executed exactly two additional Muse Glimmer roles after human review: Skeptic and Hypothesis. Both returned validated JSON; two citation-linked hypotheses survived audit. [Summary](docs/runs/nim_reviewed_continuation_20261028.json) · [handoff](docs/runs/nim_method_handoff_20261028.json). |
-| **Hosted interface** | **v0.16 deployed and verified RUNNING on CPU Basic.** | Runtime revision, health endpoint and rendered source marker checked; both supplied claim judgments and rationales are visible. NIM is still owner-disabled on HF. [Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Deployment receipt](docs/runs/hf_deployment_20261028.json). |
-| **BioNeMo computation** | Offline preflight only. | Boltz-2 request preparation and response-format checks; no hosted scientific computation has run. |
-
-Evidence: [three-source discovery run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268), [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730), and [recorded NVIDIA trial](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386).
-
-## Run locally
+## Quickstart
 
 Requires **Python 3.10+**.
+
+### 1. Install
 
 ```bash
 git clone https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026.git
 cd FrontierLab-Meta-Hackathon-2026
 python -m pip install -r requirements.txt
+```
+
+### 2. Configure (optional)
+
+No keys are needed for the synthetic demo or Europe PMC retrieval. Model-backed and publisher features are **off by default**. Set the following on the server that runs the app, using environment variables or the host's secret settings. Never put keys in the repository or in the research question.
+
+| Variable | Used for |
+| --- | --- |
+| `NVIDIA_API_KEY` | NVIDIA NIM access to Meta Muse Glimmer. |
+| `FRONTIERLAB_NIM_RESEARCH=YES` | Owner opt-in that enables the **Meta via NVIDIA** research mode. |
+| `SPRINGER_NATURE_META_API_KEY` | Springer Nature Meta API v2. This is a bibliographic metadata API, not Meta Platforms model inference. |
+| `SPRINGER_NATURE_OA_API_KEY` | Springer Nature Open Access API. |
+| `FRONTIERLAB_NVIDIA_TRIAL`, `FRONTIERLAB_META_JSON_TRIAL`, `FRONTIERLAB_META_PILOT_TRIAL`, `FRONTIERLAB_EXTRACTION_TRIAL`, `FRONTIERLAB_CONTINUATION_TRIAL` | Explicit `YES` opt-ins for the bounded trial scripts in `scripts/`. |
+| `FRONTIERLAB_DOWNLOAD_OK=YES` | Allows `scripts/start_muse_local.sh` to download the ~17 GB local checkpoint. |
+| `HF_TOKEN1`, `FRONTIERLAB_HF_DEPLOY=YES` | Used only by the Hugging Face deploy script. |
+
+GitHub Secrets are **not** automatically available inside Hugging Face Spaces. See the [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) and [resource strategy](docs/RESOURCE_STRATEGY.md) docs.
+
+### 3. Run the app
+
+```bash
 streamlit run app.py
 ```
 
-On Windows, `run_windows.bat` is also available after installing dependencies.
+On Windows, double-click `run_windows.bat`. It installs `requirements.txt` and starts Streamlit.
 
 Choose a mode in the sidebar:
 
@@ -58,52 +100,19 @@ Choose a mode in the sidebar:
 | --- | --- | --- |
 | **Synthetic audit demonstration** | Uses labeled, hand-authored fictional publications to show disagreement, approval and planning. | No keys, model or external calls. |
 | **Live Europe PMC metadata (no model calls)** | Retrieves real publication metadata and available abstracts. | Internet connection; no API key. |
-| **Live Europe PMC + local Meta model** | Attempts model-based claim extraction and the human-reviewed synthesis workflow. | An actual Muse Glimmer checkpoint served by llama.cpp on the same host at `127.0.0.1:8080`. Experimental and unverified. |
-| **Live Europe PMC + Meta via NVIDIA** | Reuses one NIM research client across extraction, reviewed synthesis, method proposals and planning. | Owner-enabled backend, server-side credential, explicit question/abstract transfer consent and shared process call cap. [Setup](docs/NIM_RESEARCH_BACKEND.md). |
+| **Live Europe PMC + local Meta model** | Attempts model-based claim extraction and the human-reviewed synthesis workflow. | A real Muse Glimmer checkpoint served by llama.cpp on the same host at `127.0.0.1:8080` (see `scripts/start_muse_local.sh`). Experimental and unverified. |
+| **Live Europe PMC + Meta via NVIDIA** | Reuses one NIM research client across extraction, reviewed synthesis, method proposals and planning. | Owner-enabled backend, server-side credential, explicit consent to send the question and abstracts, and a shared cap of eight attempted calls per server process. [Setup](docs/NIM_RESEARCH_BACKEND.md). |
 
-The CPU Space hosts the interface and retrieval/audit tools; it does not have a loaded Muse Glimmer model. A remote Kaggle server is not reachable through the Space's localhost address. See [local inference notes](docs/META_OPENWEIGHT_HF_CPU.md) and [Space setup](docs/HF_PRO_SETUP.md).
+To try the full five-stage flow without a model, run the **Synthetic audit demonstration**. Then follow the walkthrough in [method evaluation and planning](docs/METHOD_EVALUATION.md#try-both-paths-without-a-model).
 
-The NVIDIA client now has an optional, explicitly enabled Streamlit research backend. See [owner configuration and call limits](docs/NIM_RESEARCH_BACKEND.md). One explicitly authorized, branch-scoped GitHub-triggered smoke test has completed; its one-shot trigger is now disabled. The default-branch trial workflow remains manual. GitHub Secrets are not automatically available inside Hugging Face Spaces. See [resource strategy](docs/RESOURCE_STRATEGY.md).
-
-## How evidence reaches a research plan
-
-1. Retrieve publications and their available abstracts.
-2. Ask the connected model to propose claims with source IDs and exact quotations.
-3. Reject invalid source references and quotations that do not match the cited abstract.
-4. Stop for human judgments: **supported, contradicted or insufficient**.
-5. Resume skeptical review and hypothesis generation only after all claims are reviewed and at least two distinct sources are human-supported.
-6. Compare candidate methods, document reproducibility gaps and uncertainty, then select a method with a rationale or defer.
-7. Require a current saved evaluation and explicit approval before drafting a cited research plan.
-8. Export the evidence, evaluation and decision trail for inspection.
-
-Changed source records or a changed question invalidate the previous review. Insufficient evidence stops synthesis.
-
-**A matching quotation establishes that text exists in a source; it does not establish that the text supports the model's interpretation.** Human labels are review decisions, not independently adjudicated scientific ground truth. Conflict detection also depends on fallible model-supplied claim keys. Outputs are research drafts, with no validated clinical or wet-lab execution capability.
-
-See [method evaluation and planning](docs/METHOD_EVALUATION.md), [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) and [human review protocol](docs/HUMAN_REVIEW_GATE.md).
-
-## Supporting experiments and tools
-
-| Module | Purpose | Current boundary |
-| --- | --- | --- |
-| [Real literature pilot](docs/REAL_LITERATURE_PILOT.md) | Twelve excerpt-level cases from four published papers; blank reviewer packets and imported-output comparison. | One real Meta batch is recorded; reference labels are AI-authored proposals awaiting researcher review. No accuracy claim. |
-| [Claim-to-passage audit](docs/CLAIM_VERIFICATION_AND_NIM.md) | Separate source identity, quotation matching and semantic-label agreement. | Ten hand-authored fictional cases; not measured Meta model performance. |
-| [Research Failure Lab](docs/RESEARCH_FAILURE_LAB.md) | Exercise stale reviews, misattributed quotations, spoofed tool results and other handoff failures. | Twelve fictional software scenarios; not a biological or human-participant study. |
-| [BioNeMo tools](docs/BIONEMO_SCIENCE_TOOLS.md) | Prepare an optional scientific-computation step within Evaluation. | Protein-only Boltz-2 preflight and response-shape checks. ProteinMPNN, RFdiffusion and OpenFold3 are listed but not connected. |
-| Quantitative heterogeneity example | Illustrate disagreement using inverse-variance estimates, Cochran Q and I². | Fictional inputs; Python results cross-checked with Wolfram during development. |
-| [OpenCode](docs/OPENCODE_DEVELOPER.md) / [OpenShell exploration](docs/OPENCLAW_OPENSHELL.md) | Support local development and isolation experiments. | OpenCode configuration and simulated permission checks; real OpenShell runtime isolation unverified. |
-| [Legacy Facebook Research MUSE](docs/LEGACY_MUSE_MULTILINGUAL.md) | Historical cross-lingual embedding alignment reference for a future multilingual Evidence layer. | Archived upstream project, distinct from Meta Muse Glimmer; no upstream code/data bundled or executed. |
-
-These modules support the five-stage product. Their offline results do not demonstrate successful Meta inference or scientific discovery.
-
-**Muse naming note:** the archived Facebook Research **MUSE** project (Multilingual Unsupervised and Supervised Embeddings) is a separate legacy research project from **Meta Muse Glimmer 30B**. FrontierLab tracks the former only as an optional multilingual-evidence reference; it is not part of the current runtime. See [the MUSE reference note](docs/LEGACY_MUSE_MULTILINGUAL.md).
-
-## Tests and reproducibility
+### 4. Run tests
 
 ```bash
 python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
+
+The suite has **224 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction and single/batch output validation. GitHub Actions run [40578886168](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40578886168) passed all 224. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -111,42 +120,96 @@ Optional offline demonstrations:
 python -m scripts.research_failure_lab
 python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
+python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/runs/meta_pilot_predictions_20261028.json
 ```
 
-The **224-test** suite includes Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction and single/batch output validation tests. GitHub Actions run [40578886168](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40578886168) passed all 224 tests. Synthetic fixtures are labeled explicitly; genuine model outputs require separate, dated execution records.
+## Deployment (Hugging Face Space)
 
-## Repository guide
+- **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
+- **Status:** v0.16 deployed and verified RUNNING. The runtime revision, health endpoint (HTTP 200) and rendered source marker were checked, and both recorded claim judgments with their rationales are visible. [Deployment receipt](docs/runs/hf_deployment_20261028.json).
+- **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
+- **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
+
+Details: [HF deployment](docs/HF_DEPLOYMENT.md) · [HF Space setup](docs/HF_PRO_SETUP.md) · [local / open-weight inference notes](docs/META_OPENWEIGHT_HF_CPU.md).
+
+## Evaluation and recorded results
+
+All numbers below come from dated run records in [`docs/runs/`](docs/runs) and the linked GitHub Actions runs. No billed Meta Platforms Model API was used.
+
+| Component | Recorded result | Scope / limits |
+| --- | --- | --- |
+| **Meta inference smoke test** | One synthetic request to `meta/muse-glimmer-30b` via NVIDIA NIM: `finish_reason=stop`, 10.535 s, 249 tokens. [Run 40562188386](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40562188386) · [receipt](docs/runs/meta_nim_smoke_20261028.json) | Synthetic prompt only. |
+| **Structured JSON check** | One published-excerpt strict-JSON response passed expected-ID and exact-quotation checks: 5.126 s, 526 tokens. [Run 40563411852](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40563411852) · [receipt](docs/runs/meta_nim_json_20261028.json) | Single case. |
+| **12-case literature pilot batch** | 12 structured predictions in one joint context: 8 quote-anchored SUPPORTED/CONTRADICTED responses and 4 INSUFFICIENT abstentions; 11.168 s, 1,794 tokens. [Run 40563954658](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40563954658) · [receipt](docs/runs/meta_nim_pilot_20261028.json) · [predictions](docs/runs/meta_pilot_predictions_20261028.json) | Human reference labels are pending, so **accuracy is null**. This is not a generalization benchmark. [Details](docs/META_STRUCTURED_RUNS.md). |
+| **Core extraction** | Two real Evidence Extraction Agent calls (1,802 tokens) on frozen published excerpts. Two quoted claims passed the passage checks, and the run stopped at `HUMAN_CLAIM_REVIEW_REQUIRED`. [Run 40566722171](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40566722171) · [receipt](docs/runs/nim_research_extraction_20261028.json) | Fixed sources; not a fresh live search. |
+| **Human claim review** | Jaycee871 reviewed both core claims as SUPPORTED with written rationales. [Review record](docs/runs/nim_claim_review_completed_20261028.json) | Reviewer decisions, not adjudicated ground truth. |
+| **Reviewed continuation** | After the review, exactly two Muse Glimmer roles (Adversarial Skeptic Agent → Hypothesis Agent) returned validated JSON, used 2,317 tokens, and produced two citation-linked hypotheses that survived the audit. [Run 40574846326](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40574846326) · [summary](docs/runs/nim_reviewed_continuation_20261028.json) · [handoff](docs/runs/nim_method_handoff_20261028.json) | Stopped before Evaluation and Planning by design. |
+| **Method selection** | The researcher selected **M2: structure-based dual-pH histidine-scanning computational design**, with M1 kept as a comparator. The canonical evaluation passes the Planning eligibility check. [Evaluation](docs/runs/method_evaluation_20261028.json) · [researcher rationale](docs/runs/researcher_method_selection_20261028.json) | No scientific execution is claimed. Planning is **not yet approved or generated**. |
+| **Three-source discovery** | Europe PMC, Springer Nature Meta API v2 and Springer Nature Open Access each returned two records: six in total, four with abstracts. [Run 40519989268](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40519989268) | The Streamlit app currently uses only Europe PMC. |
+| **BioNeMo** | Offline preflight only: Boltz-2 request preparation and response-format checks. | No hosted scientific computation has run. |
+
+Earlier evidence: [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730).
+
+### Important limitations
+
+- **A matching quotation shows that the text exists in a source. It does not show that the text supports the model's interpretation.**
+- Human labels are review decisions, not independently adjudicated scientific ground truth.
+- Conflict detection depends on model-supplied claim keys, which can be wrong.
+- Outputs are research drafts. FrontierLab has no validated clinical or wet-lab execution capability.
+- Paid Meta Model API access is disabled.
+
+See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md) and [method evaluation and planning](docs/METHOD_EVALUATION.md).
+
+## Supporting experiments and tools
+
+| Module | Purpose | Current boundary |
+| --- | --- | --- |
+| [Real literature pilot](docs/REAL_LITERATURE_PILOT.md) | Twelve excerpt-level cases from four published papers; blank reviewer packets and comparison of imported outputs. | One real Meta batch is recorded. Reference labels are AI-authored proposals awaiting researcher review. No accuracy claim. |
+| [Claim-to-passage audit](docs/CLAIM_VERIFICATION_AND_NIM.md) | Separates source identity, quotation matching and semantic-label agreement. | Ten hand-authored fictional cases; not measured Meta model performance. |
+| [Research Failure Lab](docs/RESEARCH_FAILURE_LAB.md) | Exercises stale reviews, misattributed quotations, spoofed tool results and other handoff failures. | Twelve fictional software scenarios; not a biological or human-participant study. |
+| [BioNeMo tools](docs/BIONEMO_SCIENCE_TOOLS.md) | Prepares an optional scientific-computation step within Evaluation. | Protein-only Boltz-2 preflight and response-shape checks. ProteinMPNN, RFdiffusion and OpenFold3 are listed but not connected. |
+| Quantitative heterogeneity example | Illustrates disagreement using inverse-variance estimates, Cochran Q and I². | Fictional inputs; Python results were cross-checked with Wolfram during development. |
+| [OpenCode](docs/OPENCODE_DEVELOPER.md) / [OpenShell exploration](docs/OPENCLAW_OPENSHELL.md) | Support local development and isolation experiments. | OpenCode configuration and simulated permission checks; real OpenShell runtime isolation is unverified. |
+| [Legacy Facebook Research MUSE](docs/LEGACY_MUSE_MULTILINGUAL.md) | Historical cross-lingual embedding alignment reference for a future multilingual Evidence layer. | Archived upstream project, distinct from Meta Muse Glimmer; no upstream code or data is bundled or executed. |
+
+These modules support the five-stage product. Their offline results do not show successful Meta inference or scientific discovery.
+
+**Muse naming note:** the archived Facebook Research **MUSE** project (Multilingual Unsupervised and Supervised Embeddings) is a separate, legacy research project. It is unrelated to **Meta Muse Glimmer 30B**, and it is not part of the current runtime.
+
+## Project layout
 
 | Path | Contents |
 | --- | --- |
 | `app.py` | Streamlit interface, claim review and export controls. |
 | `frontierlab/` | Retrieval, audit rules, review packets, model adapters, research pipeline and supporting experiments. |
-| `scripts/` | Offline demonstrations, hardware checks and opt-in connection trials. |
-| `tests/` | Offline software tests. |
-| `deploy/hf-space/` | Docker Space deployment template. |
-| `docs/` | Project charter, protocols, resource notes and sprint plan. |
-| `.github/workflows/` | Automated tests and manual connection workflows. |
+| `scripts/` | Offline demonstrations, hardware checks, opt-in connection trials and the HF deploy script. |
+| `tests/` | Offline software tests (pytest). |
+| `datasets/` | Published-excerpt pilot cases with citation and rights metadata. |
+| `deploy/hf-space/` | Docker Space template (Dockerfile and Space README). |
+| `docs/` | Charter, protocols, resource notes and sprint plan; dated run records in `docs/runs/`. |
+| `.github/workflows/` | Automated tests (`tests.yml`) and manual-only connection, trial and deploy workflows. |
 | [CHANGELOG.md](CHANGELOG.md) | Version-by-version development history. |
 
-Publisher connector details: [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
+Key docs: [project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) · [method evaluation](docs/METHOD_EVALUATION.md) · [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) · [human review gate](docs/HUMAN_REVIEW_GATE.md) · [structured Meta runs](docs/META_STRUCTURED_RUNS.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [resource strategy](docs/RESOURCE_STRATEGY.md) · [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
 
-Some setup documents preserve earlier implementation snapshots. Use the dated status and linked execution records above when assessing what has actually been verified.
+Some setup documents keep earlier implementation snapshots. To judge what has actually been verified, use the dated status and run records linked above.
 
-## Next milestones
+## Hackathon context and next milestones
 
-1. **Stage 5 remains human-gated:** M2 is now formally selected in [the canonical method evaluation](docs/runs/method_evaluation_20261028.json), with the human rationale preserved separately in [the researcher selection record](docs/runs/researcher_method_selection_20261028.json). Planning has not been approved or generated.
+FrontierLab was built for the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) 2026, Indie Developer Track, under the Push the Frontier theme. Competition-period implementation began on **October 27, 2026**. The [original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) defines the five-stage contract and the four principles.
+
+1. **Stage 5 is still human-gated.** M2 is formally selected, but Planning has not been approved or generated.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
-3. **Run a controlled comparison:** use the same model and cases to compare no gate, source/quote checks, and checks plus human review; report abstention and intervention separately.
-4. **Record the public demo:** v0.16 is deployed with a checked revision; record an approximately three-minute demonstration of actual behavior.
-5. **Submit the entry:** verify the participant portal's current requirements and complete the formal submission.
+3. **Run a controlled comparison.** Use the same model and cases to compare three setups: no gate, source/quote checks, and checks plus human review. Report abstention and intervention separately.
+4. **Record the public demo.** v0.16 is deployed with a checked revision. Record a roughly three-minute demonstration of actual behavior.
+5. **Submit the entry.** Check the participant portal's current requirements and complete the formal submission.
 
-See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Repository publication and a hosted demo do not establish formal submission.
+See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repository and hosting a demo do not count as formal submission.
 
-## Project and competition
+## Credits
 
-Created by **Pack Kwan Low (Jaycee)**. Competition-period implementation began on **October 27, 2026**.
+Created by **Pack Kwan Low (Jaycee)**.
 
 - [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon)
 - [Meta developer platform](https://dev.meta.ai/)
-- [Original project charter](docs/ORIGINAL_PROJECT_CHARTER.md)
-
+- Literature data: Europe PMC and Springer Nature APIs. The pilot excerpts carry their own citation and rights metadata in [`datasets/`](datasets/real_ph_excerpt_cases_v1.json).
