@@ -9,6 +9,8 @@
 - The default installation remains unchanged; no DetectorScope, Gemma, SAE weights or PyTorch dependency is added to `requirements.txt`.
 - GitHub Actions run 40730431308 passed **265 tests**.
 - No real DetectorScope inference has been executed; the authors' disclaimer against high-stakes individual decisions is preserved in FrontierLab's runtime contract.
+- Architecture diagram, README shape legend and Mermaid text version now show DetectorScope as an optional lens in an aside off the truth path (it reads copies of model outputs and feeds no gate, review or plan); NOTICE records the DetectorScope (Apache 2.0 / CC BY 4.0) and Gemma-based checkpoint terms.
+- NOTICE adds the previously missing Meta Llama 3.1 8B Instruct (Llama 3.1 Community License, Acceptable Use Policy, required attribution notice) and Muse2-230M (Apache 2.0) entries; later sections renumbered.
 
 ## 2026-10-28 · v0.23 — Llama 3.1 8B local baseline worker
 

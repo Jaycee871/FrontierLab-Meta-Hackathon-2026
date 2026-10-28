@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.24 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Codebase: v0.24 prototype · Hosted interface: v0.16 · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -38,7 +38,7 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 ## Architecture
 
 <p align="center">
-  <img src="docs/assets/flatland-architecture.svg" alt="FrontierLab architecture: research question, evidence retrieval, optional Muse2 edge worker, Evidence Extraction Agent, verbatim evidence gate, optional Llama 3.1 8B baseline and Liquid d1-2B evidence gate, human review gate, Skeptic and Hypothesis Agents, method evaluation, planning gate, plan draft and JSON audit trail" width="100%">
+  <img src="docs/assets/flatland-architecture.svg" alt="FrontierLab architecture: research question, evidence retrieval, optional Muse2 edge worker, Evidence Extraction Agent, verbatim evidence gate, optional Llama 3.1 8B baseline and Liquid d1-2B evidence gate, human review gate, Skeptic and Hypothesis Agents, method evaluation, planning gate, plan draft and JSON audit trail, plus an optional DetectorScope audit lens beside the pipeline that reads copies of model outputs and feeds no gate" width="100%">
 </p>
 
 **From Flatland to Spaceland.** One model on its own sees only flat text. FrontierLab adds dimensions: several bounded agents, evidence that is cross-checked against its source, and a researcher who reviews each claim from outside the text, as the Sphere shows A. Square the third dimension. Each shape stands for a role. The shapes mark what a component does, not how important it is.
@@ -53,8 +53,9 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 | Gate posts | Deterministic or approval gates: verbatim evidence gate and planning gate |
 | Sphere | Human review gate and other researcher decisions (claim review, method selection) |
 | Cube | The reviewable research plan (Stage 5) |
+| Lens | DetectorScope: optional, diagnostic-only output-audit lens that reads copies of model outputs and reports interpretable detector features (`frontierlab/detectorscope_audit.py`). It sits off the truth path and feeds no gate, review or plan |
 
-Dashed lines in the diagram mark optional paths. The dimension markers at the top follow the lift from a point (the question) through a line and a square to a cube (the reviewed plan).
+Dashed lines in the diagram mark optional paths. The DetectorScope lens is drawn in a separate aside below Stage 5 because it is not a pipeline step: it has an input from model outputs and no edge back into any gate. The dimension markers at the top follow the lift from a point (the question) through a line and a square to a cube (the reviewed plan).
 
 <details>
 <summary>Text version of the pipeline (Mermaid)</summary>
@@ -72,6 +73,7 @@ flowchart TD
     E --> P{Planning gate<br/>current evaluation + explicit approval}
     P -- yes --> PL[5. Planning<br/>draft with controls, metrics,<br/>replication, falsification]
     PL --> A[(JSON audit trail export)]
+    MO[Model outputs, copied<br/>Muse2 · Llama 3.1 8B · Glimmer · Spark] -.-> DS[[DetectorScope audit lens · optional<br/>label, p_ai, feature contributions, highlights<br/>diagnostic only · feeds no gate]]
 ```
 
 </details>
@@ -141,7 +143,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The suite has **265 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction, model-scale baseline controls, optional multimodal evidence checks, provider-capability enforcement and DetectorScope diagnostic-only boundaries. GitHub Actions run [40730431308](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40730431308) passed all 265 tests. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
+The suite has **265 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction, model-scale baseline controls, optional multimodal evidence checks, provider-capability enforcement and DetectorScope diagnostic-only boundaries. GitHub Actions run [40730651080](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40730651080) passed all 265 tests on `main` at `b53fdd7`. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -149,6 +151,7 @@ Optional offline demonstrations:
 python -m scripts.research_failure_lab
 python -m scripts.bionemo_preflight
 python -m scripts.lobster_guard_demo
+python -m scripts.detectorscope_preflight
 python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/runs/meta_pilot_predictions_20261028.json
 ```
 
@@ -210,7 +213,7 @@ All model layers remain subordinate to the same evidence, human-review, stale-co
 | Llama 3.1 8B Instruct | 8B | Local general-purpose baseline / worker |
 | Muse Glimmer 30B | 30B | Verified scientific reasoning backend |
 | Muse Spark Open | 816B total / 42B active | Frontier multimodal reasoning backend |
-| DetectorScope | Diagnostic layer | Interpretable linguistic-feature audit across model outputs |
+| DetectorScope | Not a rung (diagnostic layer) | Interpretable linguistic-feature audit across the rungs' outputs; diagnostic only |
 
 The planned comparison is not a size leaderboard. The goal is to measure the smallest model that can reliably perform each bounded task under the same evidence and human-review constraints.
 
@@ -268,7 +271,7 @@ See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repo
 
 ## License
 
-The original code and documentation are released under the [MIT License](LICENSE), copyright (c) 2026 Pack Kwan Low (Jaycee871). Third-party material keeps its own terms; see [NOTICE](NOTICE). This includes the published excerpts in `datasets/`, which stay under their original licenses, as well as Meta Muse Glimmer (Apache 2.0, not bundled), Liquid AI d1/LFM models (LFM Open License v1.0, not bundled) and the referenced legacy MUSE project (CC BY-NC 4.0, not included).
+The original code and documentation are released under the [MIT License](LICENSE), copyright (c) 2026 Pack Kwan Low (Jaycee871). Third-party material keeps its own terms; see [NOTICE](NOTICE). This includes the published excerpts in `datasets/`, which stay under their original licenses, as well as Meta Muse Glimmer (Apache 2.0, not bundled), Liquid AI d1/LFM models (LFM Open License v1.0, not bundled), Meta Llama 3.1 8B Instruct (Llama 3.1 Community License and Acceptable Use Policy, not bundled), Muse Research Muse2-230M (Apache 2.0, not bundled), the optional DetectorScope package (Apache 2.0) and its Gemma-based detector checkpoints (Gemma terms; neither is bundled or installed by default) and the referenced legacy MUSE project (CC BY-NC 4.0, not included).
 
 ## Credits
 

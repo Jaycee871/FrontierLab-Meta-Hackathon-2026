@@ -49,7 +49,59 @@ material remains under its own terms.
    Users who obtain and run these models must comply with the LFM Open
    License v1.0 and keep its required notices.
 
-5. External services
+5. Meta Llama 3.1 8B Instruct
+
+   Meta Llama 3.1 8B Instruct (meta-llama/Llama-3.1-8B-Instruct;
+   https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) is licensed under
+   the Llama 3.1 Community License Agreement
+   (https://www.llama.com/llama3_1/license/), and its use is subject to the
+   Llama 3.1 Acceptable Use Policy (https://www.llama.com/llama3_1/use-policy/).
+   It is used only through the optional local baseline worker
+   (frontierlab/llama31_baseline.py), which expects a runtime the user has
+   already loaded. No Llama Materials (model weights, tokenizer or code) are
+   bundled in this repository, none are listed in requirements.txt, and
+   nothing is downloaded automatically; the hosted Space does not run Llama.
+   Users who obtain and run the model must accept and comply with that licence
+   and policy. Anyone who distributes Llama Materials, or a product or service
+   that contains them, must provide a copy of the licence, prominently display
+   "Built with Llama", and keep the following attribution notice:
+
+     "Llama 3.1 is licensed under the Llama 3.1 Community License,
+     Copyright © Meta Platforms, Inc. All Rights Reserved."
+
+6. Muse Research Muse2-230M
+
+   Muse2-230M (Muse-research/Muse2-230M;
+   https://huggingface.co/Muse-research/Muse2-230M) is published by Muse
+   Research, and its model weights are released under the Apache License 2.0.
+   It is used only through the optional edge structured worker
+   (frontierlab/muse2_edge.py), which expects a runtime the user has already
+   loaded. No Muse2 weights, tokenizer or "muse" runtime package are bundled in
+   this repository, none are listed in requirements.txt, and nothing is
+   downloaded automatically. Users who obtain and run the model must comply
+   with the Apache License 2.0 and keep its notices; the model card also states
+   that upstream dataset licences and attribution requirements continue to
+   apply to derivative uses.
+
+7. DetectorScope
+
+   DetectorScope (https://github.com/google-deepmind/detectorscope; PyPI
+   package "detectorscope") is Copyright 2026 Google LLC. Its software is
+   licensed under the Apache License 2.0, and its other materials under the
+   Creative Commons Attribution 4.0 International License. The released
+   detector checkpoints (for example liamdugan/detector-scope and the
+   peer-review variants on Hugging Face) are fine-tuned from Google's
+   gemma-2-2b and are published under the Gemma terms of use
+   (https://ai.google.dev/gemma/terms). They are used only through the optional
+   output-audit lens (frontierlab/detectorscope_audit.py), which expects a
+   detector the user has already loaded. No DetectorScope code, Gemma weights
+   or sparse-autoencoder weights are bundled in this repository, none are
+   listed in requirements.txt, and nothing is downloaded automatically. Users
+   who install and run them must comply with those terms, and the DetectorScope
+   authors' disclaimer applies: the detectors make mistakes and must not be
+   used for decisions about individuals.
+
+8. External services
 
    NVIDIA NIM, Europe PMC, the Springer Nature Meta API and the Springer Nature
    Open Access API are used as remote services. Their use is governed by
