@@ -55,6 +55,12 @@ def test_snapshot_allowlist_revision_and_no_secret_or_hardware_mutations():
     assert {".streamlit/config.toml", "docs/assets/flatland-hero.svg",
             "docs/assets/flatland-sphere-icon.png"} <= set(files)
     assert b"COPY --chown=user:user .streamlit/" in files["Dockerfile"]
+    assert {"LICENSE", "NOTICE"} <= set(files)
+    assert files["LICENSE"] == (ROOT / "LICENSE").read_bytes()
+    assert files["NOTICE"] == (ROOT / "NOTICE").read_bytes()
+    assert b"Llama 3.1 is licensed under the Llama 3.1 Community License" in files["NOTICE"]
+    assert b"COPY --chown=user:user app.py deployment.json LICENSE NOTICE ./" in files["Dockerfile"]
+    assert {"LICENSE", "NOTICE"} <= set(metadata["file_sha256"])
     assert all(not p.startswith((".github/", ".git/", "scripts/", "tests/")) for p in files)
     assert all("secret" not in p.lower() and ".env" not in p for p in files)
     assert b"git clone" not in files["Dockerfile"]

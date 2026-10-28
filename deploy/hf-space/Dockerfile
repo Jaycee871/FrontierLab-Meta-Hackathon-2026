@@ -4,7 +4,7 @@ RUN useradd --uid 1000 --create-home --shell /bin/bash user
 WORKDIR /home/user/app
 COPY requirements.txt ./
 RUN python -m pip install --no-cache-dir -r requirements.txt
-COPY --chown=user:user app.py deployment.json ./
+COPY --chown=user:user app.py deployment.json LICENSE NOTICE ./
 COPY --chown=user:user .streamlit/ ./.streamlit/
 COPY --chown=user:user frontierlab/ ./frontierlab/
 COPY --chown=user:user datasets/ ./datasets/
