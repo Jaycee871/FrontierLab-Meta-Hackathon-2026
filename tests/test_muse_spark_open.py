@@ -6,12 +6,13 @@ from frontierlab.muse_spark_open import (
     MuseSparkHostedClient,
     SparkCallBudget,
     build_request_content,
+    provider_config,
     provider_model,
 )
 
 
 class FakeTransport:
-    def __init__(self, *, model="meta-models/muse-spark-open", finish_reason="stop"):
+    def __init__(self, *, model="meta-models/Muse-Spark-Open-816B-A42B", finish_reason="stop"):
         self.model = model
         self.finish_reason = finish_reason
         self.calls = []
@@ -26,9 +27,13 @@ class FakeTransport:
         }
 
 
-def test_official_provider_model_strings_are_explicit():
-    assert provider_model("together") == "meta-models/muse-spark-open"
+def test_official_provider_model_strings_and_modalities_are_explicit():
+    assert provider_model("together") == "meta-models/Muse-Spark-Open-816B-A42B"
+    assert provider_model("together-promo") == "meta-models/muse-spark-open-816b-promo"
     assert provider_model("fireworks") == "accounts/fireworks/models/muse-spark-open"
+    assert provider_config("together")["media"] == {"image", "audio", "video"}
+    assert provider_config("fireworks")["media"] == {"image"}
+    assert provider_config("together-promo")["temporary_promo"] is True
     with pytest.raises(ValueError, match="Unsupported"):
         provider_model("unknown")
 
@@ -44,7 +49,7 @@ def test_text_research_client_matches_existing_json_contract():
     out = client.json("Hypothesis Agent", "Propose one bounded hypothesis.", {"source": "P1"})
     assert out["hypotheses"][0]["text"] == "bounded result"
     assert client.backend == "muse-spark-together"
-    assert client.model == "meta-models/muse-spark-open"
+    assert client.model == "meta-models/Muse-Spark-Open-816B-A42B"
     assert client.canonical_model == CANONICAL_MODEL
     assert client.provenance["attempted_calls"] == 1
     receipt = client.provenance["receipts"][0]
@@ -76,6 +81,35 @@ def test_multimodal_call_accepts_image_audio_video_without_logging_raw_media():
     assert "opaque-image-ref" not in json.dumps(receipt)
     blocks = transport.calls[0]["content"]
     assert [block["type"] for block in blocks] == ["text", "image", "audio", "video"]
+
+
+
+def test_fireworks_serverless_allows_image_but_blocks_unadvertised_audio_video():
+    image_transport = FakeTransport(model="accounts/fireworks/models/muse-spark-open")
+    client = MuseSparkHostedClient(
+        provider="fireworks", transport=image_transport, authorized=True
+    )
+    client.multimodal_json(
+        "Multimodal Evidence Agent",
+        "Inspect image evidence.",
+        {"claim": "bounded"},
+        media=[{"type": "image", "source": "opaque-image-ref", "mime_type": "image/png"}],
+    )
+    assert client.provenance["receipts"][0]["media_types"] == ["image"]
+
+    blocked_transport = FakeTransport(model="accounts/fireworks/models/muse-spark-open")
+    blocked = MuseSparkHostedClient(
+        provider="fireworks", transport=blocked_transport, authorized=True
+    )
+    with pytest.raises(ValueError, match="does not advertise"):
+        blocked.multimodal_json(
+            "Multimodal Evidence Agent",
+            "Inspect audio evidence.",
+            {"claim": "bounded"},
+            media=[{"type": "audio", "source": "opaque-audio-ref", "mime_type": "audio/wav"}],
+        )
+    assert blocked.provenance["attempted_calls"] == 0
+    assert blocked_transport.calls == []
 
 
 def test_request_content_rejects_unbounded_or_unknown_media():
