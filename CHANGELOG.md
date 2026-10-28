@@ -1,3 +1,13 @@
+## 2026-10-28 · v0.21.1 — Hosted Spark capability matrix corrected
+
+- Rechecked the current hosted-provider catalogs rather than assuming every Muse Spark deployment exposes every native modality.
+- Updated Together to its current published endpoint `meta-models/Muse-Spark-Open-816B-A42B` with serverless image/audio/video input.
+- Added the temporary Together promo endpoint as an explicit, non-default profile.
+- Kept Fireworks serverless at `accounts/fireworks/models/muse-spark-open` and restricted its advertised media profile to image input.
+- Provider-specific unsupported media is rejected locally before consuming the call budget or making a request.
+- Documented current standard serverless pricing parity: $1.25/M input, $0.15/M cached input and $4.25/M output.
+- No hosted inference was triggered by this correction.
+
 ## 2026-10-28 · v0.21 — Muse Spark Open frontier multimodal backend
 
 - Added a provider-neutral `MuseSparkHostedClient` for Meta Muse Spark Open while preserving the existing `.json(role, task, payload)` research interface.
