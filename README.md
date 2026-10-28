@@ -271,7 +271,7 @@ See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repo
 
 ## License
 
-The original code and documentation are released under the [MIT License](LICENSE), copyright (c) 2026 Pack Kwan Low (Jaycee871). Third-party material keeps its own terms; see [NOTICE](NOTICE). This includes the published excerpts in `datasets/`, which stay under their original licenses, as well as Meta Muse Glimmer (Apache 2.0, not bundled), Liquid AI d1/LFM models (LFM Open License v1.0, not bundled), the optional DetectorScope package (Apache 2.0) and its Gemma-based detector checkpoints (Gemma terms; neither is bundled or installed by default) and the referenced legacy MUSE project (CC BY-NC 4.0, not included).
+The original code and documentation are released under the [MIT License](LICENSE), copyright (c) 2026 Pack Kwan Low (Jaycee871). Third-party material keeps its own terms; see [NOTICE](NOTICE). This includes the published excerpts in `datasets/`, which stay under their original licenses, as well as Meta Muse Glimmer (Apache 2.0, not bundled), Liquid AI d1/LFM models (LFM Open License v1.0, not bundled), Meta Llama 3.1 8B Instruct (Llama 3.1 Community License and Acceptable Use Policy, not bundled), Muse Research Muse2-230M (Apache 2.0, not bundled), the optional DetectorScope package (Apache 2.0) and its Gemma-based detector checkpoints (Gemma terms; neither is bundled or installed by default) and the referenced legacy MUSE project (CC BY-NC 4.0, not included).
 
 ## Credits
 
