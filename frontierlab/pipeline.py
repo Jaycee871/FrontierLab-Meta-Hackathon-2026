@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from .audit import enforce_citations, risk_decision, validate_claims
 from .demo_data import DEMO_CLAIMS, DEMO_PAPERS, QUESTION
 from .evidence import retrieve_papers
+from .evidence_graph import refresh_evidence_graph
 from .models import Run
 
 
@@ -94,6 +95,7 @@ def run_research(question: str, query: str, *, mode: str, model_client=None,
     if mode == "live" and model_client is not None:
         run.backend = getattr(model_client, "backend", "unspecified")
         run.inference = getattr(model_client, "provenance", None)
+    refresh_evidence_graph(run)
     return run
 
 
@@ -155,6 +157,7 @@ def continue_after_review(run: Run, *, model_client=None) -> Run:
     run.plan = None
     run.skeptic = skeptic
     run.model = model_client.model
+    refresh_evidence_graph(run)
     return run
 
 
@@ -203,6 +206,7 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
             **evaluation_context,
         }
         log_step(run.log, "Planning Agent", "SIMULATED", "Human-approved mock plan; no AI / laboratory execution")
+        refresh_evidence_graph(run)
         return run
     if model_client is None:
         raise ValueError("A valid local model is required to generate a live plan")
@@ -246,5 +250,6 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
     run.plan.update(evaluation_context)
     run.plan["status"] = "DRAFT_FOR_RESEARCHER_REVIEW"
     log_step(run.log, "Planning Agent", "COMPLETE", "Cited plan drafted following human approval")
+    refresh_evidence_graph(run)
     return run
 

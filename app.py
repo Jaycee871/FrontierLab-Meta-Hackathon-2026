@@ -15,6 +15,8 @@ from frontierlab.claim_verification import audit_predictions, conflict_transpare
 from frontierlab.integrity_trials import suite_report
 from frontierlab.evaluation_ui import render_evaluation
 from frontierlab.evaluation import require_evaluation
+from frontierlab.evidence_graph import (approve_plan_step, refresh_evidence_graph, step_gate,
+                                        summarize as graph_summary, to_json as graph_json, to_svg as graph_svg)
 from frontierlab.literature_pilot import load_dataset, reviewer_packet
 from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
 
@@ -357,6 +359,58 @@ if result:
             st.error(f"Planning blocked: {exc}")
     if result.plan:
         st.json(result.plan)
+    # Rebuilt from the current run on every render, so reviews, hypotheses and plans stay in sync.
+    graph = refresh_evidence_graph(result)
+    g_stats = graph_summary(graph)
+    with st.expander("6 · Evidence graph · provenance of every plan step", expanded=False):
+        st.caption("EXTRACTED: passage located in the cited abstract and source IDs checked (not semantic entailment). "
+                   "INFERRED: model stance without an anchored quote. AMBIGUOUS: conflicting labels. "
+                   "Only all-EXTRACTED paths to a paper count as evidence.")
+        e_count = g_stats["edges_by_provenance"]
+        x, y, z = st.columns(3)
+        x.metric("EXTRACTED edges", e_count["EXTRACTED"])
+        y.metric("INFERRED edges (not evidence)", e_count["INFERRED"])
+        z.metric("AMBIGUOUS edges (not evidence)", e_count["AMBIGUOUS"])
+        drawing = graph_svg(graph)
+        if drawing:
+            st.markdown('<img class="fl-hero" alt="Evidence provenance graph: solid lines EXTRACTED, dashed INFERRED, dotted AMBIGUOUS" '
+                        f'src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode("utf-8")).decode("ascii")}">',
+                        unsafe_allow_html=True)
+        else:
+            st.caption("Graph too large to draw legibly; use the tables and graph.json below.")
+        if g_stats["surfaced_for_review"]:
+            st.warning("Surfaced for researcher review. These links are NOT counted as evidence.")
+            st.dataframe([{"Provenance": e["provenance"], "From": e["source"], "Relation": e["relation"],
+                           "To": e["target"], "Why": e["reason"]} for e in g_stats["surfaced_for_review"]],
+                         hide_index=True, use_container_width=True)
+        steps = [n for n in graph["nodes"] if n["type"] == "plan_step"]
+        if steps:
+            gates = {n["id"]: step_gate(graph, n["id"]) for n in steps}
+            st.dataframe([{"Step": n["index"], "Text": n["text"],
+                           "Path gate": "ALL EXTRACTED" if gates[n["id"]]["approvable"] else "BLOCKED",
+                           "Researcher approval": "RECORDED" if n["id"] in graph["approvals"] else "—",
+                           "Reasons": "; ".join(gates[n["id"]]["reasons"])} for n in steps],
+                         hide_index=True, use_container_width=True)
+            eligible = [n["id"] for n in steps if gates[n["id"]]["approvable"] and n["id"] not in graph["approvals"]]
+            if eligible:
+                with st.form("plan_step_approval_form"):
+                    chosen = st.selectbox("Plan step with an all-EXTRACTED evidence path", eligible,
+                                          format_func=lambda sid: next(f"Step {n['index']}" for n in steps if n["id"] == sid))
+                    reviewer = st.text_input("Reviewer")
+                    rationale = st.text_input("Approval rationale (8+ characters)")
+                    if st.form_submit_button("Record researcher approval of this step", type="secondary"):
+                        try:
+                            approve_plan_step(graph, chosen, reviewer=reviewer, note=rationale)
+                            st.session_state["frontier_result"] = result
+                            st.success("Step approval recorded in this session; it remains a draft, not a validated protocol.")
+                        except (ValueError, PermissionError) as exc:
+                            st.error(f"Step approval blocked: {exc}")
+            else:
+                st.info("No plan step is currently eligible for approval under the EXTRACTED-only path rule.")
+        else:
+            st.caption("No plan steps yet. Steps appear here once a draft plan exists.")
+        st.download_button("Download graph.json", data=graph_json(graph),
+                           file_name="graph.json", mime="application/json")
     with st.expander("Audit trail", expanded=False):
         st.json(result.log)
     st.download_button("Download complete provenance JSON", data=export_json(result),
