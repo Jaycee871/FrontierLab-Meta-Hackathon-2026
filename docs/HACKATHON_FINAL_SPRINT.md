@@ -69,6 +69,13 @@ The reviewed continuation has been executed successfully in GitHub Actions run 4
 - Do not use it for evidence support/contradiction labels, scientific entailment or clinical decisions.
 - No model download or live Muse2 inference is required for the competition submission; the stable Meta reasoning path remains primary.
 
+## Optional baseline extension: Llama 3.1 8B baseline
+
+- Use Llama 3.1 8B only as a medium-size local baseline / worker, not as a replacement for the verified Muse Glimmer path.
+- A future controlled benchmark can compare Muse2-230M, Llama 3.1 8B and Muse Glimmer on the same structured evidence task, with Muse Spark reserved for frontier multimodal reasoning.
+- Report JSON validity, abstention, citation validity, quotation validity, researcher intervention, latency and cost/size proxies separately.
+- Do not turn the competition demo into a model leaderboard; the core story remains evidence-grounded, human-gated scientific research.
+
 ## Priority 3: judge-operable demo
 
 - Build a 3-minute story: research question → live evidence retrieval → a model makes an overly strong claim → citation/excerpt check and/or researcher challenges it → app abstains or limits the conclusion → accessible provenance trail and download.
