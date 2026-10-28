@@ -5,7 +5,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.19 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
+**Codebase: v0.22 prototype · Hosted interface: v0.16 · Status reviewed: October 28, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -168,10 +168,13 @@ FrontierLab deliberately separates model capability from scientific governance:
 - **Meta Muse Glimmer 30B** — verified stable research backend with recorded real inference through NVIDIA NIM.
 - **Meta Muse Spark Open** — optional frontier multimodal backend with provider-specific capability enforcement. Together is the preferred first live Spark path for full text/image/audio/video serverless; Fireworks is retained as an image-first serverless fallback.
 - **Liquid AI d1-2B** — optional lightweight typed multimodal evidence verifier for localization/extraction/decision signals.
+- **Muse Research Muse2-230M** — optional edge/on-device structured worker for metadata normalization, log-to-JSON, schema formatting and routing. It is explicitly blocked from scientific entailment or clinical truth judgments.
 
 All three remain subordinate to the same evidence, human-review, stale-context, method-selection and planning gates. A more capable model does not bypass the research governance layer.
 
 ## Supporting experiments and tools
+
+- [Muse2-230M Edge Structured Worker](docs/MUSE2_EDGE_WORKER.md) — optional local preprocessing for strict JSON/metadata/routing; no real Muse2 inference has been executed in FrontierLab.
 
 | Module | Purpose | Current boundary |
 | --- | --- | --- |
