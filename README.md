@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/flatland-hero.svg" alt="FrontierLab hero: a line segment, triangle, square and hexagon rise from a flat plane toward a sphere, an homage to Flatland" width="100%">
+</p>
+
 # FrontierLab
 ### Evidence-grounded multi-agent AI for scientific research
 
@@ -33,6 +37,28 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 
 ## Architecture
 
+<p align="center">
+  <img src="docs/assets/flatland-architecture.svg" alt="FrontierLab architecture: research question, evidence retrieval, optional Muse2 edge worker, Evidence Extraction Agent, verbatim evidence gate, optional Llama 3.1 8B baseline and Liquid d1-2B evidence gate, human review gate, Skeptic and Hypothesis Agents, method evaluation, planning gate, plan draft and JSON audit trail" width="100%">
+</p>
+
+**From Flatland to Spaceland.** One model on its own sees only flat text. FrontierLab adds dimensions: several bounded agents, evidence that is cross-checked against its source, and a researcher who reviews each claim from outside the text, as the Sphere shows A. Square the third dimension. Each shape stands for a role. The shapes mark what a component does, not how important it is.
+
+| Shape | Role in FrontierLab |
+| --- | --- |
+| Point | The research question (Stage 1) |
+| Line segment | Meta Llama 3.1 8B Instruct: optional local baseline that runs the same JSON contract for comparison (`frontierlab/llama31_baseline.py`) |
+| Triangle | Muse2-230M: optional edge worker for metadata normalization and strict JSON (`frontierlab/muse2_edge.py`) |
+| Square | Liquid AI d1-2B: optional multimodal evidence gate for figures, tables and images (`frontierlab/multimodal_evidence.py`) |
+| Hexagon | Reasoning agents (Evidence Extraction, Adversarial Skeptic, Hypothesis) on Meta Muse Glimmer 30B via NVIDIA NIM, or optionally Muse Spark Open (`frontierlab/muse_spark_open.py`) |
+| Gate posts | Deterministic or approval gates: verbatim evidence gate and planning gate |
+| Sphere | Human review gate and other researcher decisions (claim review, method selection) |
+| Cube | The reviewable research plan (Stage 5) |
+
+Dashed lines in the diagram mark optional paths. The dimension markers at the top follow the lift from a point (the question) through a line and a square to a cube (the reviewed plan).
+
+<details>
+<summary>Text version of the pipeline (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     Q[1. Research<br/>question, scope, assumptions] --> R[2. Evidence: retrieval<br/>Europe PMC · Springer Nature Meta / OA]
@@ -47,6 +73,8 @@ flowchart TD
     P -- yes --> PL[5. Planning<br/>draft with controls, metrics,<br/>replication, falsification]
     PL --> A[(JSON audit trail export)]
 ```
+
+</details>
 
 | Stage | Researcher-facing goal | Current implementation |
 | --- | --- | --- |
@@ -113,7 +141,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The suite has **224 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction and single/batch output validation. GitHub Actions run [40578886168](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40578886168) passed all 224. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
+The suite has **259 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction and single/batch output validation. GitHub Actions run [40578886168](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40578886168) passed all 224 tests that existed at the time. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -236,7 +264,7 @@ See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repo
 
 ## License
 
-The original code and documentation are released under the [MIT License](LICENSE), copyright (c) 2026 Pack Kwan Low (Jaycee871). Third-party material keeps its own terms; see [NOTICE](NOTICE). This includes the published excerpts in `datasets/`, which stay under their original licenses, as well as Meta Muse Glimmer (Apache 2.0, not bundled) and the referenced legacy MUSE project (CC BY-NC 4.0, not included).
+The original code and documentation are released under the [MIT License](LICENSE), copyright (c) 2026 Pack Kwan Low (Jaycee871). Third-party material keeps its own terms; see [NOTICE](NOTICE). This includes the published excerpts in `datasets/`, which stay under their original licenses, as well as Meta Muse Glimmer (Apache 2.0, not bundled), Liquid AI d1/LFM models (LFM Open License v1.0, not bundled) and the referenced legacy MUSE project (CC BY-NC 4.0, not included).
 
 ## Credits
 
@@ -245,3 +273,4 @@ Created by **Pack Kwan Low (Jaycee)**.
 - [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon)
 - [Meta developer platform](https://dev.meta.ai/)
 - Literature data: Europe PMC and Springer Nature APIs. The pilot excerpts carry their own citation and rights metadata in [`datasets/`](datasets/real_ph_excerpt_cases_v1.json).
+- Visual theme: an homage to Edwin A. Abbott's *Flatland: A Romance of Many Dimensions* (1884, public domain). The epigraphs "Upward, not Northward" and "May aspire yet higher and higher" are quoted from the book (Project Gutenberg eBook #97). All artwork is original.
