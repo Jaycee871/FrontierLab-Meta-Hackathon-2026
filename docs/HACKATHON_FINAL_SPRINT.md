@@ -63,6 +63,12 @@ The reviewed continuation has been executed successfully in GitHub Actions run 4
 - Liquid d1-2B remains a lightweight evidence-verification option; Spark is the Meta-native frontier reasoning layer.
 - No live Spark inference is currently claimed.
 
+## Optional edge extension: Muse2-230M edge worker
+
+- Keep Muse2-230M strictly in the preprocessing layer: metadata normalization, log-to-JSON, schema formatting and routing.
+- Do not use it for evidence support/contradiction labels, scientific entailment or clinical decisions.
+- No model download or live Muse2 inference is required for the competition submission; the stable Meta reasoning path remains primary.
+
 ## Priority 3: judge-operable demo
 
 - Build a 3-minute story: research question → live evidence retrieval → a model makes an overly strong claim → citation/excerpt check and/or researcher challenges it → app abstains or limits the conclusion → accessible provenance trail and download.
