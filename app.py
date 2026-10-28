@@ -1,5 +1,6 @@
 """Run with 'streamlit run app.py'."""
 from __future__ import annotations
+import base64
 import json
 from pathlib import Path
 import streamlit as st
@@ -17,17 +18,94 @@ from frontierlab.evaluation import require_evaluation
 from frontierlab.literature_pilot import load_dataset, reviewer_packet
 from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
 
-st.set_page_config(page_title="FrontierLab | Research Intelligence", page_icon="🔬", layout="wide")
-st.markdown("""
+
+
+ASSETS = Path(__file__).resolve().parent / "docs" / "assets"
+_icon_path = ASSETS / "flatland-sphere-icon.png"
+st.set_page_config(page_title="FrontierLab | Research Intelligence",
+                   page_icon=str(_icon_path) if _icon_path.exists() else "◯", layout="wide")
+
+# Presentation only: black-and-white "Flatland book plate" styling (see docs/assets/).
+SERIF = "Georgia, 'Times New Roman', Times, serif"
+st.markdown(f"""
 <style>
-.stApp {background: #090e18; color: #e8edf8;}
-.block-container {padding-top: 2rem; max-width: 1320px;}
-h1,h2,h3 {letter-spacing:-0.025em;}
-[data-testid="stMetric"] {background:#131e2d;padding:16px;border:1px solid #273449;border-radius:14px;}
-[data-testid="stSidebar"] {background:#111b2a;}
-.stAlert {border-radius:12px;}
+:root {{ --fl-ink: #F2F2F2; --fl-soft: #CFCFCF; --fl-bg: #1E1E1E; --fl-bg2: #262626; --fl-line: rgba(242,242,242,0.55); }}
+.stApp {{ background: var(--fl-bg); color: var(--fl-ink); }}
+.stApp, .stApp p, .stApp li, .stApp label, .stApp input, .stApp textarea, .stApp button,
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp summary p, [data-testid="stMetricValue"],
+[data-testid="stMetricLabel"], [data-testid="stCaptionContainer"] {{ font-family: {SERIF}; }}
+[data-testid="stDecoration"] {{ display: none; }}
+[data-testid="stHeader"] {{ background: transparent; }}
+.block-container {{ padding-top: 2rem; max-width: 1320px; }}
+h1 {{ font-weight: 400; font-style: italic; letter-spacing: 0.02em; }}
+h2, h3 {{ font-weight: 400; letter-spacing: 0.04em; }}
+[data-testid="stCaptionContainer"], .stCaption {{ color: var(--fl-soft); }}
+hr {{ border-color: var(--fl-line) !important; }}
+a {{ color: var(--fl-ink) !important; text-decoration: underline; text-underline-offset: 3px; }}
+/* hero banner and section bands */
+.fl-hero {{ display: block; width: 100%; height: auto; border: 1px solid var(--fl-line); margin: 0 0 1.2rem 0; }}
+.fl-band {{ display: flex; align-items: center; gap: 0.6rem; margin: 1.6rem 0 0.4rem 0;
+           padding-bottom: 0.35rem; border-bottom: 1px solid var(--fl-line);
+           font-variant: small-caps; letter-spacing: 0.22em; font-size: 0.85rem; color: var(--fl-ink); }}
+.fl-band svg {{ flex: none; }}
+/* outlined white boxes instead of filled cards */
+[data-testid="stMetric"] {{ background: transparent; padding: 14px 16px; border: 1px solid var(--fl-ink); border-radius: 0; }}
+[data-testid="stSidebar"] {{ background: #1A1A1A; border-right: 1px solid var(--fl-line); }}
+[data-testid="stExpander"] details {{ border: 1px solid var(--fl-line); border-radius: 0; background: transparent; }}
+[data-testid="stForm"] {{ border: 1px solid var(--fl-line); border-radius: 0; }}
+[data-testid="stAlert"] > div, [data-testid="stAlertContainer"] {{ background: transparent !important;
+           border: 1px solid var(--fl-line); border-radius: 0; color: var(--fl-ink); }}
+[data-testid="stAlertContentWarning"], [data-testid="stAlertContentError"],
+[data-testid="stAlertContentSuccess"], [data-testid="stAlertContentInfo"] {{ color: var(--fl-ink); }}
+[data-testid="stAlert"]:has([data-testid="stAlertContentWarning"]) > div {{ border-style: dashed; border-color: var(--fl-ink); }}
+[data-testid="stAlert"]:has([data-testid="stAlertContentError"]) > div {{ border: 2px solid var(--fl-ink); }}
+[data-testid="stAlert"]:has([data-testid="stAlertContentSuccess"]) > div {{ border-left: 4px double var(--fl-ink); }}
+[data-testid="stTextAreaRootElement"], [data-testid="stTextInputRootElement"], [data-testid="stNumberInputContainer"],
+[data-testid="stSelectbox"] .react-aria-ComboBox > [role="group"], [data-testid="stMultiSelect"] .react-aria-ComboBox > [role="group"] {{
+           background: transparent !important; border: 1px solid var(--fl-line) !important; border-radius: 0 !important; }}
+[data-testid="stTextAreaRootElement"]:focus-within, [data-testid="stTextInputRootElement"]:focus-within,
+[data-testid="stNumberInputContainer"]:focus-within {{ border-color: var(--fl-ink) !important; }}
+[data-testid="stMultiSelectTagsContainer"] span[data-tag] {{
+           background: transparent !important; color: var(--fl-ink) !important; border: 1px solid var(--fl-ink); border-radius: 0; }}
+[data-testid="stMultiSelectTagsContainer"] span[data-tag] * {{ color: var(--fl-ink) !important; fill: var(--fl-ink); }}
+/* checkboxes: outlined square, white tick on charcoal (never white-on-white) */
+[data-testid="stCheckbox"] label > div:first-of-type {{ background: transparent !important; border: 1px solid var(--fl-ink) !important; border-radius: 0 !important; }}
+[data-testid="stCheckbox"] label > div:first-of-type svg polyline {{ stroke: var(--fl-ink) !important; }}
+[data-testid="stCode"] pre, [data-testid="stJson"] {{ border: 1px solid var(--fl-line); border-radius: 0; }}
+/* JSON viewer: monochrome (keys soft, values ink) */
+[data-testid="stJson"] span {{ color: var(--fl-ink) !important; }}
+[data-testid="stJson"] .object-key, [data-testid="stJson"] .object-key span {{ color: var(--fl-soft) !important; }}
+[data-testid="stJson"] .object-key-val {{ border-left-color: rgba(242,242,242,0.25) !important; }}
+[data-testid="stJson"] svg {{ color: var(--fl-ink) !important; fill: var(--fl-ink) !important; }}
+/* buttons: outlined white boxes that invert on hover */
+.stApp :is([data-testid="stBaseButton-primary"], [data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primaryFormSubmit"], [data-testid="stBaseButton-secondaryFormSubmit"]) {{ background: transparent; color: var(--fl-ink); border: 1px solid var(--fl-ink);
+           border-radius: 0; box-shadow: none; letter-spacing: 0.06em; }}
+.stApp :is([data-testid="stBaseButton-primary"], [data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primaryFormSubmit"], [data-testid="stBaseButton-secondaryFormSubmit"]) p {{ color: inherit; }}
+.stApp :is([data-testid="stBaseButton-primary"], [data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primaryFormSubmit"], [data-testid="stBaseButton-secondaryFormSubmit"]):hover:not(:disabled), .stApp :is([data-testid="stBaseButton-primary"], [data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primaryFormSubmit"], [data-testid="stBaseButton-secondaryFormSubmit"]):focus-visible {{
+           background: var(--fl-ink); color: var(--fl-bg); border-color: var(--fl-ink); }}
+.stApp :is([data-testid="stBaseButton-primary"], [data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primaryFormSubmit"], [data-testid="stBaseButton-secondaryFormSubmit"]):disabled {{ background: transparent; color: var(--fl-soft); border: 1px dashed var(--fl-line); opacity: 0.7; }}
 </style>
 """, unsafe_allow_html=True)
+
+_ICON = 'width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2F2F2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'
+BAND_ICONS = {
+    "point": f'<svg {_ICON}><line x1="2" y1="18" x2="22" y2="18" stroke-width="1"/><circle cx="12" cy="11" r="3" fill="#F2F2F2" stroke="none"/></svg>',
+    "sphere": f'<svg {_ICON}><circle cx="12" cy="12" r="10" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="10" ry="3" stroke-width="0.8" stroke-dasharray="2 2"/><ellipse cx="12" cy="12" rx="3.6" ry="10" stroke-width="0.8"/></svg>',
+    "cube": f'<svg {_ICON}><rect x="3" y="8" width="13" height="13" stroke-width="1.4"/><polyline points="3,8 8,3 21,3 16,8" stroke-width="1.4"/><polyline points="21,3 21,16 16,21" stroke-width="1.4"/></svg>',
+}
+
+
+def band(label: str, icon: str) -> None:
+    """Small-caps section band, as on the README architecture plate."""
+    st.markdown(f'<div class="fl-band">{BAND_ICONS[icon]}<span>{label}</span></div>', unsafe_allow_html=True)
+
+
+_hero_path = ASSETS / "flatland-hero.svg"
+if _hero_path.exists():
+    _hero = base64.b64encode(_hero_path.read_bytes()).decode("ascii")
+    st.markdown(f'<img class="fl-hero" src="data:image/svg+xml;base64,{_hero}" '
+                'alt="FrontierLab: From Flatland to Spaceland. Role shapes rise from a flat plane toward a sphere.">',
+                unsafe_allow_html=True)
 
 st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH THE FRONTIER")
 st.title("FrontierLab  /  Research Intelligence")
@@ -61,6 +139,7 @@ with st.sidebar:
         st.info("Europe PMC metadata only. No model inference, no paid API requests.")
     st.caption("No autonomous wet-lab execution, clinical advice or unverified study claims.")
 
+band("I · Flatland — question and evidence", "point")
 st.subheader("1 · Research question")
 with st.form("research_form"):
     question = st.text_area("Scientific research question", value=QUESTION, height=85)
@@ -193,6 +272,7 @@ if result:
             st.info("No machine-detected contradictions; this is not proof of agreement.")
         st.json(result.skeptic)
     if result.mode == "live" and result.audit.verified_claims:
+        band("II · The Sphere — human claim review", "sphere")
         with st.expander("Researcher claim review · required before synthesis", expanded=True):
             st.warning(
                 "Verbatim excerpt matching does NOT establish entailment. "
@@ -257,6 +337,7 @@ if result:
                             st.success("Provisional human-gated draft created; scientific validation is still needed.")
                         except (ValueError, PermissionError, RuntimeError) as exc:
                             st.error(f"Synthesis remains blocked: {type(exc).__name__}: {exc}")
+    band("III · Spaceland — hypothesis, evaluation and plan", "cube")
     with st.expander("3 · Falsifiable hypotheses", expanded=True):
         st.json(result.hypotheses)
     render_evaluation(result, model_client=active_client)
