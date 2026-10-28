@@ -166,7 +166,7 @@ See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human rev
 FrontierLab deliberately separates model capability from scientific governance:
 
 - **Meta Muse Glimmer 30B** — verified stable research backend with recorded real inference through NVIDIA NIM.
-- **Meta Muse Spark Open** — optional frontier multimodal backend for text + image + audio + video reasoning through self-hosted or hosted-provider inference.
+- **Meta Muse Spark Open** — optional frontier multimodal backend with provider-specific capability enforcement. Together is the preferred first live Spark path for full text/image/audio/video serverless; Fireworks is retained as an image-first serverless fallback.
 - **Liquid AI d1-2B** — optional lightweight typed multimodal evidence verifier for localization/extraction/decision signals.
 
 All three remain subordinate to the same evidence, human-review, stale-context, method-selection and planning gates. A more capable model does not bypass the research governance layer.
