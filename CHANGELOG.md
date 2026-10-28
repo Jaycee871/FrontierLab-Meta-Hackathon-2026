@@ -1,3 +1,14 @@
+## 2026-10-28 · v0.23 — Llama 3.1 8B local baseline worker
+
+- Added `meta-llama/Llama-3.1-8B-Instruct` as an optional medium-size local baseline / general-purpose worker.
+- The adapter implements FrontierLab's existing `json(role, task, payload)` contract so the same bounded structured task can be compared across model scales.
+- Every Llama 3.1 receipt is explicitly marked `baseline_only=true` and `scientific_output_independently_verified=false`.
+- Added a process-local hard call budget, no automatic retry, strict JSON parsing, input/output hashes and runtime injection without adding an 8B checkpoint or GPU dependency to the default installation.
+- Added benchmark dimensions for JSON validity, abstention, citation-ID validity, verbatim-quote validity, researcher intervention, latency and input/output size.
+- Added a zero-network preflight and dedicated documentation for the 128K-context, text-only baseline role.
+- GitHub Actions run 40664232272 passed **259 tests**.
+- No new Llama 3.1 inference has been executed by this integration; Muse Glimmer remains the verified scientific reasoning backend.
+
 ## 2026-10-28 · v0.22 — Muse2-230M edge structured worker
 
 - Added `Muse-research/Muse2-230M` as an optional **Edge Structured Worker**, not as a scientific reasoning model.
