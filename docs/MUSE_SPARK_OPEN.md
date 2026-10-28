@@ -8,7 +8,7 @@ Muse Spark Open is added as an optional **frontier multimodal Meta backend**, no
 
 - **Muse Glimmer 30B** remains the recorded stable research backend.
 - **Muse Spark Open** can use the same FrontierLab research governance through the existing `json(role, task, payload)` contract.
-- Spark also exposes `multimodal_json(..., media=[...])` for image, audio and video evidence.
+- Spark also exposes `multimodal_json(..., media=[...])`; the accepted media types are constrained by the selected provider profile rather than assumed globally.
 - **Liquid d1-2B** remains an optional lightweight typed evidence verifier; it is not a substitute for Spark or Glimmer.
 
 ## Official model facts
@@ -34,12 +34,17 @@ Official references:
 
 FrontierLab currently records the model strings listed by Meta for:
 
-| Provider | Model string |
-| --- | --- |
-| Together AI | `meta-models/muse-spark-open` |
-| Fireworks AI | `accounts/fireworks/models/muse-spark-open` |
+| Provider | Model string | Serverless | Advertised media input |
+| --- | --- | --- | --- |
+| Together AI | `meta-models/Muse-Spark-Open-816B-A42B` | Yes | image, audio, video |
+| Together AI promo | `meta-models/muse-spark-open-816b-promo` | Yes, temporary offer | image, audio, video |
+| Fireworks AI | `accounts/fireworks/models/muse-spark-open` | Yes | image |
+
+Provider capabilities are enforced before a call budget is consumed. For example, the Fireworks serverless profile rejects audio/video media locally rather than sending an unsupported request.
 
 The core adapter does **not** contain a provider API key, endpoint or SDK. A provider-specific transport is injected by the caller.
+
+As checked on October 28, 2026, both Together and Fireworks list standard Muse Spark serverless at **$1.25 / 1M input tokens, $0.15 / 1M cached input tokens and $4.25 / 1M output tokens**. Fireworks labels its standard serverless launch as a limited preview through October 29, 2026. Together separately advertises a temporary free-promo endpoint; FrontierLab records it as temporary and never silently substitutes it for the paid endpoint.
 
 This keeps the scientific workflow independent from the commercial inference host.
 
