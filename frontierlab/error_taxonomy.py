@@ -97,14 +97,14 @@ def classify_run(run: Run) -> dict:
 
     counts = Counter(event["category"] for event in events)
     runtime_failures = counts[MODEL_RUNTIME] + counts[MODEL_OUTPUT]
-    governance_blocks = counts[GOVERNANCE] + counts[EVIDENCE] + counts[CITATION] + counts[RESOURCE]
+    non_runtime_blocks = counts[GOVERNANCE] + counts[EVIDENCE] + counts[CITATION] + counts[RESOURCE]
 
     return {
         "schema": SCHEMA,
         "events": events,
         "counts": dict(sorted(counts.items())),
         "runtime_failures": runtime_failures,
-        "governance_or_evidence_blocks": governance_blocks,
+        "non_runtime_blocks": non_runtime_blocks,
         "scientific_tensions": counts[SCIENTIFIC_TENSION],
         "note": (
             "Governance/evidence blocks are expected safety workflow outcomes and are "
