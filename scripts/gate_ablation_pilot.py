@@ -28,3 +28,14 @@ def run() -> dict:
     result["execution_origin"] = packet["execution_origin"]
     result["reference_status"] = dataset["status"]
     return result
+
+
+def main() -> None:
+    result = run()
+    result["accuracy_status"] = "UNAVAILABLE_PENDING_INDEPENDENT_HUMAN_GOLD"
+    result["draft_reference_labels_used_as_gold"] = False
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
