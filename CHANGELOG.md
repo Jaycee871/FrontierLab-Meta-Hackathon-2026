@@ -1,3 +1,11 @@
+## 2026-10-29 · v0.31 — Process error taxonomy
+
+- Added `frontierlab/error_taxonomy.py` to classify blocking and failure signals without treating expected human-governance gates as runtime errors.
+- Categories cover governance gates, insufficient evidence, citation/source failures, missing resources, model runtime failures, rejected claims and scientific tensions.
+- `process_metrics` now exports the taxonomy alongside SCR, human-intervention events and NIM efficiency/AERR semantics.
+- The Streamlit process-metrics panel displays non-runtime blocking signals separately from runtime failures and scientific tensions.
+- Added regression tests and documentation. No model calls, autonomous retry or scientific decision rule changed.
+
 ## 2026-10-29 · v0.30 — Recorded human-intervention event stream
 
 - Added `frontierlab/interventions.py` with normalized, timestamped human-intervention events bound to workflow artifacts.
