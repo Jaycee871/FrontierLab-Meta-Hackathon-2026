@@ -112,7 +112,7 @@ if _hero_path.exists():
 
 st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH THE FRONTIER")
 st.title("FrontierLab  /  Research Intelligence")
-st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.16")
+st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.29")
 deployment_path = Path(__file__).resolve().parent / "deployment.json"
 if deployment_path.exists():
     deployment = json.loads(deployment_path.read_text(encoding="utf-8"))
