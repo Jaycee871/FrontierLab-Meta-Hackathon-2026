@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.24 prototype · Hosted interface: v0.16 · Status reviewed: October 29, 2026 (Asia/Taipei)**
+**Codebase: v0.28 documentation candidate over v0.27 main · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -144,7 +144,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The suite has **265 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction, model-scale baseline controls, optional multimodal evidence checks, provider-capability enforcement and DetectorScope diagnostic-only boundaries. GitHub Actions run [40730651080](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40730651080) passed all 265 tests on `main` at `b53fdd7`. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
+The current main suite has **304 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, optional multimodal/baseline/audit extensions, and evidence-graph schema v2 integrity checks. GitHub Actions run [40905004672](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40905004672) passed all 304 tests on main after PR #10. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -182,6 +182,12 @@ All numbers below come from dated run records in [`docs/runs/`](docs/runs) and t
 | **BioNeMo** | Offline preflight only: Boltz-2 request preparation and response-format checks. | No hosted scientific computation has run. |
 
 Earlier evidence: [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730).
+
+### Agentic-autonomy self-assessment
+
+Using the six-level framing summarized from Zhao et al. (npj Drug Discovery, 2026), FrontierLab is a **Level 1 Assisted Pipeline by design**. Models fill fixed roles, but code and the researcher control stage transitions; the verified NIM path has no automatic retry; and critical scientific progression remains human-gated. This is not a claim of autonomous-scientist behavior.
+
+See [agentic-AI landscape and self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) for the topology, validation boundaries, schema-v2 traceability mapping and remaining process-metric gaps.
 
 ### Important limitations
 
@@ -254,7 +260,7 @@ These modules support the five-stage product. Their offline results do not show 
 | `.github/workflows/` | Automated tests (`tests.yml`) and manual-only connection, trial and deploy workflows. |
 | [CHANGELOG.md](CHANGELOG.md) | Version-by-version development history. |
 
-Key docs: [project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) · [method evaluation](docs/METHOD_EVALUATION.md) · [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) · [human review gate](docs/HUMAN_REVIEW_GATE.md) · [evidence graph](docs/EVIDENCE_GRAPH.md) · [structured Meta runs](docs/META_STRUCTURED_RUNS.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [resource strategy](docs/RESOURCE_STRATEGY.md) · [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
+Key docs: [project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) · [method evaluation](docs/METHOD_EVALUATION.md) · [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) · [human review gate](docs/HUMAN_REVIEW_GATE.md) · [evidence graph](docs/EVIDENCE_GRAPH.md) · [agentic-AI landscape and self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) · [structured Meta runs](docs/META_STRUCTURED_RUNS.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [resource strategy](docs/RESOURCE_STRATEGY.md) · [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
 
 Some setup documents keep earlier implementation snapshots. To judge what has actually been verified, use the dated status and run records linked above.
 
@@ -282,4 +288,5 @@ Created by **Pack Kwan Low (Jaycee)**.
 - [Meta developer platform](https://dev.meta.ai/)
 - Literature data: Europe PMC and Springer Nature APIs. The pilot excerpts carry their own citation and rights metadata in [`datasets/`](datasets/real_ph_excerpt_cases_v1.json).
 - Evidence-graph provenance tags (EXTRACTED / INFERRED / AMBIGUOUS) are inspired by [Graphify](https://github.com/Graphify-Labs/graphify) (Graphify Labs, Apache-2.0). This is an idea credit only; no Graphify code is used or bundled.
+- Autonomy framing: Zhao D., Fang M., Mao L. et al., *The rise of agentic AI in drug discovery: from static tools to autonomous virtual scientists*, npj Drug Discovery 3, 43 (2026), DOI 10.1038/s44386-026-00075-0. FrontierLab summarizes the framework in its own words.
 - Visual theme: an homage to Edwin A. Abbott's *Flatland: A Romance of Many Dimensions* (1884, public domain). The epigraphs "Upward, not Northward" and "May aspire yet higher and higher" are quoted from the book (Project Gutenberg eBook #97). All artwork is original.

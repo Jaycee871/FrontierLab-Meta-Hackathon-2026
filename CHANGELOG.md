@@ -1,3 +1,12 @@
+## 2026-10-29 · v0.28 — Agentic-AI landscape and Level 1 self-assessment (docs only)
+
+- Added a concise, original-language summary of the 2026 agentic-AI autonomy framework and mapped it to FrontierLab without reproducing the source paper's figures or tables.
+- Self-assessment: FrontierLab is a **Level 1 Assisted Pipeline by design**. Models fill fixed roles, while code and the researcher control stage transitions; the verified NIM path has no automatic retry or autonomous repair loop.
+- Corrected the earlier draft's overstatements: not every free-form model field is semantically validated; receipt/budget guarantees are scoped to the verified NIM backend; workflow state is not transactional rollback; AERR is N/A on zero-error runs.
+- Updated traceability mapping after evidence-graph schema v2: approval/content binding and source-fingerprint validation are now shipped on main, while signed identity, full trajectory nodes, process metrics and a shared error taxonomy remain future work.
+- README now links the assessment and records the **304-test** main verification run after schema v2.
+- No model calls, dependencies or runtime behavior changed.
+
 ## 2026-10-29 · v0.27 — Evidence-graph approval integrity (schema v2)
 
 - `load_graph()` now applies the same reviewer and note rule as `approve_plan_step()` (non-empty reviewer, note of 8+ characters; one shared check). An approval with an empty reviewer or a short note, hand-injected onto an approvable step, is now rejected instead of accepted.
