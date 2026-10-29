@@ -22,6 +22,7 @@ from frontierlab.evidence_graph import (approve_plan_step, refresh_evidence_grap
                                         summarize as graph_summary, to_json as graph_json, to_svg as graph_svg)
 from frontierlab.literature_pilot import load_dataset, reviewer_packet
 from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
+from frontierlab.version import __version__
 
 
 
@@ -114,7 +115,7 @@ if _hero_path.exists():
 
 st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH THE FRONTIER")
 st.title("FrontierLab  /  Research Intelligence")
-st.caption("Research → Evidence → Hypothesis → Evaluation → Planning · v0.16")
+st.caption(f"Research → Evidence → Hypothesis → Evaluation → Planning · v{__version__}")
 deployment_path = Path(__file__).resolve().parent / "deployment.json"
 if deployment_path.exists():
     deployment = json.loads(deployment_path.read_text(encoding="utf-8"))
