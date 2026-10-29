@@ -1,3 +1,13 @@
+## 2026-10-29 · v0.29 — Process metrics and audit export
+
+- Added `frontierlab/process_metrics.py`, a deterministic metrics layer derived from the current `Run` state.
+- Added five-stage SCR as workflow milestone completion, explicitly not a scientific quality score.
+- Added a conservative human-intervention observable count from claim reviews, saved method evaluation, planning proxy and evidence-graph step approvals; the UI labels this **Observed human actions**, not a complete HIC.
+- Added NIM-specific AERR semantics: N/A on zero-error runs; 0% only when runtime errors occurred and none were autonomously recovered under the no-retry policy.
+- Added NIM attempted-call, failure, token and recorded elapsed-time summaries.
+- `reporting.export_json()` now includes a top-level `process_metrics` record; the Streamlit UI exposes an audit-only process-metrics panel.
+- Added dedicated documentation and regression tests. No model call, retry behavior or scientific gate was added.
+
 ## 2026-10-29 · v0.28 — Agentic-AI landscape and Level 1 self-assessment (docs only)
 
 - Added a concise, original-language summary of the 2026 agentic-AI autonomy framework and mapped it to FrontierLab without reproducing the source paper's figures or tables.
