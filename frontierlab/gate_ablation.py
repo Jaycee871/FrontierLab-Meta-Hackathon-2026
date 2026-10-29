@@ -111,3 +111,27 @@ def _gold_metrics(outputs, gold, case_ids):
         "final_outputs_complete": True,
         "accuracy": round(correct / len(case_ids), 4),
     }
+
+
+def compare_gates(cases, predictions, source_texts, *, reviews=None, independent_gold=None):
+    fixed = source_quote_arm(cases, predictions, source_texts)
+    case_ids = [str(case["case_id"]) for case in cases]
+    gold = _label_map(independent_gold, set(case_ids))
+    arm_a = _summary(fixed["raw"])
+    arm_b = _summary(fixed["gated"])
+    arm_c = apply_reviewer_gate(fixed["gated"], reviews)
+    arm_a["gold_metrics"] = _gold_metrics(fixed["raw"], gold, case_ids)
+    arm_b["gold_metrics"] = _gold_metrics(fixed["gated"], gold, case_ids)
+    arm_c["gold_metrics"] = _gold_metrics(arm_c["outputs"], gold, case_ids)
+    return {
+        "schema": SCHEMA,
+        "case_count": len(case_ids),
+        "case_ids": case_ids,
+        "arm_a_raw_model": arm_a,
+        "arm_b_source_quote_gate": arm_b,
+        "arm_c_reviewer_gate": arm_c,
+        "anchor_checks": fixed["anchor_checks"],
+        "independent_gold_supplied": bool(gold),
+        "independent_gold_complete": len(gold) == len(case_ids),
+        "accuracy_reportable": bool(gold) and len(gold) == len(case_ids),
+    }
