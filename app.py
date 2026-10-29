@@ -421,6 +421,7 @@ if result:
                     if st.form_submit_button("Record researcher approval of this step", type="secondary"):
                         try:
                             approve_plan_step(graph, chosen, reviewer=reviewer, note=rationale)
+                            record_human_event(result, "PLAN_STEP_APPROVED", chosen, actor_label=reviewer, note=rationale)
                             st.session_state["frontier_result"] = result
                             st.success("Step approval recorded in this session; it remains a draft, not a validated protocol.")
                         except (ValueError, PermissionError) as exc:
