@@ -7,7 +7,7 @@ from frontierlab.gate_ablation import (
     compare_prompt_arms,
 )
 from frontierlab.literature_pilot import load_dataset, public_cases
-from scripts.gate_ablation_pilot import run as run_recorded_pilot
+from frontierlab.recorded_gate_ablation import run_recorded_pilot
 from scripts.nim_gate_ablation_trial import run_with_client
 
 
