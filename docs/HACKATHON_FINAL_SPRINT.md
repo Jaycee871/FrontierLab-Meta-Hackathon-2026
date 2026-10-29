@@ -35,7 +35,7 @@ The reviewed continuation has been executed successfully in GitHub Actions run 4
 | Authentic Meta Muse Glimmer response | MULTIPLE RECORDED NIM RUNS | Synthetic smoke, strict JSON, 12-case batch and two-call core extraction recorded; no scientific accuracy claim |
 | Human-reviewed live continuation | EXECUTED AND RECORDED | Run 40574846326 completed the bounded skeptic → hypothesis continuation; artifact provenance validated and exact outputs preserved |
 | Researcher method selection | COMPLETED | M2 selected; M1 retained as comparator; canonical evaluation bound to exact live hypotheses and human rationale stored separately |
-| Live research claim-evaluation comparison | NOT COMPLETED | 12-case real model outputs exist, but independently adjudicated reference labels and controlled A/B/C comparison remain pending |
+| Gate-ablation comparison | PARTIALLY EXECUTED | Recorded 12-case post-generation replay is implemented: 8 decisive / 4 abstaining outputs, 0 new abstentions from the source/quote post gate, 8 human reviews pending. A true same-model/same-cases two-call prompt-level workflow is prepared but not yet executed. No accuracy claim. |
 | Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
 | Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
 
@@ -47,11 +47,13 @@ The reviewed continuation has been executed successfully in GitHub Actions run 4
 4. Do **not** invoke the Planning Agent until the researcher explicitly approves Stage 5 planning.
 5. Continue to distinguish a validated execution trace and a reasoned method choice from validated scientific truth.
 
-## Priority 2: controlled claim-error benchmark
+## Priority 2: controlled gate ablation and claim-error benchmark
 
 - Start with 12 preregistered cases: 4 supported, 4 contradicted, 4 insufficient, using legally reusable snippets. Cover exact quote but opposite interpretation, source-ID mismatch, stale version, claims that cannot be decided from abstract, and tool failure.
 - Expert/researcher labels are separate from agent predictions. Blind dual review is desirable before publishing any gold standard.
-- On the SAME queries and model compare (A) no evidence gate, (B) source+quote gate, (C) source+quote+human review. Keep human intervention explicit, rather than calculating fake fully autonomous accuracy.
+- The zero-call post-generation replay is now implemented and visible in the app. It must be described as a replay because the original prompt already requested evidence quotes.
+- The manual two-call prompt-level workflow now holds the model and case/source payload fixed while changing only the task instruction: (A) label-only, (B) quote-grounded + deterministic source/quote gate; (C) remains human review.
+- Keep human intervention explicit rather than calculating fake fully autonomous accuracy.
 - Record per-case outcome, citations, reject/abstain, latency, token usage, false positives and false negatives. A reviewer correction is not automatically evidence the model corrected itself.
 - Do not present 12 offline fictional rule tests as model benchmark outcomes.
 
