@@ -105,6 +105,7 @@ def classify_run(run: Run) -> dict:
         "counts": dict(sorted(counts.items())),
         "runtime_failures": runtime_failures,
         "non_runtime_blocks": non_runtime_blocks,
+        "governance_or_evidence_blocks": non_runtime_blocks,
         "scientific_tensions": counts[SCIENTIFIC_TENSION],
         "note": (
             "Governance/evidence blocks are expected safety workflow outcomes and are "
