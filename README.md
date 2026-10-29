@@ -9,11 +9,21 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.24 prototype · Hosted interface: v0.16 · Status reviewed: October 29, 2026 (Asia/Taipei)**
+**Main codebase: v0.25 · Documentation sync candidate: v0.25.1 · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
 ---
+
+## Current verified state
+
+- **Main branch:** `0adcfb3` (v0.25), including the provenance-tagged evidence graph and EXTRACTED-only plan-step path gate.
+- **Software verification:** GitHub Actions deployment run [40740516474](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40740516474) ran the full main-branch suite successfully: **289 tests passed**.
+- **Public Space source upload:** the same run committed source snapshot `0adcfb37e11290c30a4649c8b7712419502a4a52` to the existing Hugging Face Space. That upload is recorded; this documentation sync does **not** claim a fresh post-build runtime/health re-verification.
+- **Real Meta path:** dated Muse Glimmer / NVIDIA NIM records include the smoke test, strict-JSON check, 12-case batch, two-call core extraction and the human-reviewed Skeptic → Hypothesis continuation.
+- **Researcher decision:** M2 (structure-based dual-pH histidine-scanning computational design) is selected; M1 remains a comparator. Stage 5 Planning is still blocked until explicit researcher approval.
+- **Pending, not main:** PR [#9](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/pull/9) is a docs-only Level 1 agentic-AI self-assessment; PR [#10](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/pull/10) hardens evidence-graph approval/source integrity (schema v2) and passes 304 tests on its branch. Neither is counted as shipped main behavior until merged.
+
 
 ## The problem
 
@@ -144,7 +154,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The suite has **265 tests**. It covers Streamlit interaction, NIM backend reuse, consent revocation, bounded extraction, recorded-review rebinding, reviewed-continuation boundaries, continuation-artifact provenance validation, exact live-hypothesis method-evaluation reconstruction, model-scale baseline controls, optional multimodal evidence checks, provider-capability enforcement and DetectorScope diagnostic-only boundaries. GitHub Actions run [40730651080](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40730651080) passed all 265 tests on `main` at `b53fdd7`. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and they make no model calls. **The test count is not a model-accuracy score.**
+The current **main** suite has **289 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, optional multimodal / baseline / audit extensions, and the v0.25 provenance-tagged evidence graph with EXTRACTED-only plan-step gating. GitHub Actions deployment run [40740516474](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40740516474) passed all 289 tests on source SHA `0adcfb37e11290c30a4649c8b7712419502a4a52`. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -159,7 +169,7 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 ## Deployment (Hugging Face Space)
 
 - **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
-- **Status:** v0.16 deployed and verified RUNNING. The runtime revision, health endpoint (HTTP 200) and rendered source marker were checked, and both recorded claim judgments with their rationales are visible. [Deployment receipt](docs/runs/hf_deployment_20261028.json).
+- **Status:** the latest main source snapshot `0adcfb3` was uploaded successfully to the existing Space by [run 40740516474](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40740516474). The workflow recorded Space commit `429f4accad2d141aadde6c1eaba1224771f90158`. Earlier v0.16 runtime/health checks are preserved in the [deployment receipt](docs/runs/hf_deployment_20261028.json); this documentation sync does not claim that the newer build was independently re-checked after upload.
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
 - **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
@@ -262,7 +272,7 @@ Some setup documents keep earlier implementation snapshots. To judge what has ac
 
 FrontierLab was built for the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) 2026, Indie Developer Track, under the Push the Frontier theme. Competition-period implementation began on **October 27, 2026**. The [original project charter](docs/ORIGINAL_PROJECT_CHARTER.md) defines the five-stage contract and the four principles.
 
-1. **Stage 5 is still human-gated.** M2 is formally selected, but Planning has not been approved or generated.
+1. **Stage 5 is still human-gated.** M2 is formally selected, but Planning has not been approved or generated. Keep this as the core completion milestone.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison.** Use the same model and cases to compare three setups: no gate, source/quote checks, and checks plus human review. Report abstention and intervention separately.
 4. **Record the public demo.** v0.16 is deployed with a checked revision. Record a roughly three-minute demonstration of actual behavior.
