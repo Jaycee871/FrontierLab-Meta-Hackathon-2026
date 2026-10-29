@@ -1,3 +1,13 @@
+## 2026-10-29 · v0.32 — Trajectory audit graph
+
+- Added `frontierlab/trajectory_graph.py`, an audit-only process graph separate from the evidence graph.
+- The graph contains the fixed five-stage workflow spine plus model-call receipts, recorded human-intervention events, method evaluation, rejected claims and process-taxonomy signals.
+- Model-call nodes retain hashes, model identity, timing and usage only; prompts and model outputs are not copied into the graph.
+- Trajectory relations describe process flow and never participate in the EXTRACTED-only scientific evidence gate.
+- `reporting.export_json()` now includes a top-level `trajectory_graph` object.
+- The Streamlit interface adds **7 · Trajectory audit graph · process trace** with node counts and a `trajectory.json` download.
+- Added dedicated tests and documentation. No model call, retry behavior or scientific decision rule changed.
+
 ## 2026-10-29 · v0.31 — Process error taxonomy
 
 - Added `frontierlab/error_taxonomy.py` to classify blocking and failure signals without treating expected human-governance gates as runtime errors.

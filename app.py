@@ -11,6 +11,7 @@ from frontierlab.pipeline import make_plan, run_research, continue_after_review
 from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
 from frontierlab.process_metrics import process_metrics
+from frontierlab.trajectory_graph import build_trajectory_graph, summarize as trajectory_summary, to_json as trajectory_json
 from frontierlab.interventions import record_human_event
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.claim_verification import audit_predictions, conflict_transparency
@@ -437,6 +438,29 @@ if result:
             st.caption("No plan steps yet. Steps appear here once a draft plan exists.")
         st.download_button("Download graph.json", data=graph_json(graph),
                            file_name="graph.json", mime="application/json")
+    trajectory = build_trajectory_graph(result)
+    t_stats = trajectory_summary(trajectory)
+    with st.expander("7 · Trajectory audit graph · process trace", expanded=False):
+        st.caption(
+            "Audit-only process graph. It records model calls, human interventions, "
+            "method evaluation, rejected claims and process signals. It never participates "
+            "in the scientific evidence gate."
+        )
+        t1, t2, t3, t4 = st.columns(4)
+        t1.metric("Model calls", t_stats["model_calls"])
+        t2.metric("Human events", t_stats["human_events"])
+        t3.metric("Rejected claims", t_stats["rejected_claims"])
+        t4.metric("Process signals", t_stats["process_signals"])
+        st.dataframe(
+            [{"Node type": key, "Count": value} for key, value in t_stats["nodes_by_type"].items()],
+            hide_index=True, use_container_width=True
+        )
+        st.download_button(
+            "Download trajectory.json",
+            data=trajectory_json(trajectory),
+            file_name="trajectory.json",
+            mime="application/json",
+        )
     with st.expander("Audit trail", expanded=False):
         st.json(result.log)
     st.download_button("Download complete provenance JSON", data=export_json(result),
