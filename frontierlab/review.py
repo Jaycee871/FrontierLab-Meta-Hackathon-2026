@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 from .models import Run
+from .interventions import record_human_event
 
 VERDICTS = ("PENDING", "SUPPORTED", "CONTRADICTED", "INSUFFICIENT")
 SCHEMA = "frontierlab.human-review.v1"
@@ -103,6 +104,13 @@ def save_review(run: Run, decisions: list[dict]) -> dict:
     run.hypotheses=[]
     run.evaluation=None
     run.plan=None
+    record_human_event(
+        run,
+        "CLAIM_REVIEW_SAVED",
+        packet["dataset_id"],
+        note=packet["status"],
+        metadata={"review_stats": packet["review_stats"]},
+    )
     return packet
 
 def approved_claims(run: Run) -> list:
