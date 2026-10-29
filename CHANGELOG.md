@@ -1,3 +1,11 @@
+## 2026-10-30 · Submission/demo package — docs only
+
+- Added a ~3-minute demo runbook that distinguishes genuine recorded Meta inference, deterministic replay, researcher review and unexecuted optional experiments.
+- Added reusable public submission copy aligned to the Indie Developer / Push the Frontier story and current v0.35 shipped boundaries.
+- Added a release checklist covering repository freeze, manual HF deployment, runtime verification, demo checks, optional gate-ablation/review work, Stage 5 status and authenticated portal submission.
+- Rechecked the public Meta and Cerebral Valley event pages: project submissions remain due November 4, 2026 at 9:00 PM ET; public pages do not expose every logged-in final-submission field.
+- No code, model call, scientific gate or central version changed.
+
 ## 2026-10-29 · v0.35 — M2 Stage-5 planning-readiness contract
 
 - Added `frontierlab/planning_readiness.py`, a deterministic pre-planning contract that calls `require_evaluation()` and refuses stale/changed method evaluations.
