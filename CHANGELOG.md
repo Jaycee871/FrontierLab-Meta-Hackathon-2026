@@ -1,3 +1,15 @@
+## 2026-10-29 · v0.35 — M2 Stage-5 planning-readiness contract
+
+- Added `frontierlab/planning_readiness.py`, a deterministic pre-planning contract that calls `require_evaluation()` and refuses stale/changed method evaluations.
+- The recorded M2 packet preserves exact context/evaluation IDs, reviewed source IDs, citation-linked hypotheses and the selected-method evidence set.
+- M2's unresolved reproducibility checks are carried forward explicitly: **data, code and environment**.
+- Nine planning obligations are recorded, including design-input provenance, executable design stack, environment/protonation settings, matched-pH controls, Fab-level validation, monomeric-Fab SPR where feasible, avidity/stoichiometry caveats, histidine-search/structure bias, replication and falsification.
+- The readiness packet explicitly records `planning_approved=false`, `model_call_authorized=false`, `planning_model_called=false` and `plan_generated=false`.
+- Added `scripts/planning_readiness_recorded.py` to rebuild the exact recorded M2 context with zero model calls.
+- Streamlit now shows **Planning readiness · pre-approval contract** before the existing Stage 5 authorization checkbox. No new approval control was added.
+- Feature/UI branch CI passed **348 tests** before final documentation synchronization.
+- No Planning Agent call, experiment execution or scientific-validity claim was added.
+
 ## 2026-10-29 · v0.34 — Source-bound 12-case researcher review workspace
 
 - Added `frontierlab/pilot_review.py` to canonicalize researcher-edited literature-pilot review packets against the fixed dataset and source snapshot.

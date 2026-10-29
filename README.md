@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.34 candidate · Status reviewed: October 29, 2026 (Asia/Taipei)**
+**Codebase: v0.35 candidate · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -31,7 +31,7 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 - **Human review gate.** Each accepted claim needs a reviewer verdict: SUPPORTED, CONTRADICTED or INSUFFICIENT. Synthesis resumes only when every claim is reviewed and at least two distinct papers are judged supportive. Reviews are bound to source snapshots and the research question.
 - **Multi-agent synthesis with Meta Muse Glimmer 30B** (`meta/muse-glimmer-30b`) through NVIDIA NIM. Roles include the Evidence Extraction Agent, Adversarial Skeptic Agent and Hypothesis Agent, plus optional method-proposal and planning calls. Every call has a hard budget, and there are no automatic retries.
 - **Method evaluation.** The researcher compares candidate methods and records reproducibility documentation (data, code, environment, parameters, protocol, metrics) and uncertainty. They then select a method with a rationale or defer.
-- **Planning gate.** A draft plan needs a current saved evaluation and explicit approval. The draft includes controls, metrics, replication and falsification criteria.
+- **Planning readiness + approval gate.** A deterministic pre-planning contract first verifies that the human review, hypotheses and selected Method Evaluation are still current. It carries M2's open reproducibility checks and required validation/interpretation obligations forward without calling a model. A draft plan still requires the separate explicit researcher approval checkbox.
 - **Evidence graph.** Each run builds a plain-dict provenance graph (Paper ← Passage ← Claim ← Hypothesis ← Plan step). Every edge is tagged EXTRACTED (quote located in the abstract, or a checked ID reference), INFERRED (model stance without an anchored quote) or AMBIGUOUS (conflicting labels). A plan step can be approved only if its whole path back to a paper is EXTRACTED. The graph can be downloaded as `graph.json`. See [evidence graph](docs/EVIDENCE_GRAPH.md).
 - **Audit trail export.** Source records, claim checks, review judgments, workflow decisions and drafts can be exported as JSON with per-request model receipts (role, model ID, input/output hashes, timing, tokens), normalized human-intervention events, deterministic process metrics and an error-taxonomy summary.
 - **Human-intervention event stream.** Consequential researcher actions are timestamped and bound to workflow artifacts (claim review saved, method evaluation saved, planning approved, plan-step approved). Identity is recorded as an actor label but is not cryptographically verified.
@@ -40,6 +40,7 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 - **Trajectory audit graph.** A separate audit-only graph records the five-stage workflow, model-call receipts, human-intervention events, method evaluation, rejected claims and process signals. It is exported as `trajectory.json` and never participates in the scientific evidence gate.
 - **Controlled gate ablation.** FrontierLab separates a zero-call post-generation replay from a true same-model/same-cases prompt-level experiment. The recorded 12-case Glimmer batch currently shows 8 decisive outputs and 4 abstentions; all 8 decisive outputs already had valid anchored quotes, so the post-processing source/quote gate added 0 new abstentions. This is not reported as accuracy because independent gold is unavailable. A manual two-call Glimmer workflow is prepared for the genuine prompt-level comparison.
 - **12-case researcher review workspace.** The app can download the source-bound reviewer packet and accept an edited JSON packet back through a file uploader. Source/case fields are revalidated, completed judgments require rationales, reviewer identity is recorded as an unverified label, and Arm C is recomputed immediately without a new model call. Researcher review is never relabeled as independent gold.
+- **M2 Stage-5 readiness contract.** The selected M2 path now produces a zero-call readiness packet with exact context/evaluation IDs, reviewed source sets, the three open reproducibility checks (data/code/environment) and nine required planning obligations including monomeric-Fab SPR, avidity/stoichiometry handling, search-bias disclosure, replication and falsification. The packet explicitly keeps `planning_approved=false` and `model_call_authorized=false`.
 - **Invalidation on change.** If source records or the question change, earlier reviews, hypotheses, evaluations and plans are invalidated.
 
 ## Architecture
@@ -150,7 +151,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.34 candidate suite has **341 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, human-intervention events, process metrics, error taxonomy, trajectory audit graph, centralized version metadata, gate-ablation contracts, and source-bound 12-case reviewer-packet validation. GitHub Actions run [40919859863](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40919859863) passed all 341 tests after the review-workspace integration. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.35 candidate suite has **348 tests**. It covers the five-stage workflow, human-review/evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity, human-intervention events, process metrics, error taxonomy, trajectory audit graph, gate-ablation/reviewer-packet contracts, and deterministic Stage-5 planning readiness. GitHub Actions run [40920928261](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40920928261) passed all 348 tests after the readiness-panel integration. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -203,7 +204,7 @@ See [agentic-AI landscape and self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) for
 - Outputs are research drafts. FrontierLab has no validated clinical or wet-lab execution capability.
 - Paid Meta Model API access is disabled.
 
-See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md), [method evaluation and planning](docs/METHOD_EVALUATION.md), and [process metrics](docs/PROCESS_METRICS.md), [trajectory audit graph](docs/TRAJECTORY_GRAPH.md), and [gate ablation](docs/GATE_ABLATION.md).
+See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md), [method evaluation and planning](docs/METHOD_EVALUATION.md), and [process metrics](docs/PROCESS_METRICS.md), [trajectory audit graph](docs/TRAJECTORY_GRAPH.md), [gate ablation](docs/GATE_ABLATION.md), and [planning readiness](docs/PLANNING_READINESS.md).
 
 ## Model roles
 
