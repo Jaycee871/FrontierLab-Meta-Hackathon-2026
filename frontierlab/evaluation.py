@@ -149,6 +149,7 @@ def save_evaluation(run: Run, candidates: list[dict], *, selected_id: str | None
     run.log.append({"time_utc": datetime.now(timezone.utc).isoformat(),
                     "role": "Method Evaluation", "status": result["status"],
                     "note": "Researcher-saved method comparison; evaluation_id=" + result["evaluation_id"]})
+    record_human_event(run, "METHOD_EVALUATION_SAVED", result["evaluation_id"], note=result["status"])
     return result
 
 
