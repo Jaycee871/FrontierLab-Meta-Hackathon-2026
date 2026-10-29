@@ -1,3 +1,12 @@
+## 2026-10-29 · v0.26 — Agentic-AI landscape and autonomy self-assessment (docs only)
+
+- Added [`docs/AGENTIC_AI_LANDSCAPE.md`](docs/AGENTIC_AI_LANDSCAPE.md), a cited distillation of Zhao *et al.*, "The rise of agentic AI in drug discovery", *npj Drug Discovery* 3, 43 (2026). It covers agent anatomy, topologies, the six autonomy levels (Table 1 criteria quoted verbatim), the applications map, process-oriented evaluation, and the paper's traceability infrastructure and metrics (HIC, AERR, SCR, cost).
+- Self-assessment: FrontierLab is a **Level 1 Assisted Pipeline**, by design. It is not Level 2, because the model makes no path decisions and there are no automatic retries. Every claim is tied to a file.
+- Mapped the paper's full-chain traceability demands onto the code and named the gaps. Approval and review records have no timestamp or verified identity. `load_graph` accepts a hand-injected approval with an empty reviewer on an already approvable step, and it checks passages against the abstract stored in the graph rather than the source fingerprint. Agent calls and failed paths are missing from the graph. There is no error taxonomy, and no HIC, AERR or SCR is reported.
+- Ranked 15 recommendations, split into pre-deadline and future work, each with an effort estimate. **None is implemented in this version.**
+- README: added the autonomy-level statement, a Key docs link and a Credits entry. NOTICE: added §9, covering the paper's CC BY-NC-ND 4.0 quoted material.
+- No code, test or dependency changes.
+
 ## 2026-10-29 · v0.25 — Provenance-tagged evidence graph
 
 - Added `frontierlab/evidence_graph.py`, a plain-dict graph that links a run's plan steps back to the literature (Paper ← Passage ← Claim ← Hypothesis ← PlanStep). Edges are tagged EXTRACTED, INFERRED or AMBIGUOUS.

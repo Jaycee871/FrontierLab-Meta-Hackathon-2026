@@ -107,3 +107,17 @@ material remains under its own terms.
    Open Access API are used as remote services. Their use is governed by
    each provider's own terms. No provider code or data is relicensed here,
    beyond the dataset excerpts listed in section 1.
+
+9. Quoted material from Zhao et al. (2026)
+
+   docs/AGENTIC_AI_LANDSCAPE.md quotes short passages and the Table 1
+   autonomy-level criteria, verbatim and unmodified, from: Zhao D., Fang M.,
+   Mao L. et al., "The rise of agentic AI in drug discovery: from static tools
+   to autonomous virtual scientists", npj Drug Discovery 3, 43 (2026),
+   https://doi.org/10.1038/s44386-026-00075-0. That article is (c) the authors
+   and licensed under CC BY-NC-ND 4.0
+   (https://creativecommons.org/licenses/by-nc-nd/4.0/). The quoted text is
+   excluded from this repository's MIT licence and remains under those terms.
+   The Table 1 criteria are reproduced verbatim only; no figure is reproduced,
+   and no figure or table is redrawn or adapted. All other text in that
+   document is original summary.

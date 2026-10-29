@@ -183,6 +183,10 @@ All numbers below come from dated run records in [`docs/runs/`](docs/runs) and t
 
 Earlier evidence: [171-test run](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40560343730).
 
+### Where FrontierLab sits on the agentic-autonomy spectrum
+
+Measured against the six-level spectrum in Zhao *et al.*, *npj Drug Discovery* (2026), FrontierLab is a **Level 1 Assisted Pipeline**, and deliberately so. The model fills fixed roles; code decides the order; there are no automatic retries; and a human makes every stage transition. It is not an autonomous agent. See [agentic-AI landscape](docs/AGENTIC_AI_LANDSCAPE.md) for the evidence, the full-chain traceability gaps and ranked next steps.
+
 ### Important limitations
 
 - **A matching quotation shows that the text exists in a source. It does not show that the text supports the model's interpretation.**
@@ -254,7 +258,7 @@ These modules support the five-stage product. Their offline results do not show 
 | `.github/workflows/` | Automated tests (`tests.yml`) and manual-only connection, trial and deploy workflows. |
 | [CHANGELOG.md](CHANGELOG.md) | Version-by-version development history. |
 
-Key docs: [project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) · [method evaluation](docs/METHOD_EVALUATION.md) · [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) · [human review gate](docs/HUMAN_REVIEW_GATE.md) · [evidence graph](docs/EVIDENCE_GRAPH.md) · [structured Meta runs](docs/META_STRUCTURED_RUNS.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [resource strategy](docs/RESOURCE_STRATEGY.md) · [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
+Key docs: [project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [NIM research backend](docs/NIM_RESEARCH_BACKEND.md) · [method evaluation](docs/METHOD_EVALUATION.md) · [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md) · [human review gate](docs/HUMAN_REVIEW_GATE.md) · [evidence graph](docs/EVIDENCE_GRAPH.md) · [agentic-AI landscape and autonomy self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) · [structured Meta runs](docs/META_STRUCTURED_RUNS.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [resource strategy](docs/RESOURCE_STRATEGY.md) · [Springer Nature Meta API](docs/SPRINGER_NATURE_META.md) · [Springer Nature Open Access](docs/SPRINGER_NATURE_OA.md).
 
 Some setup documents keep earlier implementation snapshots. To judge what has actually been verified, use the dated status and run records linked above.
 
@@ -282,4 +286,5 @@ Created by **Pack Kwan Low (Jaycee)**.
 - [Meta developer platform](https://dev.meta.ai/)
 - Literature data: Europe PMC and Springer Nature APIs. The pilot excerpts carry their own citation and rights metadata in [`datasets/`](datasets/real_ph_excerpt_cases_v1.json).
 - Evidence-graph provenance tags (EXTRACTED / INFERRED / AMBIGUOUS) are inspired by [Graphify](https://github.com/Graphify-Labs/graphify) (Graphify Labs, Apache-2.0). This is an idea credit only; no Graphify code is used or bundled.
+- Autonomy levels and traceability framing: Zhao D., Fang M., Mao L. *et al.*, "The rise of agentic AI in drug discovery: from static tools to autonomous virtual scientists", *npj Drug Discovery* 3, 43 (2026), [doi:10.1038/s44386-026-00075-0](https://doi.org/10.1038/s44386-026-00075-0) (CC BY-NC-ND 4.0; quoted with attribution, nothing adapted). Distilled in [docs/AGENTIC_AI_LANDSCAPE.md](docs/AGENTIC_AI_LANDSCAPE.md).
 - Visual theme: an homage to Edwin A. Abbott's *Flatland: A Romance of Many Dimensions* (1884, public domain). The epigraphs "Upward, not Northward" and "May aspire yet higher and higher" are quoted from the book (Project Gutenberg eBook #97). All artwork is original.
