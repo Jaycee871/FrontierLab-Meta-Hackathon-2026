@@ -73,3 +73,24 @@ def source_quote_arm(cases: list[dict], predictions: list[dict], source_texts: d
         gated[cid] = label if label == "INSUFFICIENT" or anchored else "INSUFFICIENT"
 
     return {"raw": raw, "gated": gated, "anchor_checks": checks}
+
+
+def apply_reviewer_gate(gated, reviews=None):
+    reviews = _label_map(reviews, set(gated))
+    outputs = {}
+    required = 0
+    completed = 0
+    for cid, label in gated.items():
+        if label in {"SUPPORTED", "CONTRADICTED"}:
+            required += 1
+            if cid in reviews:
+                outputs[cid] = reviews[cid]
+                completed += 1
+            else:
+                outputs[cid] = PENDING
+        else:
+            outputs[cid] = "INSUFFICIENT"
+    result = _summary(outputs)
+    result["reviews_required"] = required
+    result["reviews_completed"] = completed
+    return result
