@@ -50,6 +50,24 @@ def human_interventions(run: Run) -> dict:
 
     This is derived from current artifacts, not an authoritative event stream.
     """
+    events = [
+        e for e in getattr(run, "human_events", [])
+        if isinstance(e, dict) and e.get("schema") == "frontierlab.human-intervention.v1"
+    ]
+    if events:
+        observed = {
+            "claim_review_saves": sum(e.get("kind") == "CLAIM_REVIEW_SAVED" for e in events),
+            "method_evaluation_saves": sum(e.get("kind") == "METHOD_EVALUATION_SAVED" for e in events),
+            "planning_approvals": sum(e.get("kind") == "PLANNING_APPROVED" for e in events),
+            "plan_step_approvals": sum(e.get("kind") == "PLAN_STEP_APPROVED" for e in events),
+        }
+        return {
+            "observed_total": len(events),
+            "observed": observed,
+            "status": "RECORDED_EVENT_STREAM",
+            "complete_event_log": True,
+            "note": "Counts the four instrumented consequential researcher event types; identity is not verified.",
+        }
     review_stats = run.review.get("review_stats", {}) if isinstance(run.review, dict) else {}
     claim_reviews = review_stats.get("reviewed", 0)
     if not isinstance(claim_reviews, int) or claim_reviews < 0:
