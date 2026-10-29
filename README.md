@@ -149,7 +149,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The current v0.32 main suite has **329 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, recorded human-intervention events, deterministic process metrics, process error taxonomy, the separate trajectory audit graph, and centralized UI/deployment version metadata. GitHub Actions run [40916230354](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40916230354) passed all 329 tests before the version fix was merged to main. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.33 candidate suite has **336 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, human-intervention events, process metrics, error taxonomy, trajectory audit graph, centralized version metadata, and the recorded/live gate-ablation contracts. GitHub Actions run [40919078602](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40919078602) passed all 336 tests after the gate-ablation documentation update. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
