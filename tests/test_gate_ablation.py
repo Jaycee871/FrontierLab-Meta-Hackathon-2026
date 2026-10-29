@@ -1,6 +1,7 @@
 import pytest
 
 from frontierlab.gate_ablation import PENDING, compare_gates
+from scripts.gate_ablation_pilot import run as run_recorded_pilot
 
 CASES = [
     {"case_id": "A", "source_id": "S1"},
@@ -75,3 +76,20 @@ def test_partial_gold_never_reports_accuracy():
     assert result["independent_gold_complete"] is False
     assert result["accuracy_reportable"] is False
     assert result["arm_b_source_quote_gate"]["gold_metrics"]["accuracy"] is None
+
+
+def test_recorded_glimmer_pilot_reports_structural_gate_effects_without_accuracy():
+    result = run_recorded_pilot()
+    assert result["case_count"] == 12
+    assert result["arm_a_raw_model"]["affirmative"] == 8
+    assert result["arm_a_raw_model"]["abstained"] == 4
+    assert result["arm_b_source_quote_gate"]["affirmative"] == 8
+    assert result["arm_b_source_quote_gate"]["abstained"] == 4
+    assert result["arm_c_reviewer_gate"]["reviews_required"] == 8
+    assert result["arm_c_reviewer_gate"]["reviews_completed"] == 0
+    assert result["arm_c_reviewer_gate"]["pending_review"] == 8
+    assert result["independent_gold_supplied"] is False
+    assert result["independent_gold_complete"] is False
+    assert result["accuracy_reportable"] is False
+    assert sum(v["source_matches_case"] for v in result["anchor_checks"].values()) == 12
+    assert sum(v["quote_anchored"] for v in result["anchor_checks"].values()) == 8
