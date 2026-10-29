@@ -88,12 +88,12 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 
 ## Priority 3: judge-operable demo
 
-- Build a 3-minute story: research question → live evidence retrieval → a model makes an overly strong claim → citation/excerpt check and/or researcher challenges it → app abstains or limits the conclusion → accessible provenance trail and download.
+- Use [`DEMO_RUNBOOK.md`](DEMO_RUNBOOK.md) as the canonical ~3-minute recording story. Keep the narrative on the scientific problem, genuine recorded Meta inference, governance effect, human decision and provenance—not the number of optional models.
 - Failure-path demo must remain honest if the model unexpectedly produces a correct response. Include a recorded genuine model trace and a replay only when transparently labeled 'recorded real run'.
 - Public HF CPU Basic is the frontend. It does not have a loaded 30B model; hosting Meta inference needs an approved external provider/backend with secrets kept off GitHub and appropriate cost controls.
 - Package a stable backup video that matches the application; do not call prewritten fake responses live model output.
 
-## Current official schedule check — October 28, 2026
+## Current official schedule check — October 30, 2026
 
 The current Meta and Cerebral Valley event pages both still list **November 4, 2026 at 9:00 PM ET** as the project submission deadline. The official Meta page describes the Indie Developer Track as being judged on creativity, technical ambition and whether the project works; the Push the Frontier theme explicitly includes accelerating scientific experiments.
 
@@ -105,8 +105,8 @@ The participant portal may contain additional submission-form fields that are no
 
 ## Priority 4: release and submission
 
-- Stabilize HF Space and verify exact version SHA in frontend; fix any crashes and expose clear model-provenance labels.
-- Show a concise README: problem, novel contribution, what is working today, verified evaluation numbers, limits and reproduction steps.
+- Follow [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md): manually deploy current main to the existing HF Space, then verify exact source SHA, current central version, RUNNING runtime, health endpoint and rendered marker.
+- Use [`SUBMISSION_COPY.md`](SUBMISSION_COPY.md) as the source of truth for public one-line/short/long descriptions and limitations; edit only when shipped behavior changes.
 - Confirm actual current requirements within the logged-in Cerebral Valley participant portal; complete all mandatory fields, video, code and links.
 - Target internal completion by 2026-11-04 in Taipei to leave room for portal and upload failures; formal deadline remains 2026-11-05 10:00 Taiwan time.
 
