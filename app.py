@@ -10,6 +10,7 @@ from frontierlab.openweight import OpenWeightClient
 from frontierlab.pipeline import make_plan, run_research, continue_after_review
 from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
+from frontierlab.process_metrics import process_metrics
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.claim_verification import audit_predictions, conflict_transparency
 from frontierlab.integrity_trials import suite_report
@@ -199,6 +200,24 @@ if result:
     if result.inference:
         with st.expander("Model request receipts"):
             st.json(result.inference)
+    with st.expander("Process metrics · audit only", expanded=False):
+        pm = process_metrics(result)
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Completed stages", f"{pm['stage_completion']['completed']} / 5")
+        m2.metric("SCR", f"{pm['scr'] * 100:.0f}%")
+        m3.metric("Observed human actions", pm["human_interventions"]["observed_total"])
+        aerr = pm["nim"]["aerr"]
+        m4.metric("AERR", "N/A" if aerr is None else f"{aerr * 100:.0f}%")
+        st.caption(
+            "Process metrics describe workflow activity, not model accuracy. "
+            "Observed human actions are a derived lower-bound proxy, not a complete identity-verified HIC."
+        )
+        if pm["nim"]["applicable"]:
+            st.caption(
+                f"NIM calls: {pm['nim']['attempted_calls']} · "
+                f"tokens: {pm['nim']['total_tokens']} · "
+                f"recorded model time: {pm['nim']['elapsed_seconds']:.3f}s"
+            )
     for warning in result.audit.warnings:
         st.warning(warning)
     if result.mode == "demo":
