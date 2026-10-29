@@ -11,6 +11,7 @@ from frontierlab.pipeline import make_plan, run_research, continue_after_review
 from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
 from frontierlab.process_metrics import process_metrics
+from frontierlab.interventions import record_human_event
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.claim_verification import audit_predictions, conflict_transparency
 from frontierlab.integrity_trials import suite_report
