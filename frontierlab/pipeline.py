@@ -6,6 +6,7 @@ from .demo_data import DEMO_CLAIMS, DEMO_PAPERS, QUESTION
 from .evidence import retrieve_papers
 from .evidence_graph import refresh_evidence_graph
 from .models import Run
+from .interventions import record_human_event
 
 
 def log_step(log: list[dict], role: str, state: str, note: str):
@@ -180,6 +181,7 @@ def make_plan(run: Run, *, model_client=None, approved: bool = False) -> Run:
     from copy import deepcopy
     from .evaluation import require_evaluation, selected_method
     evaluation = require_evaluation(run)
+    record_human_event(run, "PLANNING_APPROVED", evaluation["evaluation_id"], note="Researcher authorized draft planning")
     method = selected_method(evaluation)
     evaluation_context = {
         "evaluation_id": evaluation["evaluation_id"],
