@@ -8,6 +8,7 @@ from frontierlab.demo_data import QUESTION, QUERY
 from frontierlab.quantitative import inverse_variance_heterogeneity
 from frontierlab.openweight import OpenWeightClient
 from frontierlab.pipeline import make_plan, run_research, continue_after_review
+from frontierlab.planning_readiness import build_planning_readiness, readiness_summary
 from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
 from frontierlab.process_metrics import process_metrics
@@ -456,6 +457,43 @@ if result:
         evaluation_ready = True
     except (ValueError, PermissionError):
         evaluation_ready = False
+
+    if evaluation_ready and result.plan is None:
+        try:
+            readiness = build_planning_readiness(result)
+            ready_stats = readiness_summary(readiness)
+            with st.expander("Planning readiness · pre-approval contract", expanded=False):
+                st.warning(
+                    "READY ≠ APPROVED. This packet validates the current reviewed context and "
+                    "selected method, but it does not authorize or call the Planning Agent."
+                )
+                p1, p2, p3, p4 = st.columns(4)
+                p1.metric("Selected method", ready_stats["selected_candidate_id"])
+                p2.metric("Open reproducibility checks", len(ready_stats["open_reproducibility_checks"]))
+                p3.metric("Required planning obligations", ready_stats["required_obligations"])
+                p4.metric("Planning approved", "NO")
+                st.caption(
+                    "Open checks: " + ", ".join(ready_stats["open_reproducibility_checks"]) +
+                    ". The future plan must preserve evidence/citation gates and address all obligations."
+                )
+                st.dataframe(
+                    [{
+                        "Obligation": item["obligation_id"],
+                        "Category": item["category"],
+                        "Status": item["status"],
+                        "Requirement": item["requirement"],
+                    } for item in readiness["planning_obligations"]],
+                    hide_index=True,
+                    use_container_width=True,
+                )
+                st.download_button(
+                    "Download planning-readiness JSON",
+                    data=json.dumps(readiness, ensure_ascii=False, indent=2, sort_keys=True),
+                    file_name="planning_readiness.json",
+                    mime="application/json",
+                )
+        except (ValueError, PermissionError) as exc:
+            st.info(f"Planning readiness not available: {exc}")
     approved = st.checkbox("I have reviewed the evidence, conflicts and limitations. Allow a DRAFT research plan.")
     if st.button("Generate cited plan", disabled=not approved or not result.hypotheses or not evaluation_ready or (result.mode == "live" and active_client is None), type="primary"):
         try:
