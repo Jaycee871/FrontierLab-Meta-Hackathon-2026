@@ -78,7 +78,7 @@ def run_with_client(model_client, *, data: dict | None = None) -> dict:
             "For every supplied case, judge only SUPPORTED, CONTRADICTED or INSUFFICIENT "
             "from the supplied short source excerpt. Return "
             '{"cases":[{"case_id":"...","source_id":"...","label":"..."}]}. '
-            "Do not add evidence_quote in this arm."
+            "Return only those three fields for each case; do not add extra fields."
         ),
         payload,
     )
