@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.29 candidate · Status reviewed: October 29, 2026 (Asia/Taipei)**
+**Codebase: v0.31 · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -33,7 +33,10 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 - **Method evaluation.** The researcher compares candidate methods and records reproducibility documentation (data, code, environment, parameters, protocol, metrics) and uncertainty. They then select a method with a rationale or defer.
 - **Planning gate.** A draft plan needs a current saved evaluation and explicit approval. The draft includes controls, metrics, replication and falsification criteria.
 - **Evidence graph.** Each run builds a plain-dict provenance graph (Paper ← Passage ← Claim ← Hypothesis ← Plan step). Every edge is tagged EXTRACTED (quote located in the abstract, or a checked ID reference), INFERRED (model stance without an anchored quote) or AMBIGUOUS (conflicting labels). A plan step can be approved only if its whole path back to a paper is EXTRACTED. The graph can be downloaded as `graph.json`. See [evidence graph](docs/EVIDENCE_GRAPH.md).
-- **Audit trail export.** Source records, claim checks, review judgments, workflow decisions and drafts can be exported as JSON with per-request model receipts (role, model ID, input/output hashes, timing, tokens).
+- **Audit trail export.** Source records, claim checks, review judgments, workflow decisions and drafts can be exported as JSON with per-request model receipts (role, model ID, input/output hashes, timing, tokens), normalized human-intervention events, deterministic process metrics and an error-taxonomy summary.
+- **Human-intervention event stream.** Consequential researcher actions are timestamped and bound to workflow artifacts (claim review saved, method evaluation saved, planning approved, plan-step approved). Identity is recorded as an actor label but is not cryptographically verified.
+- **Process metrics.** SCR, recorded human-intervention counts, NIM AERR semantics, token/latency totals and process error classes are derived deterministically from the run state. These are workflow metrics, not scientific-accuracy scores.
+- **Error taxonomy.** Governance gates, insufficient evidence, citation/source failures, missing resources, model runtime failures, rejected claims and scientific tensions are separated instead of collapsing every non-success state into one error bucket.
 - **Invalidation on change.** If source records or the question change, earlier reviews, hypotheses, evaluations and plans are invalidated.
 
 ## Architecture
@@ -144,7 +147,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.29 candidate suite has **310 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, and deterministic process-metric semantics. GitHub Actions run [40906742592](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40906742592) passed all 310 tests on the feature branch after the process-metrics UI integration. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The current main suite has **320 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, recorded human-intervention events, deterministic process metrics and the process error taxonomy. GitHub Actions run [40909636632](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40909636632) passed all 320 tests on main. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
