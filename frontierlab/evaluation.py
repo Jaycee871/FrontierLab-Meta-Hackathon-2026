@@ -7,6 +7,7 @@ import hashlib
 import json
 
 from .models import Run
+from .interventions import record_human_event
 from .review import approved_claims, review_packet, source_fingerprint
 
 CHECKS = ("data", "code", "environment", "parameters", "protocol", "metrics")
