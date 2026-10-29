@@ -11,6 +11,7 @@ from frontierlab.pipeline import make_plan, run_research, continue_after_review
 from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
 from frontierlab.process_metrics import process_metrics
+from frontierlab.interventions import record_human_event
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.claim_verification import audit_predictions, conflict_transparency
 from frontierlab.integrity_trials import suite_report
@@ -420,6 +421,7 @@ if result:
                     if st.form_submit_button("Record researcher approval of this step", type="secondary"):
                         try:
                             approve_plan_step(graph, chosen, reviewer=reviewer, note=rationale)
+                            record_human_event(result, "PLAN_STEP_APPROVED", chosen, actor_label=reviewer, note=rationale)
                             st.session_state["frontier_result"] = result
                             st.success("Step approval recorded in this session; it remains a draft, not a validated protocol.")
                         except (ValueError, PermissionError) as exc:

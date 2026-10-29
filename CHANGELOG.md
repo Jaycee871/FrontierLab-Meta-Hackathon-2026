@@ -1,3 +1,14 @@
+## 2026-10-29 · v0.30 — Recorded human-intervention event stream
+
+- Added `frontierlab/interventions.py` with normalized, timestamped human-intervention events bound to workflow artifacts.
+- New runs record four consequential researcher actions: claim review saved, method evaluation saved, planning approved and plan-step approved.
+- `Run` now exports `human_events`; events include UTC time, event kind, bound artifact ID, actor label when supplied and `identity_verified=false`.
+- Process metrics now prefer the recorded event stream instead of inferring human actions from downstream artifacts. Legacy runs without events retain the conservative artifact-derived fallback.
+- Planning approval is recorded only after the saved evaluation passes `require_evaluation()`; a blocked attempt before a valid evaluation does not create a false approval event.
+- Added integration coverage proving the real review → evaluation → planning workflow produces the expected event sequence and that provenance export exposes it.
+- Feature branch CI passed **316 tests** in run 40908530796.
+- No model calls, autonomous retries or identity-authentication mechanism were added.
+
 ## 2026-10-29 · v0.29 — Process metrics and audit export
 
 - Added `frontierlab/process_metrics.py`, a deterministic metrics layer derived from the current `Run` state.

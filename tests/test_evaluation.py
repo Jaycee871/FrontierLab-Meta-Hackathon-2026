@@ -255,3 +255,35 @@ def test_fictional_five_stage_flow_remains_explicitly_fictional():
     assert run.plan["selected_candidate_id"] == "M1"
     assert not run.evaluation["uncertainty"]["scientific_execution_verified"]
 
+
+
+def test_human_intervention_events_follow_real_workflow():
+    run, model = live()
+    assert [event["kind"] for event in run.human_events] == ["CLAIM_REVIEW_SAVED"]
+
+    saved = save(run)
+    assert [event["kind"] for event in run.human_events] == [
+        "CLAIM_REVIEW_SAVED",
+        "METHOD_EVALUATION_SAVED",
+    ]
+    assert run.human_events[-1]["artifact_id"] == saved["evaluation_id"]
+
+    make_plan(run, model_client=model, approved=True)
+    assert [event["kind"] for event in run.human_events] == [
+        "CLAIM_REVIEW_SAVED",
+        "METHOD_EVALUATION_SAVED",
+        "PLANNING_APPROVED",
+    ]
+    assert run.human_events[-1]["artifact_id"] == saved["evaluation_id"]
+    exported = json.loads(export_json(run))
+    assert len(exported["human_events"]) == 3
+    assert exported["process_metrics"]["human_interventions"]["status"] == "RECORDED_EVENT_STREAM"
+    assert exported["process_metrics"]["human_interventions"]["observed_total"] == 3
+
+
+def test_failed_planning_before_valid_evaluation_records_no_approval_event():
+    run, model = live()
+    before = list(run.human_events)
+    with pytest.raises(PermissionError):
+        make_plan(run, model_client=model, approved=True)
+    assert run.human_events == before
