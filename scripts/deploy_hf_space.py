@@ -11,6 +11,8 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
+from frontierlab.version import __version__
+
 SPACE_ID = "Jaycee766/FrontierLab-Meta-Hackathon-2026"
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -50,7 +52,7 @@ def deploy(api, operation_class, *, root: Path, source_sha: str) -> dict:
     files = source_files(root)
     manifest = {p: hashlib.sha256(data).hexdigest() for p, data in sorted(files.items())}
     metadata = {
-        "version": "v0.16", "source_sha": source_sha, "space_id": SPACE_ID,
+        "version": f"v{__version__}", "source_sha": source_sha, "space_id": SPACE_ID,
         "built_at_utc": datetime.now(timezone.utc).isoformat(),
         "file_sha256": manifest,
         "nvidia_secret_transferred": False, "hardware_changed": False,
@@ -58,7 +60,7 @@ def deploy(api, operation_class, *, root: Path, source_sha: str) -> dict:
     files["deployment.json"] = (json.dumps(metadata, indent=2) + "\n").encode()
     commit = api.create_commit(
         repo_id=SPACE_ID, repo_type="space", parent_commit=info.sha,
-        commit_message=f"Deploy FrontierLab v0.16 source {source_sha[:12]}",
+        commit_message=f"Deploy FrontierLab v{__version__} source {source_sha[:12]}",
         operations=[operation_class(path_in_repo=p, path_or_fileobj=data)
                     for p, data in sorted(files.items())],
     )
