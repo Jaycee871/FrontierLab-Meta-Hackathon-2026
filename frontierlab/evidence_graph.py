@@ -18,6 +18,15 @@ EXTRACTED and every path ends at a Paper. This is ADDITIONAL to the existing gat
 ``audit``, ``review`` and ``pipeline``; it relaxes none of them. Like those gates it
 proves that a passage exists, not that the claim follows from it.
 
+Integrity (schema v2): each Paper node carries the ``review.source_fingerprint`` of its
+full record, and each researcher approval is bound by ``approval_digest`` to the exact
+step id, step text, cited sources and those sources' fingerprints, with a UTC timestamp.
+``load_graph`` re-checks all of this and re-applies the ``approve_plan_step`` reviewer /
+note rules. A graph.json is plain, unsigned JSON: these checks catch edits that are
+inconsistent with the file itself; an edit that recomputes every hash is caught only
+when the file is checked against a trusted run (``expected_fingerprints``). Graphs
+written as v1 carry no fingerprints or approval bindings and are rejected, not migrated.
+
 The EXTRACTED / INFERRED / AMBIGUOUS vocabulary is borrowed, as an idea only, from the
 open-source Graphify project (Graphify Labs, Apache-2.0); no Graphify code is used.
 """
@@ -26,13 +35,18 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import defaultdict
-from dataclasses import asdict
+from dataclasses import asdict, fields
+from datetime import datetime, timezone
 from html import escape
 
 from .claim_verification import locate_quote, normalize_excerpt, quote_anchored
 from .models import Paper, Run
+from .review import source_fingerprint
 
-SCHEMA = "frontierlab.evidence-graph.v1"
+SCHEMA = "frontierlab.evidence-graph.v2"
+LEGACY_SCHEMAS = ("frontierlab.evidence-graph.v1",)
+APPROVAL_FIELDS = ("approval_digest", "approved_at_utc", "note", "papers", "reviewer")
+MIN_NOTE = 8
 NODE_TYPES = ("paper", "passage", "claim", "hypothesis", "plan_step")
 RELATIONS = ("SUPPORTS", "CONTRADICTS", "CITES", "DERIVED_FROM")
 PROVENANCE = ("EXTRACTED", "INFERRED", "AMBIGUOUS")
@@ -118,7 +132,8 @@ def build_evidence_graph(run: Run, *, previous: dict | None = None) -> dict:
     g = _G()
     papers = {p.paper_id: p for p in run.papers}
     for p in run.papers:
-        g.node(f"paper:{p.paper_id}", "paper", label=p.title, paper=asdict(p))
+        g.node(f"paper:{p.paper_id}", "paper", label=p.title, paper=asdict(p),
+               source_fingerprint=source_fingerprint(p))
 
     verified = list(run.audit.verified_claims)
     stances = defaultdict(set)
@@ -216,7 +231,7 @@ def build_evidence_graph(run: Run, *, previous: dict | None = None) -> dict:
                  "NOT semantic entailment. INFERRED and AMBIGUOUS edges never count as evidence."),
     }
     for sid, record in ((previous or {}).get("approvals") or {}).items():
-        if any(n["id"] == sid for n in graph["nodes"]) and step_gate(graph, sid)["approvable"]:
+        if any(n["id"] == sid for n in graph["nodes"]) and not approval_problems(graph, sid, record):
             graph["approvals"][sid] = record
     return graph
 
@@ -274,17 +289,67 @@ def step_gate(graph: dict, step_id: str) -> dict:
             "papers": sorted(papers), "blocking_edges": blocking}
 
 
+def _check_reviewer_note(reviewer, note):
+    """The single reviewer / note rule, shared by approve_plan_step and load_graph."""
+    if not isinstance(reviewer, str) or not reviewer.strip():
+        raise ValueError("Reviewer name required")
+    if not isinstance(note, str) or len(note.strip()) < MIN_NOTE:
+        raise ValueError(f"Approval requires a rationale ({MIN_NOTE}+ characters)")
+
+
+def approval_digest(graph: dict, step_id: str, papers: list[str]) -> str:
+    """SHA-256 binding an approval to the step id, exact step text, the sources it cites
+    and those sources' record fingerprints. Any change to them changes the digest."""
+    nodes = {n["id"]: n for n in graph.get("nodes", [])}
+    step = nodes.get(step_id) or {}
+    body = {
+        "step_id": step_id, "text": step.get("text"),
+        "plan_evidence_ids": step.get("plan_evidence_ids"), "papers": list(papers),
+        "source_fingerprints": [(nodes.get(f"paper:{p}") or {}).get("source_fingerprint")
+                                for p in papers],
+    }
+    raw = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def approval_problems(graph: dict, step_id: str, record) -> list[str]:
+    """Reasons a recorded approval is invalid for this graph; empty list if valid."""
+    if not isinstance(record, dict) or set(record) != set(APPROVAL_FIELDS):
+        return ["Approval record has missing or unexpected fields"]
+    try:
+        _check_reviewer_note(record["reviewer"], record["note"])
+    except ValueError as exc:
+        return [str(exc)]
+    if record["reviewer"] != record["reviewer"].strip() or record["note"] != record["note"].strip()[:1500]:
+        return ["Approval reviewer / note not in canonical form"]
+    stamp = record["approved_at_utc"]
+    try:
+        when = datetime.fromisoformat(stamp) if isinstance(stamp, str) else None
+    except ValueError:
+        when = None
+    if when is None or when.utcoffset() is None or when.utcoffset().total_seconds() != 0:
+        return ["Approval timestamp must be an ISO-8601 UTC time"]
+    gate = step_gate(graph, step_id)
+    if not gate["approvable"]:
+        return ["Step violates the EXTRACTED-only path rule"]
+    if record["papers"] != gate["papers"]:
+        return ["Approval sources differ from the step's current evidence path"]
+    if record["approval_digest"] != approval_digest(graph, step_id, gate["papers"]):
+        return ["Approval is not bound to this step's text and sources"]
+    return []
+
+
 def approve_plan_step(graph: dict, step_id: str, *, reviewer: str, note: str) -> dict:
     """Record a researcher's approval of one plan step; refuses unless step_gate passes."""
     gate = step_gate(graph, step_id)
     if not gate["approvable"]:
         raise PermissionError("Plan step not approvable: " + "; ".join(gate["reasons"]))
-    if not isinstance(reviewer, str) or not reviewer.strip():
-        raise ValueError("Reviewer name required")
-    if not isinstance(note, str) or len(note.strip()) < 8:
-        raise ValueError("Approval requires a rationale (8+ characters)")
-    graph["approvals"][step_id] = {"reviewer": reviewer.strip(), "note": note.strip()[:1500],
-                                   "papers": gate["papers"]}
+    _check_reviewer_note(reviewer, note)
+    graph["approvals"][step_id] = {
+        "reviewer": reviewer.strip(), "note": note.strip()[:1500], "papers": gate["papers"],
+        "approved_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "approval_digest": approval_digest(graph, step_id, gate["papers"]),
+    }
     return graph
 
 
@@ -314,10 +379,29 @@ def to_json(graph: dict) -> str:
     return json.dumps(graph, ensure_ascii=False, indent=2, sort_keys=True)
 
 
-def load_graph(data: str | dict) -> dict:
-    """Parse and re-verify a graph.json. Fails closed if any EXTRACTED claim edge or
-    passage cannot be re-anchored against the abstract stored in the graph."""
+_PAPER_FIELDS = {f.name for f in fields(Paper)}
+
+
+def run_fingerprints(run: Run) -> dict[str, str]:
+    """Trusted source fingerprints from a live run, for ``load_graph(expected_fingerprints=)``."""
+    return {p.paper_id: source_fingerprint(p) for p in run.papers}
+
+
+def load_graph(data: str | dict, *, expected_fingerprints: dict[str, str] | None = None) -> dict:
+    """Parse and re-verify a graph.json. Fails closed if:
+
+    * the schema is not v2 (legacy v1 graphs carry no integrity bindings);
+    * a Paper node's stored record does not match its ``source_fingerprint``, or (when
+      ``expected_fingerprints`` from a trusted run is given) the fingerprint differs
+      from the trusted one or a paper is missing / extra;
+    * any passage or EXTRACTED claim edge cannot be re-anchored in that abstract;
+    * any approval fails the ``approve_plan_step`` reviewer / note rule, lacks a UTC
+      timestamp, or is not bound to its step's exact text and sources.
+    """
     graph = json.loads(data) if isinstance(data, str) else json.loads(json.dumps(data))
+    if isinstance(graph, dict) and graph.get("schema") in LEGACY_SCHEMAS:
+        raise ValueError("Legacy evidence graph (v1) has no source fingerprints or approval "
+                         "bindings and cannot be verified; rebuild it from the run")
     if not isinstance(graph, dict) or graph.get("schema") != SCHEMA:
         raise ValueError("Not a FrontierLab evidence graph")
     nodes = {}
@@ -325,6 +409,23 @@ def load_graph(data: str | dict) -> dict:
         if not isinstance(n, dict) or n.get("type") not in NODE_TYPES or not isinstance(n.get("id"), str):
             raise ValueError("Invalid node")
         nodes[n["id"]] = n
+    seen_papers = {}
+    for n in nodes.values():
+        if n["type"] != "paper":
+            continue
+        record = n.get("paper")
+        if not isinstance(record, dict) or set(record) != _PAPER_FIELDS:
+            raise ValueError(f"Paper {n['id']} has an invalid source record")
+        paper = Paper(**record)
+        if n["id"] != f"paper:{paper.paper_id}" or n.get("source_fingerprint") != source_fingerprint(paper):
+            raise ValueError(f"Paper {n['id']} record does not match its source fingerprint")
+        seen_papers[paper.paper_id] = n["source_fingerprint"]
+    if expected_fingerprints is not None:
+        if set(seen_papers) != set(expected_fingerprints):
+            raise ValueError("Graph papers differ from the trusted run's sources")
+        for pid, fp in seen_papers.items():
+            if expected_fingerprints[pid] != fp:
+                raise ValueError(f"Paper {pid} differs from the trusted source record")
     for e in graph.get("edges", []):
         if (not isinstance(e, dict) or e.get("relation") not in RELATIONS
                 or e.get("provenance") not in PROVENANCE
@@ -352,9 +453,10 @@ def load_graph(data: str | dict) -> dict:
                 raise ValueError(f"EXTRACTED claim edge {src['id']} quote does not match its passage")
     if not isinstance(graph.get("approvals", {}), dict):
         raise ValueError("Invalid approvals")
-    for sid in graph.get("approvals", {}):
-        if not step_gate(graph, sid)["approvable"]:
-            raise ValueError(f"Recorded approval for {sid} violates the EXTRACTED-only path rule")
+    for sid, record in graph.get("approvals", {}).items():
+        problems = approval_problems(graph, sid, record)
+        if problems:
+            raise ValueError(f"Recorded approval for {sid} rejected: " + "; ".join(problems))
     return graph
 
 

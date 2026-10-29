@@ -10,9 +10,10 @@ from frontierlab.audit import validate_claims
 from frontierlab.claim_verification import audit_predictions, locate_quote, quote_anchored
 from frontierlab.claim_benchmark import benchmark
 from frontierlab.evidence_graph import (
-    approve_plan_step, build_evidence_graph, classify_claim_edge, load_graph, step_gate,
-    summarize, to_json, to_svg,
+    approval_digest, approve_plan_step, build_evidence_graph, classify_claim_edge, load_graph,
+    run_fingerprints, step_gate, summarize, to_json, to_svg,
 )
+from frontierlab.review import source_fingerprint
 from frontierlab.models import Paper, Run
 from frontierlab.pipeline import run_research
 from tests.test_recorded_method_selection import load_selected_run
@@ -215,6 +216,133 @@ def test_approvals_survive_rebuild_only_while_path_stays_extracted():
         load_graph(forged)
 
 
+# -- approval integrity on load ------------------------------------------------------
+
+def approved_graph():
+    run = planned_run([claim("PMC1", QUOTE_A), claim("PMC2", QUOTE_B)], ["PMC1", "PMC2"], ["PMC1", "PMC2"])
+    graph = build_evidence_graph(run)
+    sid = step_ids(graph)[0]
+    approve_plan_step(graph, sid, reviewer="Jaycee", note="Checked against full text.")
+    return run, graph, sid
+
+
+def test_approval_record_has_utc_timestamp_and_step_binding_and_loads():
+    run, graph, sid = approved_graph()
+    record = graph["approvals"][sid]
+    assert record["approved_at_utc"].endswith("+00:00")
+    assert record["approval_digest"] == approval_digest(graph, sid, record["papers"])
+    assert load_graph(to_json(graph)) == graph
+    assert load_graph(graph, expected_fingerprints=run_fingerprints(run)) == graph
+
+
+@pytest.mark.parametrize("reviewer", ["", "   ", None])
+def test_load_rejects_injected_approval_without_reviewer(reviewer):
+    _, graph, sid = approved_graph()
+    forged = deepcopy(graph)
+    forged["approvals"][sid]["reviewer"] = reviewer
+    with pytest.raises(ValueError, match="Reviewer name required"):
+        load_graph(forged)
+    with pytest.raises(ValueError):
+        approve_plan_step(deepcopy(graph), sid, reviewer=reviewer, note="Checked against full text.")
+
+
+@pytest.mark.parametrize("note", ["", "       ", "short", None])
+def test_load_rejects_injected_approval_with_empty_or_short_note(note):
+    _, graph, sid = approved_graph()
+    forged = deepcopy(graph)
+    forged["approvals"][sid]["note"] = note
+    with pytest.raises(ValueError, match="rationale"):
+        load_graph(forged)
+    with pytest.raises(ValueError):
+        approve_plan_step(deepcopy(graph), sid, reviewer="Jaycee", note=note)
+
+
+def test_load_rejects_pre_fix_approval_shape_and_bad_timestamps():
+    _, graph, sid = approved_graph()
+    old_shape = deepcopy(graph)
+    old_shape["approvals"][sid] = {"reviewer": "Jaycee", "note": "Checked against full text.",
+                                   "papers": ["PMC1", "PMC2"]}
+    with pytest.raises(ValueError, match="missing or unexpected fields"):
+        load_graph(old_shape)
+    for stamp in ["", "yesterday", "2026-10-29T12:00:00", "2026-10-29T20:00:00+08:00", 0]:
+        forged = deepcopy(graph)
+        forged["approvals"][sid]["approved_at_utc"] = stamp
+        with pytest.raises(ValueError, match="timestamp"):
+            load_graph(forged)
+
+
+def test_load_rejects_approval_transplanted_to_another_step():
+    _, graph, sid = approved_graph()
+    other = [s for s in step_ids(graph) if s != sid][0]
+    assert step_gate(graph, other)["approvable"]  # the target step is itself approvable
+    forged = deepcopy(graph)
+    forged["approvals"] = {other: deepcopy(graph["approvals"][sid])}
+    with pytest.raises(ValueError, match="not bound to this step"):
+        load_graph(forged)
+
+
+def test_load_rejects_approval_after_step_text_rewritten_in_place():
+    _, graph, sid = approved_graph()
+    forged = deepcopy(graph)
+    step = next(n for n in forged["nodes"] if n["id"] == sid)
+    step["text"] = "Skip the matched-pH controls."
+    with pytest.raises(ValueError, match="not bound to this step"):
+        load_graph(forged)
+
+
+def rewrite_paper_consistently(graph, *, refresh_fingerprint):
+    """Self-consistent forgery: abstract, passage and claim quote all say 'raised'."""
+    forged = deepcopy(graph)
+    nodes = {n["id"]: n for n in forged["nodes"]}
+    paper = nodes["paper:PMC1"]
+    paper["paper"]["abstract"] = paper["paper"]["abstract"].replace("strongly reduced", "strongly raised!")
+    fake = "HER2 binding was strongly raised! at pH 6.0"
+    start = paper["paper"]["abstract"].index(fake)
+    for n in forged["nodes"]:
+        if n["type"] == "passage" and n["paper_id"] == "PMC1":
+            n["start"], n["end"], n["text"] = start, start + len(fake), fake
+        if n["type"] == "claim" and n["paper_id"] == "PMC1":
+            n["evidence_quote"] = fake
+    if refresh_fingerprint:
+        paper["source_fingerprint"] = source_fingerprint(Paper(**paper["paper"]))
+        for sid, record in forged["approvals"].items():
+            record["approval_digest"] = approval_digest(forged, sid, record["papers"])
+    return forged
+
+
+def test_load_rejects_self_consistent_abstract_passage_quote_rewrite():
+    _, graph, _ = approved_graph()
+    with pytest.raises(ValueError, match="source fingerprint"):
+        load_graph(rewrite_paper_consistently(graph, refresh_fingerprint=False))
+
+
+def test_fully_rehashed_rewrite_is_caught_against_the_trusted_run():
+    # graph.json is unsigned: a forger who recomputes every hash passes the standalone
+    # check; binding to the trusted run's source fingerprints still rejects it.
+    run, graph, _ = approved_graph()
+    forged = rewrite_paper_consistently(graph, refresh_fingerprint=True)
+    load_graph(forged)  # documented limit of an unsigned file
+    with pytest.raises(ValueError, match="differs from the trusted source record"):
+        load_graph(forged, expected_fingerprints=run_fingerprints(run))
+    with pytest.raises(ValueError, match="differ from the trusted run"):
+        load_graph(graph, expected_fingerprints={"PMC1": run_fingerprints(run)["PMC1"]})
+
+
+def test_legacy_v1_graph_is_rejected_not_migrated():
+    _, graph, _ = approved_graph()
+    legacy = deepcopy(graph)
+    legacy["schema"] = "frontierlab.evidence-graph.v1"
+    with pytest.raises(ValueError, match="Legacy evidence graph"):
+        load_graph(legacy)
+
+
+def test_rebuild_drops_approval_once_source_record_changes():
+    run, graph, sid = approved_graph()
+    assert sid in build_evidence_graph(run, previous=graph)["approvals"]
+    run.papers = [paper("PMC1", ABS_A + " Revised."), PAPERS[1]]
+    assert build_evidence_graph(run, previous=graph)["approvals"] == {}
+
+
 # -- serialisation round trip -----------------------------------------------------------
 
 def test_graph_json_round_trip_and_run_as_dict():
@@ -249,5 +377,5 @@ def test_app_shows_graph_panel_and_download_in_demo():
     assert not app.exception
     assert any(e.label.startswith("6 · Evidence graph") for e in app.expander)
     run = app.session_state["frontier_result"]
-    assert run.evidence_graph["schema"] == "frontierlab.evidence-graph.v1"
+    assert run.evidence_graph["schema"] == "frontierlab.evidence-graph.v2"
     assert any("NOT counted as evidence" in w.value for w in app.warning)
