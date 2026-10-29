@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Any
 
 from .models import Run
+from .error_taxonomy import classify_run
 
 SCHEMA = "frontierlab.process-metrics.v1"
 STAGES = ("research", "evidence", "hypothesis", "evaluation", "planning")
@@ -180,12 +181,14 @@ def process_metrics(run: Run) -> dict:
     stages = stage_completion(run)
     interventions = human_interventions(run)
     nim = nim_efficiency(run)
+    taxonomy = classify_run(run)
     return {
         "schema": SCHEMA,
         "scr": stages["scr"],
         "stage_completion": stages,
         "human_interventions": interventions,
         "nim": nim,
+        "error_taxonomy": taxonomy,
         "scientific_accuracy_measured": False,
         "scientific_validity_verified": False,
     }
