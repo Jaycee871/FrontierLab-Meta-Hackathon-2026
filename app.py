@@ -211,7 +211,7 @@ if result:
         m4.metric("AERR", "N/A" if aerr is None else f"{aerr * 100:.0f}%")
         st.caption(
             "Process metrics describe workflow activity, not model accuracy. "
-            "Observed human actions are a derived lower-bound proxy, not a complete identity-verified HIC."
+            "Observed human actions use recorded intervention events when available; legacy runs use a conservative fallback. Identity is not verified."
         )
         if pm["nim"]["applicable"]:
             st.caption(
