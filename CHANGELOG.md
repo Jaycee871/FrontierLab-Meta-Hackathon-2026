@@ -1,3 +1,13 @@
+## 2026-10-29 · v0.34 — Source-bound 12-case researcher review workspace
+
+- Added `frontierlab/pilot_review.py` to canonicalize researcher-edited literature-pilot review packets against the fixed dataset and source snapshot.
+- Completed judgments require a nonempty reviewer label and an 8+ character rationale; modified source text, source IDs or claims are rejected.
+- Canonical packets record UTC time, review coverage and `independence_verified=false`. Researcher labels remain process evidence, not independent scientific gold.
+- The recorded gate-ablation replay can now consume validated in-memory review labels and complete Arm C without rerunning Meta Muse Glimmer.
+- The Streamlit literature-pilot panel adds a reviewer-name field and JSON uploader. Uploaded packets are validated, Arm C is recomputed immediately, and a canonical source-bound review JSON can be downloaded.
+- Added regression tests; the feature branch passed **341 tests** before the v0.34 documentation/version sync.
+- No model call, automatic retry or scientific-accuracy claim was added.
+
 ## 2026-10-29 · v0.33 — Controlled gate-ablation experiment
 
 - Added `frontierlab/gate_ablation.py` with two explicitly separated experiment types: post-generation gate replay and same-model/same-cases prompt-level ablation.
