@@ -213,6 +213,11 @@ if result:
             "Process metrics describe workflow activity, not model accuracy. "
             "Observed human actions use recorded intervention events when available; legacy runs use a conservative fallback. Identity is not verified."
         )
+        taxonomy = pm["error_taxonomy"]
+        e1, e2, e3 = st.columns(3)
+        e1.metric("Governance / evidence blocks", taxonomy["governance_or_evidence_blocks"])
+        e2.metric("Runtime failures", taxonomy["runtime_failures"])
+        e3.metric("Scientific tensions", taxonomy["scientific_tensions"])
         if pm["nim"]["applicable"]:
             st.caption(
                 f"NIM calls: {pm['nim']['attempted_calls']} · "
