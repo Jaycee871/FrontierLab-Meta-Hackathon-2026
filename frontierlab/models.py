@@ -53,6 +53,7 @@ class Run:
     backend: str = "none"
     inference: dict | None = None
     evidence_graph: dict | None = None
+    human_events: list[dict] = field(default_factory=list)
 
     def as_dict(self) -> dict:
         return asdict(self)
