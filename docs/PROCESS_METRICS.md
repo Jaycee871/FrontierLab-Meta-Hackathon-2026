@@ -16,16 +16,20 @@ SCR is the number of completed FrontierLab milestones divided by five:
 
 A 100% SCR means the five workflow milestones exist. It does **not** mean the science is correct.
 
-### Human-intervention observable count
+### Human-intervention event stream
 
-FrontierLab reports a conservative lower-bound count from artifacts already stored in a `Run`:
+New runs record four consequential researcher events in `Run.human_events`:
 
-- reviewed claim decisions;
-- saved method evaluation;
-- generated plan as a proxy for explicit planning approval;
-- approved evidence-graph plan steps.
+- `CLAIM_REVIEW_SAVED`;
+- `METHOD_EVALUATION_SAVED`;
+- `PLANNING_APPROVED`;
+- `PLAN_STEP_APPROVED`.
 
-The field is deliberately named **Observed human actions** in the UI. It is not a complete, identity-verified Human Intervention Count because the current data model does not store every human action as a normalized event.
+Each event carries a UTC timestamp, event kind, bound artifact ID, actor label when available, note and `identity_verified=false`. The record therefore provides attributable process evidence without pretending that a typed reviewer name is authenticated identity.
+
+Process metrics prefer this recorded event stream. Older runs that predate the event schema remain readable and fall back to the conservative artifact-derived observable count.
+
+The UI continues to call the value **Observed human actions** rather than a fully verified HIC, because the event stream covers the four instrumented consequential actions rather than every possible researcher interaction.
 
 ### AERR — autonomous error recovery rate
 
@@ -50,7 +54,7 @@ For NIM receipts, the process-metrics layer sums:
 
 `frontierlab.reporting.export_json(run)` adds a top-level `process_metrics` object to the provenance JSON.
 
-The Streamlit interface exposes the same values in **Process metrics · audit only**.
+The Streamlit interface exposes the same values in **Process metrics · audit only**. The complete provenance JSON also contains the raw `human_events` array through `Run.as_dict()`.
 
 ## Scientific boundary
 
