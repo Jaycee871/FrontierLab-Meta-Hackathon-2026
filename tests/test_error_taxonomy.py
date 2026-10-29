@@ -33,7 +33,7 @@ def test_expected_human_review_gate_is_not_runtime_failure():
     }]))
     assert result["counts"] == {GOVERNANCE: 1}
     assert result["runtime_failures"] == 0
-    assert result["governance_or_evidence_blocks"] == 1
+    assert result["non_runtime_blocks"] == 1
 
 
 def test_evidence_citation_and_resource_blocks_are_separate_categories():
@@ -68,4 +68,4 @@ def test_failed_nim_receipt_is_runtime_failure_not_governance_gate():
     result = classify_run(run)
     assert result["counts"][MODEL_RUNTIME] == 1
     assert result["runtime_failures"] == 1
-    assert result["governance_or_evidence_blocks"] == 0
+    assert result["non_runtime_blocks"] == 0
