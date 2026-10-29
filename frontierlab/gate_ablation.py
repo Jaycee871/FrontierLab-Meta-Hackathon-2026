@@ -94,3 +94,20 @@ def apply_reviewer_gate(gated, reviews=None):
     result["reviews_required"] = required
     result["reviews_completed"] = completed
     return result
+
+
+def _gold_metrics(outputs, gold, case_ids):
+    complete_gold = len(gold) == len(case_ids) and all(cid in gold for cid in case_ids)
+    complete_outputs = all(outputs.get(cid) in LABELS for cid in case_ids)
+    if not complete_gold or not complete_outputs:
+        return {
+            "gold_complete": complete_gold,
+            "final_outputs_complete": complete_outputs,
+            "accuracy": None,
+        }
+    correct = sum(outputs[cid] == gold[cid] for cid in case_ids)
+    return {
+        "gold_complete": True,
+        "final_outputs_complete": True,
+        "accuracy": round(correct / len(case_ids), 4),
+    }
