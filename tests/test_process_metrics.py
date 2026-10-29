@@ -1,4 +1,5 @@
 from frontierlab.models import Audit, Run
+from frontierlab.interventions import record_human_event
 from frontierlab.process_metrics import (
     human_interventions,
     nim_efficiency,
@@ -118,3 +119,19 @@ def test_process_metrics_never_claims_scientific_accuracy():
     assert result["schema"] == "frontierlab.process-metrics.v1"
     assert result["scientific_accuracy_measured"] is False
     assert result["scientific_validity_verified"] is False
+
+
+def test_recorded_event_stream_replaces_artifact_proxy():
+    run = _run(
+        review={"review_stats": {"reviewed": 5}},
+        evaluation={"evaluation_id": "legacy-proxy"},
+        plan={"status": "DRAFT_FOR_RESEARCHER_REVIEW"},
+    )
+    record_human_event(run, "CLAIM_REVIEW_SAVED", "review-1")
+    record_human_event(run, "METHOD_EVALUATION_SAVED", "eval-1")
+    result = human_interventions(run)
+    assert result["status"] == "RECORDED_EVENT_STREAM"
+    assert result["observed_total"] == 2
+    assert result["observed"]["claim_review_saves"] == 1
+    assert result["observed"]["method_evaluation_saves"] == 1
+    assert result["complete_event_log"] is True
