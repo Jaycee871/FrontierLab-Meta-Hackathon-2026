@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.28 documentation candidate over v0.27 main · Status reviewed: October 29, 2026 (Asia/Taipei)**
+**Codebase: v0.29 candidate · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -144,7 +144,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The current main suite has **304 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, optional multimodal/baseline/audit extensions, and evidence-graph schema v2 integrity checks. GitHub Actions run [40905004672](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40905004672) passed all 304 tests on main after PR #10. The tests use deterministic rules, parsers, adapters and mocked or fictional scenarios, and normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.29 candidate suite has **310 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, and deterministic process-metric semantics. GitHub Actions run [40906742592](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40906742592) passed all 310 tests on the feature branch after the process-metrics UI integration. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -197,7 +197,7 @@ See [agentic-AI landscape and self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) for
 - Outputs are research drafts. FrontierLab has no validated clinical or wet-lab execution capability.
 - Paid Meta Model API access is disabled.
 
-See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md) and [method evaluation and planning](docs/METHOD_EVALUATION.md).
+See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md), [method evaluation and planning](docs/METHOD_EVALUATION.md), and [process metrics](docs/PROCESS_METRICS.md).
 
 ## Model roles
 
