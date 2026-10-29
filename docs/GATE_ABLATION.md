@@ -113,3 +113,18 @@ The experiment therefore separates:
 3. human scientific judgment.
 
 None of those layers alone proves scientific truth.
+
+
+## Completing Arm C in the public app
+
+The literature-pilot panel now supports a source-bound review round trip:
+
+1. download `frontierlab_real_excerpt_review.json`;
+2. edit only each case's `label` and `rationale`;
+3. enter a reviewer name in the app;
+4. upload the edited JSON;
+5. FrontierLab revalidates the fixed sources, case IDs and claim text;
+6. a canonical packet is produced with UTC time, coverage and `independence_verified=false`;
+7. Arm C is recomputed from those researcher labels with **zero new model calls**.
+
+A completed researcher review can therefore measure reviewer corrections and intervention burden, but it still does not unlock an accuracy claim unless a separate independently verified reference set exists.

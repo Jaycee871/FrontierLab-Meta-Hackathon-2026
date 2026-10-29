@@ -47,7 +47,7 @@ def _review_labels(path: str | Path | None, expected_dataset_id: str) -> dict[st
     return labels
 
 
-def run_recorded_pilot(*, review_path: str | Path | None = None) -> dict:
+def run_recorded_pilot(*, review_path: str | Path | None = None, review_labels: dict[str, str] | None = None) -> dict:
     data = load_dataset(DATASET)
     packet = json.loads(PREDICTIONS.read_text(encoding="utf-8"))
     recorded = json.loads(RECEIPT.read_text(encoding="utf-8"))
@@ -67,7 +67,19 @@ def run_recorded_pilot(*, review_path: str | Path | None = None) -> dict:
         row["source_id"]: row["source_text"]
         for row in data["sources"]
     }
+    if review_path is not None and review_labels is not None:
+        raise ValueError("Use review_path or review_labels, not both")
     reviews = _review_labels(review_path, did)
+    if review_labels is not None:
+        if not isinstance(review_labels, dict):
+            raise ValueError("review_labels must be a mapping")
+        valid_case_ids = {row["case_id"] for row in data["cases"]}
+        reviews = {}
+        for cid, label in review_labels.items():
+            label = str(label).upper()
+            if cid not in valid_case_ids or label not in LABELS:
+                raise ValueError("Direct review label does not match the fixed case set")
+            reviews[cid] = label
 
     result = compare_post_generation_gates(
         cases,

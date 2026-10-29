@@ -22,6 +22,7 @@ from frontierlab.evidence_graph import (approve_plan_step, refresh_evidence_grap
                                         summarize as graph_summary, to_json as graph_json, to_svg as graph_svg)
 from frontierlab.literature_pilot import load_dataset, reviewer_packet
 from frontierlab.recorded_gate_ablation import run_recorded_pilot
+from frontierlab.pilot_review import canonicalize_review_upload, labels_from_review_packet
 from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
 from frontierlab.version import __version__
 
@@ -208,6 +209,56 @@ with st.expander("Published-literature pilot · 12 cases awaiting researcher ann
     st.download_button(
         "Download literature reviewer packet", data=json.dumps(reviewer_packet(pilot), ensure_ascii=False, indent=2),
         file_name="frontierlab_real_excerpt_review.json", mime="application/json")
+    reviewer_name = st.text_input(
+        "Reviewer name for an uploaded 12-case packet",
+        key="pilot_review_reviewer",
+        help="Used for provenance only; FrontierLab does not verify identity."
+    )
+    uploaded_review = st.file_uploader(
+        "Upload edited 12-case reviewer packet (JSON)",
+        type=["json"],
+        key="pilot_review_upload",
+        help="Keep the source/case fields unchanged; edit only label and rationale fields."
+    )
+    if uploaded_review is not None:
+        try:
+            review_upload = json.loads(uploaded_review.getvalue().decode("utf-8"))
+            canonical_review = canonicalize_review_upload(
+                pilot, review_upload, reviewer=reviewer_name
+            )
+            review_stats = canonical_review["review_stats"]
+            review_labels = labels_from_review_packet(pilot, canonical_review)
+            reviewed_ablation = run_recorded_pilot(review_labels=review_labels)
+            arm_c = reviewed_ablation["arm_c_source_quote_plus_human_review"]
+            if canonical_review["status"] == "COMPLETE_RESEARCHER_REVIEW":
+                st.success(
+                    "12-case researcher review packet is complete and source-bound. "
+                    "It remains researcher-supplied review, not independent gold."
+                )
+            else:
+                st.info(
+                    f"Partial researcher review: {review_stats['reviewed']} / "
+                    f"{review_stats['total']} cases completed."
+                )
+            rv1, rv2, rv3 = st.columns(3)
+            rv1.metric("Cases reviewed", review_stats["reviewed"])
+            rv2.metric("Arm C reviews completed", arm_c["reviews_completed"])
+            rv3.metric(
+                "Reviewer changes to surviving decisions",
+                arm_c["review_corrections_to_surviving_decisions"],
+            )
+            st.caption(
+                f"Arm C pending reviews: {arm_c['pending_review']}. "
+                "Accuracy remains unavailable because independence_verified=false."
+            )
+            st.download_button(
+                "Download canonical source-bound review JSON",
+                data=json.dumps(canonical_review, ensure_ascii=False, indent=2, sort_keys=True),
+                file_name="frontierlab_real_excerpt_review_completed.json",
+                mime="application/json",
+            )
+        except (ValueError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            st.error(f"Reviewer packet rejected: {exc}")
     st.markdown("[Pilot protocol and source attribution](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/blob/main/docs/REAL_LITERATURE_PILOT.md)")
     review_path = Path(__file__).resolve().parent / "docs/runs/nim_claim_review_completed_20261028.json"
     if review_path.exists():
