@@ -1,3 +1,13 @@
+## 2026-10-29 · v0.25.1 — Status/documentation synchronization
+
+- Documentation-only synchronization against shipped `main` at `0adcfb3`; no pipeline, model, gate, dependency or runtime behavior changed.
+- README now separates **shipped main** from open PR behavior, records the main-branch 289-test deployment run, and distinguishes the latest HF source upload from independent runtime verification.
+- `docs/RESOURCE_STRATEGY.md` was rewritten from its October 27 pre-inference state to the current resource boundary: genuine Muse Glimmer runs are recorded, optional Spark/d1/Llama/Muse2/DetectorScope components remain non-default, and Stage 5 stays human-gated.
+- `docs/HACKATHON_FINAL_SPRINT.md` now records v0.25 evidence-graph status, the open PR #9 / #10 boundary, and the October 29 schedule re-check.
+- `docs/HF_DEPLOYMENT.md` records source SHA `0adcfb3` and Space commit `429f4acc...` from run 40740516474 without falsely claiming a fresh post-build runtime check.
+- Official Meta and Cerebral Valley event pages still list **November 4, 2026 at 9:00 PM ET** as the submission deadline (November 5 at 10:00 in Taipei after U.S. DST ends).
+- Pending PRs remain pending: #9 is the Level 1 agentic-AI docs assessment; #10 is evidence-graph schema v2 integrity hardening with 304 tests on its branch.
+
 ## 2026-10-29 · v0.25 — Provenance-tagged evidence graph
 
 - Added `frontierlab/evidence_graph.py`, a plain-dict graph that links a run's plan steps back to the literature (Paper ← Passage ← Claim ← Hypothesis ← PlanStep). Edges are tagged EXTRACTED, INFERRED or AMBIGUOUS.
