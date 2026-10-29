@@ -46,3 +46,30 @@ def _summary(outputs: dict[str, str]) -> dict:
         "abstained": values.count("INSUFFICIENT"),
         "pending_review": values.count(PENDING),
     }
+
+
+def source_quote_arm(cases: list[dict], predictions: list[dict], source_texts: dict[str, str]) -> dict:
+    pred = _prediction_map(predictions)
+    case_sources = {}
+    for case in cases:
+        cid = str(case.get("case_id", "")).strip()
+        sid = str(case.get("source_id", "")).strip()
+        if not cid or not sid or cid in case_sources:
+            raise ValueError("Invalid fixed case set")
+        case_sources[cid] = sid
+    if set(pred) != set(case_sources):
+        raise ValueError("Predictions must cover the exact fixed case set")
+
+    raw, gated, checks = {}, {}, {}
+    for cid, expected_sid in case_sources.items():
+        row = pred[cid]
+        label = str(row["label"]).upper()
+        raw[cid] = label
+        sid = str(row.get("source_id", "")).strip()
+        source_matches = sid == expected_sid and sid in source_texts
+        quote = str(row.get("evidence_quote", ""))
+        anchored = bool(source_matches and quote and quote_anchored(source_texts[sid], quote))
+        checks[cid] = {"source_matches_case": source_matches, "quote_anchored": anchored}
+        gated[cid] = label if label == "INSUFFICIENT" or anchored else "INSUFFICIENT"
+
+    return {"raw": raw, "gated": gated, "anchor_checks": checks}
