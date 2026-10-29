@@ -43,7 +43,26 @@ INFERRED and AMBIGUOUS edges are listed for the researcher in the UI ("Surfaced 
 
 This gate is **additional**. It relaxes none of the existing gates. The verbatim evidence gate, human claim review, two-source rule, method evaluation and planning approval all still apply. Once a review exists, hypotheses link only to claims the researcher marked SUPPORTED.
 
-A recorded approval is kept when the graph is rebuilt only if the step still exists unchanged (step IDs are content hashes) and still passes the rule. `load_graph()` re-checks every passage and every EXTRACTED claim edge against the abstract stored in the graph, as well as every recorded approval. A tampered or stale `graph.json` therefore fails closed.
+A recorded approval holds `reviewer`, `note`, `papers`, `approved_at_utc` (ISO-8601 UTC) and `approval_digest`. The digest is a SHA-256 over the step ID, the exact step text, the plan's cited IDs, the reached papers, and those papers' `source_fingerprint` values. Every Paper node carries the `review.source_fingerprint` of its full record. When the graph is rebuilt, an approval is kept only if it still re-verifies, so it is dropped if the step text or a cited source record changes.
+
+`load_graph()` fails closed. It rejects a graph if any of these checks fail:
+
+- a Paper record does not match its stored fingerprint;
+- a passage or EXTRACTED claim edge does not re-anchor in the abstract;
+- an approval breaks the same reviewer and 8+ character note rule that `approve_plan_step()` applies (one shared check);
+- an approval lacks a UTC timestamp;
+- an approval's digest does not match the step it is filed under.
+
+So it rejects:
+
+- injected approvals with an empty reviewer or a short note;
+- approvals moved onto another step;
+- a step whose text was rewritten in place;
+- a self-consistent rewrite of the abstract, passage and quote.
+
+**Limit:** `graph.json` is unsigned. A forger who also recomputes every hash passes the standalone check. That case is caught only by `load_graph(data, expected_fingerprints=run_fingerprints(run))` against a trusted run.
+
+Graphs written as `frontierlab.evidence-graph.v1`, before these bindings existed, are **rejected rather than migrated**. A v1 approval has no timestamp or binding, so it cannot be verified. The fix is to rebuild the graph from its run.
 
 As with the verbatim gate, EXTRACTED proves that a passage exists. **It does not prove that the claim follows from that passage.**
 
@@ -59,7 +78,7 @@ Section "6 · Evidence graph" contains:
 
 ## Public API
 
-`build_evidence_graph(run, previous=None)`, `refresh_evidence_graph(run)`, `classify_claim_edge(...)`, `step_gate(graph, step_id)`, `approve_plan_step(graph, step_id, reviewer=, note=)`, `summarize(graph)`, `to_json(graph)`, `load_graph(text_or_dict)`, `to_svg(graph, max_nodes=60)`.
+`build_evidence_graph(run, previous=None)`, `refresh_evidence_graph(run)`, `classify_claim_edge(...)`, `step_gate(graph, step_id)`, `approve_plan_step(graph, step_id, reviewer=, note=)`, `summarize(graph)`, `to_json(graph)`, `load_graph(text_or_dict, expected_fingerprints=None)`, `run_fingerprints(run)`, `approval_digest(graph, step_id, papers)`, `to_svg(graph, max_nodes=60)`.
 
 ## Prior art and credit
 

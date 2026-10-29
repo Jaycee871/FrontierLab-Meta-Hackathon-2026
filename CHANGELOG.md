@@ -1,3 +1,11 @@
+## 2026-10-29 · v0.27 — Evidence-graph approval integrity (schema v2)
+
+- `load_graph()` now applies the same reviewer and note rule as `approve_plan_step()` (non-empty reviewer, note of 8+ characters; one shared check). An approval with an empty reviewer or a short note, hand-injected onto an approvable step, is now rejected instead of accepted.
+- Approval records now include `approved_at_utc` (ISO-8601 UTC) and `approval_digest`. The digest is a SHA-256 over the step ID, the exact step text, the cited IDs, the reached papers and their source fingerprints. An approval moved to another step, or kept after the step text is rewritten, is now rejected. A rebuild drops approvals whose step or source record changed.
+- Paper nodes now carry `review.source_fingerprint`. `load_graph()` rejects a Paper record that doesn't match it, which closes the self-consistent abstract + passage + quote rewrite. New `load_graph(..., expected_fingerprints=run_fingerprints(run))` checks the graph against a trusted run. Without it, an unsigned file whose every hash was recomputed still passes; this is documented and tested.
+- The schema is bumped to `frontierlab.evidence-graph.v2`. v1 graphs are rejected with a "rebuild from the run" message rather than migrated, because a v1 approval carries nothing that can be verified. The app builds graphs from the live run and never loads saved ones, so its round trip is unaffected.
+- Tests: 15 new tests in `tests/test_evidence_graph.py`, and one existing assertion updated (`v1` → `v2`). The local suite passed **304 tests**.
+
 ## 2026-10-29 · v0.25 — Provenance-tagged evidence graph
 
 - Added `frontierlab/evidence_graph.py`, a plain-dict graph that links a run's plan steps back to the literature (Paper ← Passage ← Claim ← Hypothesis ← PlanStep). Edges are tagged EXTRACTED, INFERRED or AMBIGUOUS.
