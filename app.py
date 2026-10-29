@@ -21,6 +21,7 @@ from frontierlab.evaluation import require_evaluation
 from frontierlab.evidence_graph import (approve_plan_step, refresh_evidence_graph, step_gate,
                                         summarize as graph_summary, to_json as graph_json, to_svg as graph_svg)
 from frontierlab.literature_pilot import load_dataset, reviewer_packet
+from frontierlab.recorded_gate_ablation import run_recorded_pilot
 from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
 from frontierlab.version import __version__
 
@@ -176,6 +177,34 @@ with st.expander("Published-literature pilot · 12 cases awaiting researcher ann
         recorded = json.loads(recorded_path.read_text(encoding="utf-8"))["receipt"]
         st.info("RECORDED REAL META RUN · 12 structured predictions, 8 matched quotations and 4 insufficient-evidence responses. This panel makes no live model call; accuracy awaits researcher review.")
         st.download_button("Download recorded Meta predictions", data=json.dumps(recorded["predictions"], ensure_ascii=False, indent=2), file_name="meta_pilot_predictions_20261028.json", mime="application/json")
+        ablation = run_recorded_pilot()
+        with st.expander("Gate ablation · recorded 12-case Glimmer batch", expanded=False):
+            st.warning(
+                "POST-GENERATION REPLAY ONLY. The recorded model prompt already requested evidence quotes, "
+                "so this does not isolate the causal effect of quote-grounded prompting. "
+                "The 12-case human review is still pending; no accuracy is reported."
+            )
+            g1, g2, g3, g4 = st.columns(4)
+            g1.metric("Raw decisive", ablation["arm_a_fixed_model_outputs"]["decisive"])
+            g2.metric("Quote-gated decisive", ablation["arm_b_source_quote_post_gate"]["decisive"])
+            g3.metric("New abstentions from gate", ablation["effects"]["quote_gate_new_abstentions"])
+            g4.metric("Human reviews pending", ablation["arm_c_source_quote_plus_human_review"]["pending_review"])
+            st.caption(
+                f"Recorded Meta call: {ablation['recorded_model_call']['usage']['total_tokens']} tokens · "
+                f"{ablation['recorded_model_call']['elapsed_seconds']:.3f}s · "
+                f"new model calls for this replay: {ablation['new_model_calls']}."
+            )
+            st.caption(
+                "In this clean recorded batch, all eight decisive outputs already had valid anchored quotes, "
+                "so the post-processing source/quote gate introduced zero additional abstentions. "
+                "That is a result, not evidence that the gate is unnecessary."
+            )
+            st.download_button(
+                "Download recorded gate-ablation JSON",
+                data=json.dumps(ablation, ensure_ascii=False, indent=2, sort_keys=True),
+                file_name="gate_ablation_recorded_20261028.json",
+                mime="application/json",
+            )
     st.download_button(
         "Download literature reviewer packet", data=json.dumps(reviewer_packet(pilot), ensure_ascii=False, indent=2),
         file_name="frontierlab_real_excerpt_review.json", mime="application/json")

@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.32 · Status reviewed: October 29, 2026 (Asia/Taipei)**
+**Codebase: v0.33 candidate · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Final sprint plan](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Test workflow](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -38,6 +38,7 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 - **Process metrics.** SCR, recorded human-intervention counts, NIM AERR semantics, token/latency totals and process error classes are derived deterministically from the run state. These are workflow metrics, not scientific-accuracy scores.
 - **Error taxonomy.** Governance gates, insufficient evidence, citation/source failures, missing resources, model runtime failures, rejected claims and scientific tensions are separated instead of collapsing every non-success state into one error bucket.
 - **Trajectory audit graph.** A separate audit-only graph records the five-stage workflow, model-call receipts, human-intervention events, method evaluation, rejected claims and process signals. It is exported as `trajectory.json` and never participates in the scientific evidence gate.
+- **Controlled gate ablation.** FrontierLab separates a zero-call post-generation replay from a true same-model/same-cases prompt-level experiment. The recorded 12-case Glimmer batch currently shows 8 decisive outputs and 4 abstentions; all 8 decisive outputs already had valid anchored quotes, so the post-processing source/quote gate added 0 new abstentions. This is not reported as accuracy because the 12-case researcher review and independent gold are not complete. A manual two-call Glimmer workflow is prepared for the genuine prompt-level comparison.
 - **Invalidation on change.** If source records or the question change, earlier reviews, hypotheses, evaluations and plans are invalidated.
 
 ## Architecture
@@ -148,7 +149,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The current v0.32 main suite has **329 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, recorded human-intervention events, deterministic process metrics, process error taxonomy, the separate trajectory audit graph, and centralized UI/deployment version metadata. GitHub Actions run [40916230354](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40916230354) passed all 329 tests before the version fix was merged to main. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.33 candidate suite has **336 tests**. It covers the five-stage workflow, human-review and evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity checks, human-intervention events, process metrics, error taxonomy, trajectory audit graph, centralized version metadata, and the recorded/live gate-ablation contracts. GitHub Actions run [40919078602](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40919078602) passed all 336 tests after the gate-ablation documentation update. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -201,7 +202,7 @@ See [agentic-AI landscape and self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) for
 - Outputs are research drafts. FrontierLab has no validated clinical or wet-lab execution capability.
 - Paid Meta Model API access is disabled.
 
-See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md), [method evaluation and planning](docs/METHOD_EVALUATION.md), and [process metrics](docs/PROCESS_METRICS.md), and [trajectory audit graph](docs/TRAJECTORY_GRAPH.md).
+See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md), [method evaluation and planning](docs/METHOD_EVALUATION.md), and [process metrics](docs/PROCESS_METRICS.md), [trajectory audit graph](docs/TRAJECTORY_GRAPH.md), and [gate ablation](docs/GATE_ABLATION.md).
 
 ## Model roles
 

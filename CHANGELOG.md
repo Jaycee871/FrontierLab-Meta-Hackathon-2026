@@ -1,3 +1,13 @@
+## 2026-10-29 · v0.33 — Controlled gate-ablation experiment
+
+- Added `frontierlab/gate_ablation.py` with two explicitly separated experiment types: post-generation gate replay and same-model/same-cases prompt-level ablation.
+- Added a deployable recorded replay for the genuine 12-case Meta Muse Glimmer batch. The replay makes zero new model calls and binds back to the recorded NIM receipt.
+- Current recorded result: 8 decisive + 4 abstaining model outputs; all 8 decisive outputs already had valid anchored quotes, so the post-processing source/quote gate introduced 0 new abstentions. Eight surviving decisions still require 12-case researcher review.
+- Added a manual, hard-capped two-call NIM workflow for the stronger prompt-level comparison: label-only Arm A versus quote-grounded Arm B, followed by deterministic gating; Arm C remains human review.
+- Accuracy stays unavailable unless a complete independently verified gold set is explicitly supplied. Provisional AI-authored labels are never used as gold.
+- Added a Streamlit panel for the recorded replay with tokens, latency, gate effect and review-pending status.
+- Added tests, documentation and a v0.33 version bump. The workflow has no automatic retry and is not automatically triggered.
+
 ## 2026-10-29 · v0.32 — Trajectory audit graph
 
 - Added `frontierlab/trajectory_graph.py`, an audit-only process graph separate from the evidence graph.

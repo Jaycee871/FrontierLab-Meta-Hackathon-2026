@@ -1,0 +1,44 @@
+name: Meta Muse Glimmer — controlled gate ablation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontierlab-nim-gate-ablation
+  cancel-in-progress: false
+
+jobs:
+  compare-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      FRONTIERLAB_NIM_RESEARCH: "YES"
+      FRONTIERLAB_GATE_ABLATION_TRIAL: "YES"
+
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install runtime dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run same-model same-cases two-call ablation
+        run: python -m scripts.nim_gate_ablation_trial > nim_gate_ablation_trial.json
+
+      - name: Preserve non-secret run record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nim-gate-ablation-${{ github.run_id }}
+          path: nim_gate_ablation_trial.json
+          if-no-files-found: ignore
+          retention-days: 30
