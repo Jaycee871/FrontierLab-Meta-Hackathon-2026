@@ -1,6 +1,6 @@
 import pytest
 
-from frontierlab.governance import PolicyRequest, capability_matrix, evaluate
+from frontierlab.governance import PolicyRequest, capability_matrix, evaluate, governance_summary
 
 
 def test_unknown_role_capability_and_data_class_fail_closed():
@@ -67,3 +67,12 @@ def test_public_matrix_is_deterministic_and_contains_all_role_capability_pairs()
     second = capability_matrix()
     assert first == second
     assert len(first) == 4 * 9
+
+def test_governance_summary_preserves_fail_closed_boundaries():
+    summary = governance_summary()
+    assert summary["default_policy"] == "DENY"
+    assert summary["patient_identifiable_access_allowed_for_any_role"] is False
+    assert summary["patient_data_access_implemented"] is False
+    assert summary["legal_responsibility_assigned_by_frontierlab"] is False
+    assert summary["automatic_repair_allowed"] is False
+    assert sum(summary["public_baseline_decisions"].values()) == 4 * 9
