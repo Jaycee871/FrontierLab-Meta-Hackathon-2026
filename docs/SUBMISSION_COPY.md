@@ -133,7 +133,7 @@ The extension has three pillars:
 - **Provenance:** preserve an inspectable chain from source/data through tool/model/version/parameters/human actions to the resulting scientific artefact.
 - **Governance:** define permissions, approval boundaries, sensitive-data access, audit responsibilities and accountability for agent-assisted research.
 
-The current FrontierLab prototype implements parts of provenance and governance. Autonomous repair/rebuild, institutional role-based access control and patient-data governance remain future research.
+The current FrontierLab prototype now implements substantial provenance/human-governance controls plus Phase 1 maintainability: a scheduled dependency/environment canary with regression testing, dependency fingerprints and quarantine-on-failure. Autonomous repair/rebuild, institutional role-based access control and patient-data governance remain future research.
 
 This three-pillar framework is a FrontierLab / Pack Kwan Low extension inspired by the shift from static papers to operable research agents; it is not presented as a result already established by Paper2Agent.
 
