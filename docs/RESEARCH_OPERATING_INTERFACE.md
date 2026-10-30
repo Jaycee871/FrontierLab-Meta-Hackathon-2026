@@ -32,7 +32,7 @@ This document is a concept architecture, not a claim that every module below is 
 | Evidence Trace | claim-to-source provenance | implemented through Evidence Graph + measured Trace Coverage |
 | Process Trace | who/what happened during execution | implemented through Trajectory Audit Graph + human events |
 | Governance | permissions, approvals, accountability | partial prototype through human gates, budgets and audit rules |
-| Maintainability | failure detection, regression, rebuild/repair | CI/error taxonomy exist; autonomous repair/rebuild is future work |
+| Maintainability | failure detection, regression, rebuild/repair | scheduled maintenance canary + dependency fingerprint + quarantine policy implemented; autonomous repair/rebuild remains future work |
 
 ## Relationship to the current five-stage pipeline
 
@@ -106,15 +106,20 @@ Expose:
 
 ### Maintainability panel
 
-Future panel may expose:
+Phase 1 is now operationalized by the scheduled Maintenance Canary.
 
-- dependency drift;
-- last regression-test result;
-- tool health;
-- environment rebuild status;
-- repair attempts;
-- quarantine status;
-- maintainer approval.
+The canary records:
+
+- Python and tracked package versions;
+- requirements-file hashes;
+- a dependency fingerprint;
+- full regression-test outcome;
+- HEALTHY / QUARANTINE_REQUIRED status;
+- whether promotion is permitted.
+
+Automatic repair, environment rebuild, commit and merge remain disabled. A failing canary preserves its evidence and requires human-approved repair before promotion.
+
+See [Maintenance canary](MAINTENANCE_CANARY.md).
 
 ## Design principle
 
