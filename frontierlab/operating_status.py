@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .evidence_graph import build_evidence_graph
+from .governance import governance_summary
 from .process_metrics import process_metrics, stage_completion
 from .traceability import source_audit_summary, trace_coverage
 from .version import __version__
@@ -53,6 +54,7 @@ def research_operating_status(run) -> dict:
             "method_evaluation_saved": isinstance(run.evaluation, dict),
             "planning_authorized_recorded": planning_authorized,
             "plan_generated": isinstance(run.plan, dict),
+            "capability_policy": governance_summary(),
         },
         "maintainability": {
             "central_version_metadata": True,
