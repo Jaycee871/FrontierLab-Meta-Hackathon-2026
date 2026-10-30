@@ -121,3 +121,20 @@ Models fill bounded research roles. Code and the researcher control transitions.
 ## Suggested final sentence
 
 **The goal is not to remove the scientist from the loop; it is to make every model-assisted scientific step strong enough to inspect, challenge and reproduce.**
+
+
+## Information Management extension
+
+Beyond the hackathon prototype, FrontierLab develops a research direction from Information Management: once papers, code, data and methods become operable agents, the next problem is how to manage them as research infrastructure.
+
+The extension has three pillars:
+
+- **Maintainability:** detect dependency/tool breakage, run regression tests, attempt bounded rebuild/repair, and revalidate before a repaired component returns to trusted use.
+- **Provenance:** preserve an inspectable chain from source/data through tool/model/version/parameters/human actions to the resulting scientific artefact.
+- **Governance:** define permissions, approval boundaries, sensitive-data access, audit responsibilities and accountability for agent-assisted research.
+
+The current FrontierLab prototype implements parts of provenance and governance. Autonomous repair/rebuild, institutional role-based access control and patient-data governance remain future research.
+
+This three-pillar framework is a FrontierLab / Pack Kwan Low extension inspired by the shift from static papers to operable research agents; it is not presented as a result already established by Paper2Agent.
+
+FrontierLab also proposes studying an **Agent Availability** reporting statement—analogous in spirit to Data Availability and Code Availability—that would disclose the agent version, represented artefacts, validation status, permissions, provenance and maintenance state. This is a forward-looking proposal, not a current journal standard.
