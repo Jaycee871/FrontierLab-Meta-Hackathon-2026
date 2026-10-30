@@ -1,3 +1,3 @@
 """Single codebase version used by the UI and tests."""
 
-__version__ = "0.35"
+__version__ = "0.36"

@@ -29,7 +29,7 @@ This document is a concept architecture, not a claim that every module below is 
 | MCP Tools | executable agent capabilities | conceptual/integration direction |
 | MCP Resources | managed references/data resources | conceptual/integration direction |
 | MCP Prompts | reusable task contracts | analogous structured role/task contracts exist; generalized MCP prompt management is future work |
-| Evidence Trace | claim-to-source provenance | implemented through Evidence Graph |
+| Evidence Trace | claim-to-source provenance | implemented through Evidence Graph + measured Trace Coverage |
 | Process Trace | who/what happened during execution | implemented through Trajectory Audit Graph + human events |
 | Governance | permissions, approvals, accountability | partial prototype through human gates, budgets and audit rules |
 | Maintainability | failure detection, regression, rebuild/repair | CI/error taxonomy exist; autonomous repair/rebuild is future work |
@@ -77,7 +77,21 @@ Expose citation/source existence and quotation anchoring checks.
 
 ### Trace Coverage
 
-Proposed metric for the fraction of material claims with an approved path to source evidence. No value should be shown without measurement.
+Implemented in `frontierlab/traceability.py` and exposed through the Research Operating Interface.
+
+Two values are reported:
+
+- **Source Trace Coverage** — fraction of in-scope downstream artifacts that reach at least one known Paper;
+- **Strict Extracted Coverage** — fraction whose complete reachable path is EXTRACTED, resolves to Paper nodes, and has no unresolved sources or dead ends.
+
+Recorded reviewed M2 core measurement:
+
+- 4 / 4 in-scope artifacts source-traceable = **100% Source Trace Coverage**;
+- 2 / 4 fully EXTRACTED = **50% Strict Extracted Coverage**.
+
+The difference is intentional. The PMC4314675 path preserves an original model stance of `inconclusive` even though the later researcher review judged the claim SUPPORTED, so that path remains AMBIGUOUS rather than being rewritten into strict evidence.
+
+These are provenance metrics, not model accuracy or scientific truth. See [Trace Coverage](TRACE_COVERAGE.md).
 
 ### Governance panel
 

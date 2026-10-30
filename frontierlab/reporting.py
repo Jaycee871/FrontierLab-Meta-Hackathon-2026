@@ -4,12 +4,14 @@ import json
 from .models import Run
 from .process_metrics import process_metrics
 from .trajectory_graph import build_trajectory_graph
+from .operating_status import research_operating_status
 
 
 def export_json(run: Run) -> str:
     payload = run.as_dict()
     payload["process_metrics"] = process_metrics(run)
     payload["trajectory_graph"] = build_trajectory_graph(run)
+    payload["research_operating_status"] = research_operating_status(run)
     return json.dumps(payload, indent=2, ensure_ascii=False)
 
 

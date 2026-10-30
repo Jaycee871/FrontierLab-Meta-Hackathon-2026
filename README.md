@@ -9,9 +9,9 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.35 candidate · Status reviewed: October 29, 2026 (Asia/Taipei)**
+**Codebase: v0.36 candidate · Status reviewed: October 30, 2026 (Asia/Taipei)**
 
-[Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
+[Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
 ---
 
@@ -38,6 +38,7 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 - **Process metrics.** SCR, recorded human-intervention counts, NIM AERR semantics, token/latency totals and process error classes are derived deterministically from the run state. These are workflow metrics, not scientific-accuracy scores.
 - **Error taxonomy.** Governance gates, insufficient evidence, citation/source failures, missing resources, model runtime failures, rejected claims and scientific tensions are separated instead of collapsing every non-success state into one error bucket.
 - **Trajectory audit graph.** A separate audit-only graph records the five-stage workflow, model-call receipts, human-intervention events, method evaluation, rejected claims and process signals. It is exported as `trajectory.json` and never participates in the scientific evidence gate.
+- **Measured Trace Coverage.** The Research Operating Interface computes source reachability separately from all-EXTRACTED provenance completeness. In the recorded reviewed M2 core, **4/4 artifacts are source-traceable (100%) while 2/4 are fully EXTRACTED (50%)**. The gap preserves a real model/researcher disagreement on PMC4314675 rather than rewriting it away. These are provenance metrics, not accuracy.
 - **Controlled gate ablation.** FrontierLab separates a zero-call post-generation replay from a true same-model/same-cases prompt-level experiment. The recorded 12-case Glimmer batch currently shows 8 decisive outputs and 4 abstentions; all 8 decisive outputs already had valid anchored quotes, so the post-processing source/quote gate added 0 new abstentions. This is not reported as accuracy because independent gold is unavailable. A manual two-call Glimmer workflow is prepared for the genuine prompt-level comparison.
 - **12-case researcher review workspace.** The app can download the source-bound reviewer packet and accept an edited JSON packet back through a file uploader. Source/case fields are revalidated, completed judgments require rationales, reviewer identity is recorded as an unverified label, and Arm C is recomputed immediately without a new model call. Researcher review is never relabeled as independent gold.
 - **M2 Stage-5 readiness contract.** The selected M2 path now produces a zero-call readiness packet with exact context/evaluation IDs, reviewed source sets, the three open reproducibility checks (data/code/environment) and nine required planning obligations including monomeric-Fab SPR, avidity/stoichiometry handling, search-bias disclosure, replication and falsification. The packet explicitly keeps `planning_approved=false` and `model_call_authorized=false`.
@@ -169,7 +170,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.35 candidate suite has **348 tests**. It covers the five-stage workflow, human-review/evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity, human-intervention events, process metrics, error taxonomy, trajectory audit graph, gate-ablation/reviewer-packet contracts, and deterministic Stage-5 planning readiness. GitHub Actions run [40920928261](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40920928261) passed all 348 tests after the readiness-panel integration. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.36 candidate suite has **356 tests**. It covers the five-stage workflow, human-review/evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity, human-intervention events, process metrics, error taxonomy, trajectory audit graph, gate-ablation/reviewer-packet contracts, Stage-5 planning readiness, measured Trace Coverage and the Research Operating Interface status/export. GitHub Actions run [41063163269](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41063163269) passed all 356 tests on the final v0.36 documentation chain. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -184,7 +185,7 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 ## Deployment (Hugging Face Space)
 
 - **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
-- **Status:** v0.16 deployed and verified RUNNING. The runtime revision, health endpoint (HTTP 200) and rendered source marker were checked, and both recorded claim judgments with their rationales are visible. [Deployment receipt](docs/runs/hf_deployment_20261028.json).
+- **Status:** the latest source deployment workflow succeeded on October 30, 2026 for v0.35 source `f7b67b6a3b0911d4e425db8890a89834e1118efe`, creating HF Space commit `a0e9e533d8501dbadc5d7c88b49e452fc4ea1161` (GitHub Actions run 41037999309). The deploy receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; that proves source upload, not post-build runtime health. After v0.36 merges, the Space should be redeployed and runtime/health/source-marker verification repeated.
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
 - **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
