@@ -95,3 +95,33 @@ def test_operating_status_exposes_process_not_chain_of_thought():
     assert status["governance"]["plan_generated"] is True
     assert status["scientific_accuracy_measured"] is False
     assert "chain-of-thought" in status["note"]
+
+
+def test_recorded_m2_core_has_measured_trace_coverage():
+    from scripts.trace_coverage_recorded import run as recorded_trace
+    result = recorded_trace()
+    trace = result["trace_coverage"]
+    assert result["new_model_calls"] == 0
+    assert result["selected_candidate_id"] == "M2"
+    assert result["planning_approved"] is False
+    assert trace["material_artifacts"] == 4  # 2 reviewed claims + 2 hypotheses
+    assert trace["source_traceable_artifacts"] == 4
+    assert trace["strict_extracted_artifacts"] == 4
+    assert trace["source_trace_coverage"] == 1.0
+    assert trace["strict_extracted_coverage"] == 1.0
+    assert result["scientific_accuracy_measured"] is False
+    assert result["semantic_entailment_verified"] is False
+
+
+def test_complete_provenance_export_includes_operating_status():
+    import json
+    from frontierlab.reporting import export_json
+    from tests.test_evidence_graph import planned_run, claim, QUOTE_A, QUOTE_B
+    run = planned_run(
+        [claim("PMC1", QUOTE_A), claim("PMC2", QUOTE_B)],
+        ["PMC1", "PMC2"],
+        ["PMC1", "PMC2"],
+    )
+    payload = json.loads(export_json(run))
+    assert payload["research_operating_status"]["schema"] == "frontierlab.research-operating-status.v1"
+    assert payload["research_operating_status"]["traceability"]["source_trace_coverage"] == 1.0
