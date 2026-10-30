@@ -150,3 +150,37 @@ def capability_matrix() -> list[dict]:
                 "reason": result["reason"],
             })
     return rows
+
+def governance_summary() -> dict:
+    rows = capability_matrix()
+    counts = {"ALLOW": 0, "REQUIRE_HUMAN_APPROVAL": 0, "DENY": 0}
+    for row in rows:
+        counts[row["decision"]] += 1
+    patient_checks = [
+        evaluate(PolicyRequest(
+            role=role,
+            capability="data.read",
+            data_class="PATIENT_IDENTIFIABLE",
+            institutional_authorization=True,
+            human_approval=True,
+        ))
+        for role in sorted(ROLES)
+    ]
+    return {
+        "schema": "frontierlab.governance-summary.v1",
+        "policy_version": "frontierlab-governance-v1",
+        "default_policy": "DENY",
+        "roles": sorted(ROLES),
+        "capabilities": sorted(CAPABILITIES),
+        "public_baseline_decisions": counts,
+        "patient_identifiable_access_allowed_for_any_role": any(
+            item["effective_decision"] == "ALLOW" for item in patient_checks
+        ),
+        "patient_data_access_implemented": False,
+        "legal_responsibility_assigned_by_frontierlab": False,
+        "automatic_repair_allowed": False,
+        "note": (
+            "Software policy prototype only; institutional authorization, IRB review, "
+            "legal responsibility and real patient-data access are outside this implementation."
+        ),
+    }
