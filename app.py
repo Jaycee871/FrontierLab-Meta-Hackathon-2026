@@ -12,6 +12,7 @@ from frontierlab.planning_readiness import build_planning_readiness, readiness_s
 from frontierlab.review import review_packet, save_review
 from frontierlab.reporting import export_json, summary
 from frontierlab.process_metrics import process_metrics
+from frontierlab.operating_status import research_operating_status
 from frontierlab.trajectory_graph import build_trajectory_graph, summarize as trajectory_summary, to_json as trajectory_json
 from frontierlab.interventions import record_human_event
 from frontierlab.claim_benchmark import benchmark
@@ -307,6 +308,70 @@ if result:
                 f"tokens: {pm['nim']['total_tokens']} · "
                 f"recorded model time: {pm['nim']['elapsed_seconds']:.3f}s"
             )
+
+    with st.expander("Research Operating Interface · operational status", expanded=False):
+        roi = research_operating_status(result)
+        trace = roi["traceability"]
+        source_cov = trace["source_trace_coverage"]
+        strict_cov = trace["strict_extracted_coverage"]
+        o1, o2, o3, o4 = st.columns(4)
+        o1.metric("Next required stage", roi["current_activity"]["next_required_stage"].title())
+        o2.metric("Source trace coverage", "N/A" if source_cov is None else f"{source_cov * 100:.0f}%")
+        o3.metric("Strict extracted coverage", "N/A" if strict_cov is None else f"{strict_cov * 100:.0f}%")
+        o4.metric("Auto repair", "OFF")
+        st.caption(
+            "Trace Coverage is measured from the current Evidence Graph. "
+            "It measures provenance coverage, not scientific accuracy or semantic truth."
+        )
+        a1, a2, a3, a4 = st.columns(4)
+        audit_state = roi["source_audit"]
+        a1.metric("Active papers", audit_state["papers"])
+        a2.metric("Anchored passed claims", audit_state["anchored_passed_claims"])
+        a3.metric(
+            "Rejected claims",
+            audit_state["rejected_claims_attached"] + audit_state["rejected_claims_unattached"],
+        )
+        a4.metric("Human events", roi["governance"]["human_events_recorded"])
+        st.dataframe(
+            [
+                {
+                    "Control area": "Provenance",
+                    "Status": "MEASURED",
+                    "Detail": (
+                        f"{trace['source_traceable_artifacts']} / {trace['material_artifacts']} "
+                        "in-scope artifacts reach a known paper"
+                    ),
+                },
+                {
+                    "Control area": "Governance",
+                    "Status": "HUMAN-GATED",
+                    "Detail": (
+                        f"Claim review: {roi['governance']['claim_review_status']} · "
+                        f"Method evaluation: {'saved' if roi['governance']['method_evaluation_saved'] else 'not saved'} · "
+                        f"Planning authorization recorded: "
+                        f"{'yes' if roi['governance']['planning_authorized_recorded'] else 'no'}"
+                    ),
+                },
+                {
+                    "Control area": "Maintainability",
+                    "Status": roi["maintainability"]["status"],
+                    "Detail": "Regression monitoring/error taxonomy exist; autonomous repair and environment rebuild are not implemented.",
+                },
+            ],
+            hide_index=True,
+            use_container_width=True,
+        )
+        if roi["active_sources"]:
+            st.caption(
+                "Active sources: " + ", ".join(source["paper_id"] for source in roi["active_sources"])
+            )
+        st.download_button(
+            "Download operating-status JSON",
+            data=json.dumps(roi, ensure_ascii=False, indent=2, sort_keys=True),
+            file_name="research_operating_status.json",
+            mime="application/json",
+        )
+
     for warning in result.audit.warnings:
         st.warning(warning)
     if result.mode == "demo":
