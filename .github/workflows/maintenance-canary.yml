@@ -9,7 +9,9 @@ on:
       - "requirements.txt"
       - "requirements-dev.txt"
       - "frontierlab/**"
-      - "scripts/maintenance_canary.py"
+      - "app.py"
+      - "scripts/**"
+      - "tests/**"
       - ".github/workflows/maintenance-canary.yml"
 
 permissions:
