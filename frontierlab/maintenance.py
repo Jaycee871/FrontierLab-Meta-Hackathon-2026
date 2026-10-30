@@ -1,1 +1,118 @@
-"""Maintainability canary records for FrontierLab.\n\nPhase 1 detects dependency/environment regressions and preserves provenance.\nIt deliberately does not repair, commit, merge, or promote code automatically.\n"""\nfrom __future__ import annotations\n\nfrom hashlib import sha256\nimport json\nimport re\nfrom typing import Mapping\n\nSCHEMA = "frontierlab.maintenance-health.v1"\n\n\ndef _sha(value: str) -> str:\n    return sha256(value.encode("utf-8")).hexdigest()\n\n\ndef dependency_fingerprint(\n    *,\n    python_version: str,\n    requirements: Mapping[str, str],\n    installed_packages: Mapping[str, str],\n) -> str:\n    body = {\n        "python_version": python_version,\n        "requirements": dict(sorted(requirements.items())),\n        "installed_packages": dict(sorted(installed_packages.items())),\n    }\n    raw = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False)\n    return _sha(raw)\n\n\ndef parse_pytest_summary(text: str) -> dict:\n    """Extract coarse test counts without treating tests as model/science accuracy."""\n    text = text if isinstance(text, str) else ""\n    passed = failed = errors = skipped = 0\n    patterns = {\n        "passed": r"(\d+)\s+passed",\n        "failed": r"(\d+)\s+failed",\n        "errors": r"(\d+)\s+errors?",\n        "skipped": r"(\d+)\s+skipped",\n    }\n    values = {}\n    for key, pattern in patterns.items():\n        matches = re.findall(pattern, text)\n        values[key] = int(matches[-1]) if matches else 0\n    return {\n        "passed": values["passed"],\n        "failed": values["failed"],\n        "errors": values["errors"],\n        "skipped": values["skipped"],\n    }\n\n\ndef build_health_report(\n    *,\n    frontierlab_version: str,\n    source_sha: str | None,\n    trigger: str,\n    python_version: str,\n    requirements: Mapping[str, str],\n    installed_packages: Mapping[str, str],\n    pytest_exit_code: int,\n    pytest_output: str,\n) -> dict:\n    if not isinstance(pytest_exit_code, int):\n        raise ValueError("pytest_exit_code must be an integer")\n    if not isinstance(trigger, str) or not trigger.strip():\n        raise ValueError("trigger required")\n\n    req_hashes = {name: _sha(text) for name, text in sorted(requirements.items())}\n    tests = parse_pytest_summary(pytest_output)\n    healthy = pytest_exit_code == 0\n    status = "HEALTHY" if healthy else "QUARANTINE_REQUIRED"\n\n    report = {\n        "schema": SCHEMA,\n        "status": status,\n        "frontierlab_version": frontierlab_version,\n        "source_sha": source_sha,\n        "trigger": trigger.strip(),\n        "environment": {\n            "python_version": python_version,\n            "requirements_sha256": req_hashes,\n            "installed_packages": dict(sorted(installed_packages.items())),\n            "dependency_fingerprint": dependency_fingerprint(\n                python_version=python_version,\n                requirements=requirements,\n                installed_packages=installed_packages,\n            ),\n        },\n        "regression_test": {\n            "exit_code": pytest_exit_code,\n            **tests,\n            "software_tests_only": True,\n            "scientific_accuracy_measured": False,\n        },\n        "maintenance_policy": {\n            "failure_detected": not healthy,\n            "automatic_repair_enabled": False,\n            "repair_attempted": False,\n            "automatic_environment_rebuild_enabled": False,\n            "automatic_commit_enabled": False,\n            "automatic_merge_enabled": False,\n            "human_approval_required_before_promotion": True,\n            "promotion_allowed": healthy,\n        },\n        "next_action": (\n            "No maintenance action required; preserve this health record."\n            if healthy\n            else "Quarantine this revision/environment, inspect the failing test log, and require human-approved repair before promotion."\n        ),\n        "note": (\n            "This canary detects software/environment regressions and records provenance. "\n            "It does not establish scientific validity and does not perform autonomous repair."\n        ),\n    }\n    return report
+"""Maintainability canary records for FrontierLab.
+
+Phase 1 detects dependency/environment regressions and preserves provenance.
+It deliberately does not repair, commit, merge, or promote code automatically.
+"""
+from __future__ import annotations
+
+from hashlib import sha256
+import json
+import re
+from typing import Mapping
+
+SCHEMA = "frontierlab.maintenance-health.v1"
+
+
+def _sha(value: str) -> str:
+    return sha256(value.encode("utf-8")).hexdigest()
+
+
+def dependency_fingerprint(
+    *,
+    python_version: str,
+    requirements: Mapping[str, str],
+    installed_packages: Mapping[str, str],
+) -> str:
+    body = {
+        "python_version": python_version,
+        "requirements": dict(sorted(requirements.items())),
+        "installed_packages": dict(sorted(installed_packages.items())),
+    }
+    raw = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return _sha(raw)
+
+
+def parse_pytest_summary(text: str) -> dict:
+    """Extract coarse test counts without treating tests as model/science accuracy."""
+    text = text if isinstance(text, str) else ""
+    patterns = {
+        "passed": r"(\d+)\s+passed",
+        "failed": r"(\d+)\s+failed",
+        "errors": r"(\d+)\s+errors?",
+        "skipped": r"(\d+)\s+skipped",
+    }
+    values = {}
+    for key, pattern in patterns.items():
+        matches = re.findall(pattern, text)
+        values[key] = int(matches[-1]) if matches else 0
+    return {
+        "passed": values["passed"],
+        "failed": values["failed"],
+        "errors": values["errors"],
+        "skipped": values["skipped"],
+    }
+
+
+def build_health_report(
+    *,
+    frontierlab_version: str,
+    source_sha: str | None,
+    trigger: str,
+    python_version: str,
+    requirements: Mapping[str, str],
+    installed_packages: Mapping[str, str],
+    pytest_exit_code: int,
+    pytest_output: str,
+) -> dict:
+    if not isinstance(pytest_exit_code, int):
+        raise ValueError("pytest_exit_code must be an integer")
+    if not isinstance(trigger, str) or not trigger.strip():
+        raise ValueError("trigger required")
+
+    req_hashes = {name: _sha(text) for name, text in sorted(requirements.items())}
+    tests = parse_pytest_summary(pytest_output)
+    healthy = pytest_exit_code == 0
+    status = "HEALTHY" if healthy else "QUARANTINE_REQUIRED"
+
+    return {
+        "schema": SCHEMA,
+        "status": status,
+        "frontierlab_version": frontierlab_version,
+        "source_sha": source_sha,
+        "trigger": trigger.strip(),
+        "environment": {
+            "python_version": python_version,
+            "requirements_sha256": req_hashes,
+            "installed_packages": dict(sorted(installed_packages.items())),
+            "dependency_fingerprint": dependency_fingerprint(
+                python_version=python_version,
+                requirements=requirements,
+                installed_packages=installed_packages,
+            ),
+        },
+        "regression_test": {
+            "exit_code": pytest_exit_code,
+            **tests,
+            "software_tests_only": True,
+            "scientific_accuracy_measured": False,
+        },
+        "maintenance_policy": {
+            "failure_detected": not healthy,
+            "automatic_repair_enabled": False,
+            "repair_attempted": False,
+            "automatic_environment_rebuild_enabled": False,
+            "automatic_commit_enabled": False,
+            "automatic_merge_enabled": False,
+            "human_approval_required_before_promotion": True,
+            "promotion_allowed": healthy,
+        },
+        "next_action": (
+            "No maintenance action required; preserve this health record."
+            if healthy
+            else "Quarantine this revision/environment, inspect the failing test log, and require human-approved repair before promotion."
+        ),
+        "note": (
+            "This canary detects software/environment regressions and records provenance. "
+            "It does not establish scientific validity and does not perform autonomous repair."
+        ),
+    }
