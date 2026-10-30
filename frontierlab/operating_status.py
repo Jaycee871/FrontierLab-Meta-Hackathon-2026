@@ -57,10 +57,13 @@ def research_operating_status(run) -> dict:
         "maintainability": {
             "central_version_metadata": True,
             "process_error_taxonomy": True,
+            "maintenance_canary_configured": True,
+            "scheduled_dependency_canary": True,
+            "last_canary_status_embedded_in_runtime": False,
             "automatic_repair_enabled": False,
             "automatic_environment_rebuild_enabled": False,
             "verified_nim_automatic_retry": False if run.backend == "nvidia-nim" else None,
-            "status": "REGRESSION_MONITORED_MANUAL_REPAIR",
+            "status": "CANARY_MONITORED_MANUAL_REPAIR",
         },
         "scientific_accuracy_measured": False,
         "note": (

@@ -1,0 +1,76 @@
+name: Maintenance canary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * *"
+  push:
+    paths:
+      - "requirements.txt"
+      - "requirements-dev.txt"
+      - "frontierlab/**"
+      - "app.py"
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/maintenance-canary.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontierlab-maintenance-canary
+  cancel-in-progress: false
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install current dependency range
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Run regression tests and preserve exit code
+        id: regress
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q 2>&1 | tee pytest.log
+          code=${PIPESTATUS[0]}
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Build maintenance health record
+        if: always()
+        shell: bash
+        run: |
+          code="${{ steps.regress.outputs.exit_code }}"
+          if [ -z "$code" ]; then code=99; fi
+          python -m scripts.maintenance_canary --pytest-exit-code "$code" --pytest-log pytest.log --trigger "${{ github.event_name }}" > maintenance_health.json
+
+      - name: Upload maintenance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-canary-${{ github.run_id }}
+          path: |
+            maintenance_health.json
+            pytest.log
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce quarantine on regression failure
+        if: always()
+        shell: bash
+        run: |
+          code="${{ steps.regress.outputs.exit_code }}"
+          if [ -z "$code" ]; then code=99; fi
+          if [ "$code" -ne 0 ]; then
+            echo "Regression failure detected. Revision/environment requires quarantine and human-approved repair."
+            exit "$code"
+          fi

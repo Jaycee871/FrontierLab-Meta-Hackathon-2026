@@ -1,6 +1,16 @@
 # Maintainability benchmark — proposed FrontierLab experiment
 
-> **Status:** research design / future experiment. Not executed.
+> **Status:** Phase 1 detection/provenance canary executed; autonomous repair benchmark remains future work.
+
+## Phase 1 implementation status
+
+FrontierLab now implements the detection half of this research agenda through the [Maintenance canary](MAINTENANCE_CANARY.md).
+
+The executed canary automatically installs the currently allowed dependency range, runs the regression suite, records environment/package provenance, computes a dependency fingerprint and emits either **HEALTHY** or **QUARANTINE_REQUIRED**.
+
+The first executed feature-branch canary (GitHub Actions run 41064072834) produced a HEALTHY record with 361 passing tests and a preserved maintenance artifact.
+
+Autonomous repair, environment rebuilding and automatic promotion remain disabled.
 
 ## Research question
 

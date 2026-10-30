@@ -388,7 +388,7 @@ if result:
                 {
                     "Control area": "Maintainability",
                     "Status": roi["maintainability"]["status"],
-                    "Detail": "Regression monitoring/error taxonomy exist; autonomous repair and environment rebuild are not implemented.",
+                    "Detail": "Scheduled dependency canary, version metadata and error taxonomy are active; autonomous repair and environment rebuild are not implemented.",
                 },
             ],
             hide_index=True,
