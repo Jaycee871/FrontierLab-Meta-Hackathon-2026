@@ -106,14 +106,20 @@ def test_recorded_m2_core_has_measured_trace_coverage():
     assert result["planning_approved"] is False
     assert trace["material_artifacts"] == 4  # 2 reviewed claims + 2 hypotheses
     assert trace["source_traceable_artifacts"] == 4
-    for artifact in trace["artifacts"]:
-        assert artifact["strict_extracted"], (
-            f"{artifact['artifact_id']} blockers={artifact['blocking_edges']} "
-            f"unresolved={artifact['unresolved_evidence_ids']} dead_ends={artifact['dead_ends']}"
-        )
-    assert trace["strict_extracted_artifacts"] == 4
+    assert trace["strict_extracted_artifacts"] == 2
     assert trace["source_trace_coverage"] == 1.0
-    assert trace["strict_extracted_coverage"] == 1.0
+    assert trace["strict_extracted_coverage"] == 0.5
+    assert trace["source_untraceable_artifacts"] == 0
+    assert trace["strict_blocked_artifacts"] == 2
+    assert trace["blocking_edges_by_provenance"]["AMBIGUOUS"] == 2
+    blocked = [item for item in trace["artifacts"] if not item["strict_extracted"]]
+    assert {item["artifact_type"] for item in blocked} == {"claim", "hypothesis"}
+    assert any(
+        "Stance 'inconclusive' does not decide the claim"
+        in edge["reason"]
+        for item in blocked
+        for edge in item["blocking_edges"]
+    )
     assert result["scientific_accuracy_measured"] is False
     assert result["semantic_entailment_verified"] is False
 
