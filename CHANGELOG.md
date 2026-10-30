@@ -1,3 +1,16 @@
+## 2026-10-30 · v0.36 — Measured Trace Coverage and Research Operating Status
+
+- Added `frontierlab/traceability.py` with two distinct provenance metrics: Source Trace Coverage and Strict Extracted Coverage.
+- Headline scope includes evidence-gate-passed claims, hypotheses and plan steps; rejected claims remain visible as exclusions rather than distorting the denominator.
+- Added `frontierlab/operating_status.py` to aggregate current activity, active sources, source audit, traceability, governance and maintainability state without exposing private chain-of-thought.
+- Streamlit now exposes **Research Operating Interface · operational status**, including provenance blockers whenever source reachability exceeds strict EXTRACTED coverage.
+- The complete provenance export now embeds `research_operating_status`.
+- Added a zero-call recorded M2 trace reconstruction. Measured result: **4/4 source-traceable artifacts (100%) and 2/4 fully EXTRACTED artifacts (50%)**.
+- The 50% strict result is intentional: the PMC4314675 claim/hypothesis path preserves the original model stance `inconclusive` even though later researcher review marked the claim SUPPORTED, so that path remains AMBIGUOUS.
+- Added `docs/TRACE_COVERAGE.md` and updated the Research Operating Interface documentation.
+- Maintainability status remains regression-monitored/manual-repair; automatic repair and environment rebuilding are not implemented.
+- No new model call, scientific-accuracy claim or Stage 5 authorization was added.
+
 ## 2026-10-30 · Information Management research extension — docs only
 
 - Added a FrontierLab Information Management extension authored as a project research direction rather than a claim from Paper2Agent.
