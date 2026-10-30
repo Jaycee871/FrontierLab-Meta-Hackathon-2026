@@ -145,6 +145,15 @@ def trace_coverage(graph: dict) -> dict:
         for node in nodes
     )
 
+    blocking_counts = {"INFERRED": 0, "AMBIGUOUS": 0, "OTHER": 0}
+    for record in records:
+        for edge in record["blocking_edges"]:
+            provenance = edge.get("provenance")
+            if provenance in blocking_counts:
+                blocking_counts[provenance] += 1
+            else:
+                blocking_counts["OTHER"] += 1
+
     return {
         "schema": "frontierlab.trace-coverage.v1",
         "scope_definition": (
@@ -153,6 +162,9 @@ def trace_coverage(graph: dict) -> dict:
         "material_artifacts": total,
         "source_traceable_artifacts": source_traced,
         "strict_extracted_artifacts": strict,
+        "source_untraceable_artifacts": total - source_traced,
+        "strict_blocked_artifacts": total - strict,
+        "blocking_edges_by_provenance": blocking_counts,
         "source_trace_coverage": round(source_traced / total, 4) if total else None,
         "strict_extracted_coverage": round(strict / total, 4) if total else None,
         "excluded_rejected_claims": rejected_claims,
