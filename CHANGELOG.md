@@ -1,3 +1,13 @@
+## 2026-10-30 · Research Operating Interface Traditional Chinese companion — docs only
+
+- Added `docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md`, a Traditional Chinese write-up of the Research Operating Interface concept, the three Information Management aspects, the Agent Availability idea and the five research directions.
+- Every section is labelled 【文獻】 (from the cited literature), 【作者前瞻】 (the source authors' forward-looking proposal, not an announced policy) or 【延伸觀點】 (the author's own Information Management extension, not a paper-validated conclusion).
+- The mock-up figures “12 source audits” and “98% trace coverage” are marked 【示意數字】 wherever they appear: illustrative only, not measured. They are kept separate from the measured v0.36 Trace Coverage values (100% source / 50% strict on 4 artifacts).
+- The closing comparison with current FrontierLab lists only capabilities found in the code and keeps the Level 1 Assisted Pipeline framing.
+- Full bibliographic details for AlphaGenome, Scanpy and TISSUE are left as a stated to-do rather than filled in.
+- README documentation index links the new document.
+- No code, test, dependency or central version changed.
+
 ## 2026-10-30 · v0.37 — Maintainability canary and quarantine policy
 
 - Added `frontierlab/maintenance.py` to create deterministic maintenance-health records containing requirements hashes, tracked package versions, Python version, dependency fingerprint and software regression outcome.
