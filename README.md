@@ -170,7 +170,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.35 candidate suite has **348 tests**. It covers the five-stage workflow, human-review/evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity, human-intervention events, process metrics, error taxonomy, trajectory audit graph, gate-ablation/reviewer-packet contracts, and deterministic Stage-5 planning readiness. GitHub Actions run [40920928261](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/40920928261) passed all 348 tests after the readiness-panel integration. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.36 candidate suite has **356 tests**. It covers the five-stage workflow, human-review/evaluation invalidation, model-adapter boundaries, evidence-graph schema v2 integrity, human-intervention events, process metrics, error taxonomy, trajectory audit graph, gate-ablation/reviewer-packet contracts, Stage-5 planning readiness, measured Trace Coverage and the Research Operating Interface status/export. GitHub Actions run [41063163269](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41063163269) passed all 356 tests on the final v0.36 documentation chain. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -185,7 +185,7 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 ## Deployment (Hugging Face Space)
 
 - **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
-- **Status:** v0.16 deployed and verified RUNNING. The runtime revision, health endpoint (HTTP 200) and rendered source marker were checked, and both recorded claim judgments with their rationales are visible. [Deployment receipt](docs/runs/hf_deployment_20261028.json).
+- **Status:** the latest source deployment workflow succeeded on October 30, 2026 for v0.35 source `f7b67b6a3b0911d4e425db8890a89834e1118efe`, creating HF Space commit `a0e9e533d8501dbadc5d7c88b49e452fc4ea1161` (GitHub Actions run 41037999309). The deploy receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; that proves source upload, not post-build runtime health. After v0.36 merges, the Space should be redeployed and runtime/health/source-marker verification repeated.
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
 - **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
