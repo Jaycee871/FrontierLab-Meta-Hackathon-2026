@@ -106,7 +106,7 @@ def test_recorded_m2_core_has_measured_trace_coverage():
     assert result["planning_approved"] is False
     assert trace["material_artifacts"] == 4  # 2 reviewed claims + 2 hypotheses
     assert trace["source_traceable_artifacts"] == 4
-    assert trace["strict_extracted_artifacts"] == 4
+    assert trace["strict_extracted_artifacts"] == 4, trace["artifacts"]
     assert trace["source_trace_coverage"] == 1.0
     assert trace["strict_extracted_coverage"] == 1.0
     assert result["scientific_accuracy_measured"] is False
