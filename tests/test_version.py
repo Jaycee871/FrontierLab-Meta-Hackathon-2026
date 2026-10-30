@@ -3,7 +3,7 @@ from pathlib import Path
 
 def test_central_version_matches_current_release():
     from frontierlab.version import __version__
-    assert __version__ == "0.35"
+    assert __version__ == "0.36"
 
 
 def test_app_uses_central_version_not_hardcoded_legacy_label():
