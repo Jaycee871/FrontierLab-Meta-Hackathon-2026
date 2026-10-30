@@ -44,7 +44,7 @@ def research_operating_status(run) -> dict:
         "source_audit": audit,
         "traceability": trace,
         "governance": {
-            "human_events_recorded": metrics["human_interventions"]["recorded_total"],
+            "human_events_recorded": metrics["human_interventions"]["observed_total"],
             "claim_review_status": (
                 run.review.get("status")
                 if isinstance(run.review, dict)
