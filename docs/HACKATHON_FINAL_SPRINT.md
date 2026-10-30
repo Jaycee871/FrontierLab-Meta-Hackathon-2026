@@ -118,3 +118,20 @@ The participant portal may contain additional submission-form fields that are no
 - Publication-scale biomedical benchmark or claims of superhuman AI scientific discovery.
 
 **GO / NO-GO:** Do not claim a Meta-powered live end-to-end scientific product unless there is authentic dated Meta model output, a working endpoint, and a reproducible recorded trace. A transparent partial prototype is preferred over a false success claim.
+
+
+## Post-submission Information Management research direction
+
+FrontierLab now documents a project-origin Information Management extension around **maintainability, provenance and governance**.
+
+This is not a claim that Paper2Agent or another cited paper already validated those three pillars. It is a FrontierLab / Pack Kwan Low research direction motivated by the move from passive research artefacts to operable agents.
+
+Post-submission priorities:
+
+- run the proposed maintainability benchmark using controlled dependency/API/environment failures;
+- extend provenance from paper/model/human records to code/data/environment artefacts;
+- study institutional tool/data authorization and responsibility boundaries;
+- evaluate a Research Operating Interface that manages Paper / Code / Data, MCP-style tools/resources/prompts, Evidence Trace, Governance and Maintainability;
+- study the proposed **Agent Availability** reporting statement as a complement to Data/Code Availability.
+
+These items are research agenda, not current hackathon deliverables.

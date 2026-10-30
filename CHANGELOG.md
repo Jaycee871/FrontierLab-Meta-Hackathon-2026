@@ -1,3 +1,13 @@
+## 2026-10-30 · Information Management research extension — docs only
+
+- Added a FrontierLab Information Management extension authored as a project research direction rather than a claim from Paper2Agent.
+- Formalized three management pillars for operable scientific agents: **maintainability, provenance and governance**.
+- Added the **Research Operating Interface** concept: Paper / Code / Data plus MCP-style tool/resource/prompt integration under Evidence Trace, Governance and Maintainability controls.
+- Distinguished current prototype capabilities from future work: FrontierLab already implements substantial provenance/human-governance machinery, while autonomous repair/rebuild, institutional RBAC and sensitive-data policy enforcement remain future research.
+- Added a proposed **Agent Availability statement** template covering agent identity, represented artefacts, validation, provenance, governance and maintenance. It is explicitly marked as a forward-looking proposal, not an existing journal standard.
+- Clarified that mock-up figures such as “98% trace coverage” must not be presented as measured results unless a real claim-set metric exists.
+- No code, model call, scientific gate or central version changed.
+
 ## 2026-10-30 · Submission/demo package — docs only
 
 - Added a ~3-minute demo runbook that distinguishes genuine recorded Meta inference, deterministic replay, researcher review and unexecuted optional experiments.
