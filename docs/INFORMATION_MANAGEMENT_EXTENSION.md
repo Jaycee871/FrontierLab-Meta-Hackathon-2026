@@ -332,6 +332,8 @@ The experiment can measure:
 
 A safe initial design would allow bounded repair only inside an isolated environment and require human approval before any repaired tool is promoted.
 
+See [Maintainability benchmark — proposed experiment](MAINTAINABILITY_BENCHMARK.md).
+
 ---
 
 ## 8. Agent Availability — proposed future research-reporting statement
