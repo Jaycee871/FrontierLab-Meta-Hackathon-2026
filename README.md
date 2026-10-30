@@ -11,7 +11,7 @@ FrontierLab helps a researcher turn a scientific question into a falsifiable hyp
 
 **Codebase: v0.35 candidate · Status reviewed: October 29, 2026 (Asia/Taipei)**
 
-[Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
+[Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
 ---
 
@@ -42,6 +42,24 @@ It follows four principles: **transparent evidence, reproducibility, uncertainty
 - **12-case researcher review workspace.** The app can download the source-bound reviewer packet and accept an edited JSON packet back through a file uploader. Source/case fields are revalidated, completed judgments require rationales, reviewer identity is recorded as an unverified label, and Arm C is recomputed immediately without a new model call. Researcher review is never relabeled as independent gold.
 - **M2 Stage-5 readiness contract.** The selected M2 path now produces a zero-call readiness packet with exact context/evaluation IDs, reviewed source sets, the three open reproducibility checks (data/code/environment) and nine required planning obligations including monomeric-Fab SPR, avidity/stoichiometry handling, search-bias disclosure, replication and falsification. The packet explicitly keeps `planning_approved=false` and `model_call_authorized=false`.
 - **Invalidation on change.** If source records or the question change, earlier reviews, hypotheses, evaluations and plans are invalidated.
+
+## Information Management research extension
+
+FrontierLab also asks a broader Information Management question: **what happens after research artefacts become executable agents?**
+
+Paper2Agent demonstrated that papers and associated code/data/methods can be converted into interactive, tested paper agents. FrontierLab extends that idea toward a managed research infrastructure organized around three IM pillars:
+
+- **Maintainability** — can tool/dependency failures be detected, classified, rebuilt and revalidated before they silently reach the researcher?
+- **Provenance** — can a reviewer trace an output back through source/data/tool/model/version/parameter/human-decision history?
+- **Governance** — who may use which tools/data, what requires approval, and who remains accountable for consequential research actions?
+
+This three-pillar framing is a **FrontierLab / Pack Kwan Low research extension**, not a claim that Paper2Agent or another cited paper has already validated it.
+
+The long-term concept is a **Research Operating Interface**: a management layer over Paper / Code / Data, MCP-style tools/resources/prompts, Evidence Trace, Governance and Maintainability. The current prototype already implements parts of provenance and governance; autonomous repair/rebuild and institutional access control remain future research.
+
+A related forward-looking proposal is an **Agent Availability statement**, analogous in spirit to Data Availability / Code Availability reporting, that would disclose an agent's version, represented artefacts, validation status, provenance, permissions and maintenance state. This is a proposed research-reporting concept, not an existing journal standard.
+
+See [Information Management extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md), [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md), and [Agent Availability statement proposal](docs/AGENT_AVAILABILITY_STATEMENT.md).
 
 ## Architecture
 
