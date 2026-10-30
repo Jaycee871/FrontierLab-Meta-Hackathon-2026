@@ -98,3 +98,21 @@ The next research phase can compare:
 - automatic detection + bounded repair proposal + human promotion approval.
 
 Any repair experiment should remain isolated and should never automatically merge into trusted main.
+
+## Final v0.37 validation
+
+After the central version guard and canary trigger scope were synchronized, FrontierLab reran both the ordinary test workflow and the Maintenance Canary on commit `2a076c1d8b485cdc47e0352a2d5fea412753db0e`.
+
+- Maintenance Canary run: `41064836504`
+- Artifact: `maintenance-canary-41064836504`
+- Artifact ID: `12982122350`
+- FrontierLab version: **0.37**
+- Status: **HEALTHY**
+- Regression tests: **361 passed**
+- Dependency fingerprint: `ac61d837d7b2c80e5f0e6e3cb1fe6a0f5cb42705a52dba18fa2dee71f68d4b34`
+- Failure detected: **false**
+- Automatic repair attempted: **false**
+- Human approval before promotion: **required**
+- Promotion allowed by software canary: **true**
+
+The canary trigger scope now includes FrontierLab package code, `app.py`, scripts, tests, dependency files and the canary workflow itself, in addition to the daily schedule.
