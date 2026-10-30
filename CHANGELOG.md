@@ -4,7 +4,8 @@
 - Added `scripts/maintenance_canary.py` and a GitHub Actions **Maintenance canary** that runs manually, on relevant code/dependency changes, and daily at 02:17 UTC.
 - The canary installs the currently allowed dependency range, runs the full regression suite, preserves `pytest.log`, emits `maintenance_health.json`, uploads both as a 30-day artifact, and fails the workflow when regression tests fail.
 - Failure policy is **QUARANTINE_REQUIRED**. Automatic repair, environment rebuild, commit and merge are explicitly disabled; human approval is required before promotion.
-- First executed canary: run 41064072834, artifact 12980538164, status **HEALTHY**, Python 3.11.17, Streamlit 1.66.1, Requests 2.34.2, OpenAI 2.54.0, Pytest 9.2.0, dependency fingerprint `ac61d837d7b2c80e5f0e6e3cb1fe6a0f5cb42705a52dba18fa2dee71f68d4b34`, **361 tests passed**.
+- First executed canary: run 41064072834, artifact 12980538164, status **HEALTHY**, with **361 tests passed**.
+- Final v0.37 validation canary: run **41064836504**, artifact **12982122350**, status **HEALTHY**, Python 3.11.17, Streamlit 1.66.1, Requests 2.34.2, OpenAI 2.54.0, Pytest 9.2.0, dependency fingerprint `ac61d837d7b2c80e5f0e6e3cb1fe6a0f5cb42705a52dba18fa2dee71f68d4b34`, **361 tests passed**.
 - Research Operating Interface now reports maintainability as **CANARY_MONITORED_MANUAL_REPAIR**. The last GitHub canary result is not embedded into the app runtime, avoiding a stale-status claim.
 - Updated maintainability benchmark / Research Operating Interface documentation and added a dedicated Maintenance Canary document.
 - No autonomous repair, code modification, model call or scientific-validity claim was added.
