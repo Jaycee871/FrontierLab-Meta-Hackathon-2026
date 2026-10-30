@@ -323,6 +323,39 @@ if result:
             "Trace Coverage is measured from the current Evidence Graph. "
             "It measures provenance coverage, not scientific accuracy or semantic truth."
         )
+        if (
+            source_cov is not None
+            and strict_cov is not None
+            and strict_cov < source_cov
+        ):
+            st.info(
+                "Some artifacts can be traced to a source but do not have an all-EXTRACTED path. "
+                "FrontierLab preserves those provenance disagreements instead of promoting them to strict evidence."
+            )
+            blocked_rows = []
+            for artifact in trace["artifacts"]:
+                if artifact["strict_extracted"]:
+                    continue
+                if artifact["blocking_edges"]:
+                    for edge in artifact["blocking_edges"]:
+                        blocked_rows.append({
+                            "Artifact": artifact["artifact_id"],
+                            "Type": artifact["artifact_type"],
+                            "Blocking provenance": edge["provenance"],
+                            "Reason": edge["reason"],
+                        })
+                elif artifact["unresolved_evidence_ids"] or artifact["dead_ends"]:
+                    blocked_rows.append({
+                        "Artifact": artifact["artifact_id"],
+                        "Type": artifact["artifact_type"],
+                        "Blocking provenance": "UNRESOLVED",
+                        "Reason": (
+                            f"unknown sources={artifact['unresolved_evidence_ids']} · "
+                            f"dead ends={artifact['dead_ends']}"
+                        ),
+                    })
+            if blocked_rows:
+                st.dataframe(blocked_rows, hide_index=True, use_container_width=True)
         a1, a2, a3, a4 = st.columns(4)
         audit_state = roi["source_audit"]
         a1.metric("Active papers", audit_state["papers"])
