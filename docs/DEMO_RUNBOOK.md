@@ -18,7 +18,7 @@ Current software baseline at preparation time:
 - **361 tests passed** on main (run 41293104079)
 - Maintenance Canary: **HEALTHY** on the latest scheduled pre-doc main (run 41292083692; 361 tests)
 - Stage 5 status: **readiness complete; planning not approved or generated**
-- HF source deployment for current main succeeded (run 41293111832; Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692`), but the receipt is still **BUILD_PENDING**; verify runtime health and rendered source marker before recording
+- latest deployed v0.37 baseline: source `c0c9f7ff…` → Space commit `1509bcfc…` (run 41293111832), receipt **BUILD_PENDING**. After the final docs freeze merges, redeploy final main and verify runtime health + rendered source marker before recording
 
 Do not call a recorded result "live". Do not call researcher review "independent gold". Do not call software tests model accuracy.
 
