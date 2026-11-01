@@ -73,8 +73,9 @@ Software verification and scientific evaluation are reported separately.
 
 Current software baseline:
 
-- v0.35;
-- 348 tests on main;
+- v0.37;
+- **361 tests on current main** (GitHub Actions run 41293104079);
+- scheduled/on-change Maintenance Canary implemented and passing on the latest scheduled run;
 - no normal test invokes a model.
 
 Recorded 12-case Glimmer gate replay:
@@ -98,10 +99,17 @@ The repository also includes a manual same-model/same-cases two-call prompt-abla
 - reviewed Skeptic/Hypothesis continuation;
 - researcher Method Evaluation with M2 selected;
 - evidence and trajectory provenance;
+- measured Trace Coverage (recorded reviewed M2 core: 4/4 source-traceable; 2/4 fully EXTRACTED);
+- Research Operating Interface operational status;
+- scheduled dependency/environment Maintenance Canary with provenance capture and quarantine-on-failure;
 - process metrics/error taxonomy;
 - gate-ablation replay;
 - 12-case review packet round trip;
 - M2 planning readiness.
+
+## Deployment state
+
+Latest deployed v0.37 baseline: GitHub source `c0c9f7ff7938b1e2814236101e6b82e3080ea863` → HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` (run 41293111832), after 361 tests passed. The receipt is `HF_SOURCE_COMMITTED_BUILD_PENDING`, so this is source-upload evidence rather than a post-build runtime-health claim. The final submission-doc merge changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
 
 ## What remains deliberately incomplete
 

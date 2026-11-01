@@ -267,11 +267,13 @@ FrontierLab already implements a narrow version of this through source-ID and ve
 
 ### Trace Coverage
 
-Proposed metric:
+The original interface concept treated Trace Coverage as a proposed metric:
 
 > the proportion of material claims in an output that can be traced through an approved provenance path to source evidence.
 
-No percentage should be displayed unless measured from an explicit claim set. Values such as “98% trace coverage” are interface mock-up examples only until a real measurement pipeline exists.
+FrontierLab now implements a measured version with two separate quantities: **Source Trace Coverage** and **Strict Extracted Coverage**. On the recorded reviewed M2 core, 4/4 in-scope artifacts are source-traceable (100%) while 2/4 have a fully EXTRACTED path (50%). These are provenance measurements over a four-artifact demonstration set, not model accuracy or scientific truth.
+
+Mock-up values such as “98% trace coverage” remain illustrative only and must not be confused with the measured 100% / 50% recorded-M2 result.
 
 ### Execution Status
 
@@ -307,9 +309,11 @@ FrontierLab currently operationalizes all five to different degrees, but none sh
 
 ---
 
-## 7. Maintainability as the next FrontierLab experiment
+## 7. Maintainability: Phase 1 executed, repair benchmark next
 
-A future FrontierLab maintainability benchmark could intentionally break a paper agent or research tool through controlled changes:
+FrontierLab now implements **Phase 1 maintainability** through a scheduled/on-change Maintenance Canary. It installs the current allowed dependency range, runs the software regression suite, records package/environment provenance and a dependency fingerprint, preserves the log/artifact, and returns HEALTHY or QUARANTINE_REQUIRED. Automatic repair, environment rebuild, commit and merge remain disabled.
+
+The next maintainability benchmark can intentionally break a paper agent or research tool through controlled changes:
 
 - dependency upgrade;
 - changed API schema;

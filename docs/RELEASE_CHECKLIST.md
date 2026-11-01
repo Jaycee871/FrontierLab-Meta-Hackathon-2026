@@ -1,7 +1,7 @@
 # FrontierLab — release & submission checklist
 
-**Target public release:** current main after v0.35 and submission-package docs.  
-**Public event deadline rechecked 2026-10-30 Asia/Taipei:** Nov 4, 2026 at 9:00 PM ET = **Nov 5, 2026 at 10:00 AM Asia/Taipei**. Organizer dates may change.
+**Target public release:** current v0.37 main plus final submission-facing documentation sync.  
+**Public event deadline rechecked 2026-11-01 Asia/Taipei:** Nov 4, 2026 at 9:00 PM ET = **Nov 5, 2026 at 10:00 AM Asia/Taipei**. Organizer dates may change.
 
 Official public references:
 
@@ -20,6 +20,8 @@ Official public references:
 - [ ] Historical run records are left immutable.
 
 ## B. Hugging Face deployment
+
+**Current deployment reference (2026-11-01):** deployed v0.37 baseline `c0c9f7ff7938b1e2814236101e6b82e3080ea863` was uploaded by run 41293111832 to HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` after 361 tests passed. Receipt status: `HF_SOURCE_COMMITTED_BUILD_PENDING`. The deployment allow-list includes documentation, so after this final docs sync merges, **redeploy final main once more** before claiming exact Space/main SHA parity. Treat runtime health as not independently verified until the checks below pass.
 
 The deployment workflow is manual (`workflow_dispatch`).
 

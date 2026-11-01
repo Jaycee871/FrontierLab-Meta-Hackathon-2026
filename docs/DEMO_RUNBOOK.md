@@ -13,11 +13,12 @@ Use a revision that has passed CI and note the exact source SHA.
 
 Current software baseline at preparation time:
 
-- FrontierLab v0.35
-- main source: `58f82df6043070654ec7e1dc16e25bfbcfcbd57b`
-- 348 tests passed on main
+- FrontierLab v0.37
+- main source: `c0c9f7ff7938b1e2814236101e6b82e3080ea863`
+- **361 tests passed** on main (run 41293104079)
+- Maintenance Canary: **HEALTHY** on the latest scheduled pre-doc main (run 41292083692; 361 tests)
 - Stage 5 status: **readiness complete; planning not approved or generated**
-- latest public Space deployment must be re-verified separately before recording
+- latest deployed v0.37 baseline: source `c0c9f7ff…` → Space commit `1509bcfc…` (run 41293111832), receipt **BUILD_PENDING**. After the final docs freeze merges, redeploy final main and verify runtime health + rendered source marker before recording
 
 Do not call a recorded result "live". Do not call researcher review "independent gold". Do not call software tests model accuracy.
 
@@ -112,6 +113,10 @@ Call out the most important interpretation safeguard:
 Do not tick the planning-approval checkbox merely for the video unless Stage 5 has actually been approved.
 
 ## 2:15–2:45 — Two different provenance questions
+
+If time permits, briefly show **Research Operating Interface · operational status** before the two graphs. The recorded reviewed M2 core measures **4/4 source-traceable artifacts (100%)** and **2/4 fully EXTRACTED artifacts (50%)**. Explain the denominator and that the 50% strict result preserves a real model/researcher provenance disagreement; it is not an accuracy score.
+
+
 
 **Screen:** Evidence Graph, then Trajectory Audit Graph.
 
