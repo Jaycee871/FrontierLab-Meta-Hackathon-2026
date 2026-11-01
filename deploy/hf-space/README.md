@@ -6,6 +6,9 @@ colorTo: blue
 sdk: docker
 app_port: 7860
 pinned: false
+models:
+  - meta-models/Muse-Spark-Open-816B-A42B
+  - meta-models/Muse-Glimmer-30B
 ---
 
 # FrontierLab — Scientific Research Intelligence
@@ -16,7 +19,7 @@ This Docker CPU Space runs the five-stage Streamlit research interface, syntheti
 
 The two recorded core-extraction claims have explicit researcher SUPPORTED judgments. The separate 12-case literature pilot still awaits human annotation. Recording those judgments does not generate hypotheses, select a method or approve a plan.
 
-An optional NVIDIA-hosted Meta Muse Glimmer backend requires the Space owner's server-side configuration and session consent. Deployment does not copy a NVIDIA credential or enable inference. The same-host local model is not provided by this CPU image.
+Live Meta Muse mode: when the Space owner sets an `HF_TOKEN` secret, the app can call `meta-models/Muse-Spark-Open-816B-A42B` (primary) with `meta-models/Muse-Glimmer-30B` as automatic fallback through Hugging Face Inference Providers, billed to the owner. Each visitor must tick a consent box; calls are capped at 6 per session and by a per-process daily cap, and every output still passes the verbatim evidence gate and human review. The direct billed Meta Model API adapter remains off. An optional NVIDIA-hosted Meta Muse Glimmer backend requires the Space owner's server-side configuration and session consent. Deployment does not copy a NVIDIA credential or enable inference. The same-host local model is not provided by this CPU image.
 
 Source: https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026
 
