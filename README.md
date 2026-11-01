@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.37 candidate · Status reviewed: October 30, 2026 (Asia/Taipei)**
+**Codebase: v0.37 candidate · Status reviewed: November 1, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [研究操作介面（繁中）](docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Maintenance canary](docs/MAINTENANCE_CANARY.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -186,7 +186,7 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 ## Deployment (Hugging Face Space)
 
 - **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
-- **Status:** the latest source deployment workflow succeeded on October 30, 2026 for v0.35 source `f7b67b6a3b0911d4e425db8890a89834e1118efe`, creating HF Space commit `a0e9e533d8501dbadc5d7c88b49e452fc4ea1161` (GitHub Actions run 41037999309). The deploy receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; that proves source upload, not post-build runtime health. After v0.36 merges, the Space should be redeployed and runtime/health/source-marker verification repeated.
+- **Status:** the latest source deployment workflow succeeded on November 1, 2026 for current main `c0c9f7ff7938b1e2814236101e6b82e3080ea863`, after **361 software tests passed**, creating HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` (GitHub Actions run 41293111832). The deploy receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; this proves the exact v0.37 source was uploaded to the existing Space, **not** that post-build runtime health has been independently verified. Runtime/health/source-marker verification remains a release check.
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
 - **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
