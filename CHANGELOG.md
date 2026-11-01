@@ -1,3 +1,10 @@
+## 2026-11-01 · Paper2Agent citation and Agent Availability attribution — docs only
+
+- Completed the Paper2Agent reference in `docs/INFORMATION_MANAGEMENT_EXTENSION.md`: *Nature* 658(8138), 1272–1280 (2026), DOI, arXiv:2509.06917 preprint, GitHub repository, and the three case-study MCP server Spaces (AlphaGenome, Scanpy, TISSUE).
+- Corrected the Agent Availability attribution: the Paper2Agent Discussion (arXiv:2509.06917v2, §3) already anticipates an “agent availability” section, so the concept is credited to the original authors. FrontierLab's contribution is described as the concrete field list / template.
+- Made `README.md`, `docs/AGENT_AVAILABILITY_STATEMENT.md`, `docs/SUBMISSION_COPY.md` and `docs/HACKATHON_FINAL_SPRINT.md` consistent with that attribution.
+- No code, test, fixture, measured number or central version changed.
+
 ## 2026-10-30 · v0.37 — Maintainability canary and quarantine policy
 
 - Added `frontierlab/maintenance.py` to create deterministic maintenance-health records containing requirements hashes, tracked package versions, Python version, dependency fingerprint and software regression outcome.

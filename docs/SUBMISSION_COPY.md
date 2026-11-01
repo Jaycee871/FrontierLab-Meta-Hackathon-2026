@@ -137,4 +137,4 @@ The current FrontierLab prototype now implements substantial provenance/human-go
 
 This three-pillar framework is a FrontierLab / Pack Kwan Low extension inspired by the shift from static papers to operable research agents; it is not presented as a result already established by Paper2Agent.
 
-FrontierLab also proposes studying an **Agent Availability** reporting statement—analogous in spirit to Data Availability and Code Availability—that would disclose the agent version, represented artefacts, validation status, permissions, provenance and maintenance state. This is a forward-looking proposal, not a current journal standard.
+FrontierLab also proposes studying an **Agent Availability** reporting statement—analogous in spirit to Data Availability and Code Availability. The Paper2Agent authors anticipated such an “agent availability” section; FrontierLab's contribution is a concrete field list disclosing the agent version, represented artefacts, validation status, permissions, provenance and maintenance state. This is not a current journal standard.
