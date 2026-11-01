@@ -340,7 +340,13 @@ See [Maintainability benchmark — proposed experiment](MAINTAINABILITY_BENCHMAR
 
 Modern journals increasingly request data- and code-availability statements.
 
-This extension proposes studying whether interactive scientific-agent work may eventually need an additional reporting field:
+The idea of an additional **Agent Availability** reporting section comes from the Paper2Agent authors, not from FrontierLab. In the Discussion of the published Paper2Agent paper (Miao et al., *Nature* 658, 1272–1280, 2026; the same sentence appears in the arXiv:2509.06917v2 preprint) they write:
+
+> “Looking forward, just as many journals now require data and code availability sections, we anticipate the emergence of an ‘agent availability’ section that specifies whether and how the contribution has been embodied as an interactive agent.”
+
+The paper also includes its own short *Agent availability* section pointing to the Paper2Agent-generated AlphaGenome agent.
+
+FrontierLab's contribution is narrower: a concrete, more detailed field list that operationalises such a section for managed research agents:
 
 > **Agent Availability**
 
@@ -358,7 +364,7 @@ Possible contents:
 - What provenance/audit records can it export?
 - What actions still require human approval?
 
-This is a **forward-looking proposal by the FrontierLab project**, not an existing journal standard.
+The **concept** of an agent availability section is the Paper2Agent authors' (Miao et al.); the **field list above and the template** are FrontierLab's proposed operationalisation. Neither is an existing journal standard.
 
 See [Agent Availability statement proposal](AGENT_AVAILABILITY_STATEMENT.md).
 
@@ -382,8 +388,23 @@ FrontierLab IM extension:
 operable research agents -> maintainable + traceable + governable research infrastructure
 ```
 
+### What the Paper2Agent paper does and does not cover
+
+To keep the boundary of this extension precise, the published *Nature* version of Paper2Agent was checked against the three pillars:
+
+- **Maintainability.** The paper notes in one sentence of its Discussion that "paper agents require ongoing maintenance as upstream codebases and dependencies evolve", and treats this as an inherent cost of publishing executable research. It does not develop maintenance into a measurement, canary, quarantine policy or management framework.
+- **Provenance.** The term does not appear in the main text. Evidence tracing, content-hash identifiers, quote anchoring and trace-coverage metrics are not part of the paper.
+- **Governance.** The term does not appear in the main text. Security, intellectual-property and attribution challenges are mentioned once and deferred to the Supplementary Note; human approval gates, institutional authorization and responsibility boundaries are not developed.
+
+The paper also does not propose a Research Operating Interface. These elements — the three-pillar framework, its research questions, and the Research Operating Interface — are the Information Management extension proposed by Pack Kwan Low in this project. Paper2Agent is cited as the prior work that made the question possible, not as their source.
+
 ## References
 
-- Miao, J., Davis, J. R., Zhang, Y., Pritchard, J. K. & Zou, J. **Reimagining research papers as interactive and reliable AI agents.** Nature (2026). DOI: 10.1038/s41586-026-11044-y.
+- Miao, J., Davis, J. R., Zhang, Y., Pritchard, J. K. & Zou, J. **Reimagining research papers as interactive and reliable AI agents.** *Nature* **658**(8138), 1272–1280 (2026). DOI: [10.1038/s41586-026-11044-y](https://doi.org/10.1038/s41586-026-11044-y).
+- Preprint: Miao, J. et al. Paper2Agent: Reimagining research papers as interactive and reliable AI agents. arXiv:2509.06917 (2025). https://arxiv.org/abs/2509.06917
 - Paper2Agent repository: https://github.com/jmiao24/Paper2Agent
+- Paper2Agent case-study agents (MCP servers on Hugging Face Spaces, as listed in the paper's Code availability section):
+  - AlphaGenome MCP server: https://huggingface.co/spaces/Paper2Agent/alphagenome_mcp
+  - Scanpy MCP server: https://huggingface.co/spaces/Paper2Agent/scanpy_mcp
+  - TISSUE MCP server: https://huggingface.co/spaces/Paper2Agent/tissue_mcp
 

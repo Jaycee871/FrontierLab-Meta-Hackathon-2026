@@ -132,6 +132,6 @@ Post-submission priorities:
 - extend provenance from paper/model/human records to code/data/environment artefacts;
 - study institutional tool/data authorization and responsibility boundaries;
 - evaluate a Research Operating Interface that manages Paper / Code / Data, MCP-style tools/resources/prompts, Evidence Trace, Governance and Maintainability;
-- study the proposed **Agent Availability** reporting statement as a complement to Data/Code Availability.
+- study FrontierLab's proposed field list for an **Agent Availability** reporting statement (a section first anticipated by the Paper2Agent authors) as a complement to Data/Code Availability.
 
 These items are research agenda, not current hackathon deliverables.
