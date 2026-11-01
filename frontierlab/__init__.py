@@ -1,2 +1,4 @@
-"""FrontierLab v0.1: Evidence-grounded, human-reviewed scientific-agent prototype."""
-__version__ = "0.1.0"
+"""FrontierLab: evidence-grounded, human-reviewed scientific-agent prototype."""
+from .version import __version__
+
+__all__ = ["__version__"]

@@ -171,7 +171,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.38 candidate suite has **367 tests**. It covers the v0.37 research/provenance/governance/maintenance stack plus accepted-baseline drift comparison and advisory repair-proposal governance. Main GitHub Actions run [41298101837](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101837) passed all 367 software tests after merge. The matched main Maintenance Canary run [41298101823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101823) recorded `HEALTHY`, preserved artifact `maintenance-canary-41298101823` (artifact ID `13079632919`), found no drift from the accepted Nov 1 baseline, and emitted `NO_REPAIR_NEEDED / HEALTHY_STABLE`. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.38 suite on main has **367 tests**; this branch's recorded-replay / judge-path work adds 11 more (**378 tests** locally). It covers the v0.37 research/provenance/governance/maintenance stack plus accepted-baseline drift comparison and advisory repair-proposal governance. Main GitHub Actions run [41298101837](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101837) passed all 367 software tests after merge. The matched main Maintenance Canary run [41298101823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101823) recorded `HEALTHY`, preserved artifact `maintenance-canary-41298101823` (artifact ID `13079632919`), found no drift from the accepted Nov 1 baseline, and emitted `NO_REPAIR_NEEDED / HEALTHY_STABLE`. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -186,7 +186,7 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 ## Deployment (Hugging Face Space)
 
 - **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
-- **Status:** the latest deployed **v0.37 baseline** is GitHub source `c0c9f7ff7938b1e2814236101e6b82e3080ea863`, uploaded after **361 software tests passed** to HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` (run 41293111832). The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; this proves source upload, **not** post-build runtime health. Because the deploy allow-list includes README/docs as well as application code, any later submission-doc merge changes the GitHub source SHA and requires one final deploy if the Space source marker must exactly match final main.
+- **Status:** the latest deployed baseline is **v0.38**: v0.38 main source `64c7aa4458d677c5048b07fbc1d99a5f734dcf3d` was uploaded by run [41300778009](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41300778009) (2026-11-01 19:11 Asia/Taipei) to HF Space commit `0cca430e625faedbab24562728a4354b99085065` after **367 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.38` and that source SHA. Any later merge (including docs) changes the GitHub source SHA and needs one more manual deploy if the Space source marker must exactly match main.
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
 - **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
@@ -298,7 +298,7 @@ FrontierLab was built for the [Meta Global AI Developer Hackathon](https://cereb
 1. **Stage 5 is still human-gated.** M2 is formally selected, but Planning has not been approved or generated.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison.** Use the same model and cases to compare three setups: no gate, source/quote checks, and checks plus human review. Report abstention and intervention separately.
-4. **Record the public demo.** v0.16 is deployed with a checked revision. Record a roughly three-minute demonstration of actual behavior.
+4. **Record the public demo.** v0.38 is deployed with a checked revision (see Deployment above). Record a roughly three-minute demonstration of actual behavior, starting from the in-app Judge path and the recorded real M2 replay.
 5. **Submit the entry.** Check the participant portal's current requirements and complete the formal submission.
 
 See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repository and hosting a demo do not count as formal submission.
@@ -313,6 +313,7 @@ Created by **Pack Kwan Low (Jaycee)**.
 
 - [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon)
 - [Meta developer platform](https://dev.meta.ai/)
+- Prior work: Miao, J., Davis, J. R., Zhang, Y., Pritchard, J. K. & Zou, J. Reimagining research papers as interactive and reliable AI agents. *Nature* **658**(8138), 1272–1280 (2026). https://doi.org/10.1038/s41586-026-11044-y (Paper2Agent; preprint arXiv:2509.06917). FrontierLab cites it as prior work; the Information Management three-pillar extension (maintainability, provenance, governance) and the Research Operating Interface are FrontierLab / Pack Kwan Low's own research contribution.
 - Literature data: Europe PMC and Springer Nature APIs. The pilot excerpts carry their own citation and rights metadata in [`datasets/`](datasets/real_ph_excerpt_cases_v1.json).
 - Evidence-graph provenance tags (EXTRACTED / INFERRED / AMBIGUOUS) are inspired by [Graphify](https://github.com/Graphify-Labs/graphify) (Graphify Labs, Apache-2.0). This is an idea credit only; no Graphify code is used or bundled.
 - Autonomy framing: Zhao D., Fang M., Mao L. et al., *The rise of agentic AI in drug discovery: from static tools to autonomous virtual scientists*, npj Drug Discovery 3, 43 (2026), DOI 10.1038/s44386-026-00075-0. FrontierLab summarizes the framework in its own words.

@@ -59,7 +59,7 @@ The accurate claim is: FrontierLab preserves and invalidates research artifacts 
 
 ## 5. Traceability after evidence-graph schema v2
 
-Current `main` includes evidence-graph schema v2, merged in commit `b3cdef7`. GitHub Actions run 40905004672 passed **304 tests**.
+Evidence-graph schema v2 was merged in commit `b3cdef7`; at that time GitHub Actions run 40905004672 passed **304 tests**. Current `main` (v0.38) passes **367 tests** (run 41298101837).
 
 | Area | Current capability | Remaining limitation |
 | --- | --- | --- |

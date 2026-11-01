@@ -14,8 +14,9 @@ import json
 import os
 from pathlib import Path
 
-from frontierlab.models import Audit, Claim, Paper, Run
+from frontierlab.models import Run
 from frontierlab.pipeline import continue_after_review
+from frontierlab.recorded_replay import rehydrate_run
 from frontierlab.research_backend import CallBudget, NvidiaResearchClient
 from frontierlab.review import review_packet
 
@@ -24,30 +25,8 @@ DEFAULT_EXTRACTION = ROOT / "docs" / "runs" / "nim_research_extraction_20261028.
 DEFAULT_REVIEW = ROOT / "docs" / "runs" / "nim_claim_review_completed_20261028.json"
 
 
-def _rehydrate_run(raw: dict) -> Run:
-    papers = [Paper(**item) for item in raw["papers"]]
-    audit_raw = raw["audit"]
-    audit = Audit(
-        verified_claims=[Claim(**item) for item in audit_raw.get("verified_claims", [])],
-        rejected_claims=audit_raw.get("rejected_claims", []),
-        conflicts=audit_raw.get("conflicts", []),
-        warnings=audit_raw.get("warnings", []),
-    )
-    return Run(
-        question=raw["question"],
-        mode=raw["mode"],
-        model=raw["model"],
-        papers=papers,
-        audit=audit,
-        hypotheses=raw.get("hypotheses", []),
-        skeptic=raw.get("skeptic", {}),
-        log=raw.get("log", []),
-        plan=raw.get("plan"),
-        review=raw.get("review"),
-        evaluation=raw.get("evaluation"),
-        backend=raw.get("backend", "none"),
-        inference=raw.get("inference"),
-    )
+# Shared with the app replay panel; kept under the historical name for callers.
+_rehydrate_run = rehydrate_run
 
 
 def load_recorded_context(extraction_path=DEFAULT_EXTRACTION, review_path=DEFAULT_REVIEW) -> Run:

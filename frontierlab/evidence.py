@@ -13,6 +13,33 @@ def clean_html(value: str) -> str:
     return re.sub(r"\s+", " ", html.unescape(value)).strip()
 
 
+def europepmc_error_message(exc: BaseException) -> str | None:
+    """Return a friendly message when *exc* came from the Europe PMC request.
+
+    Returns None for any other exception so callers keep their normal handling.
+    """
+    if not isinstance(exc, requests.RequestException):
+        return None
+    response = getattr(exc, "response", None)
+    request = getattr(exc, "request", None)
+    url = (getattr(response, "url", None) or getattr(request, "url", None) or "")
+    if not str(url).startswith(EPMC_ENDPOINT):
+        return None
+    status = getattr(response, "status_code", None)
+    if status == 429:
+        detail = "Europe PMC is rate-limiting requests right now (HTTP 429)."
+    elif status is not None and status >= 500:
+        detail = f"Europe PMC is temporarily unavailable (HTTP {status})."
+    elif status is not None:
+        detail = f"Europe PMC rejected the search request (HTTP {status}). Try simplifying the query."
+    elif isinstance(exc, requests.Timeout):
+        detail = "Europe PMC did not respond in time."
+    else:
+        detail = "Europe PMC could not be reached from this server."
+    return (detail + " No evidence was retrieved and no model was called. "
+            "Please try again in a minute, or use the synthetic audit or the recorded replay meanwhile.")
+
+
 def retrieve_papers(query: str, page_size: int = 6, session=None) -> list[Paper]:
     if not query.strip():
         raise ValueError("Research query must not be empty")

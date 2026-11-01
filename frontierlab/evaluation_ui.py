@@ -47,7 +47,7 @@ def render_evaluation(run, *, model_client=None):
         "Only the saved evaluation is used for planning; save any edits before continuing."
     )
     if run.mode == "demo":
-        st.warning("FICTIONAL strategies and evidence. No model or laboratory experiment has run.")
+        st.caption("FICTIONAL strategies and evidence. No model or laboratory experiment has run.")
     elif st.button("Suggest methods with this run's Meta backend", key="suggest_" + ctx,
                    disabled=model_client is None):
         try:
@@ -141,7 +141,7 @@ def render_evaluation(run, *, model_client=None):
              "Scope": c["scope"],
              **{CRITERION_LABELS[k]: c["comparison"][k] for k in CRITERIA}}
             for c in run.evaluation["candidates"]
-        ], hide_index=True, use_container_width=True)
+        ], hide_index=True, width="stretch")
         st.caption("No calibrated confidence percentage or scientifically proven winner is computed.")
         st.json(run.evaluation)
         st.download_button(
