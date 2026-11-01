@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.38 candidate · Status reviewed: November 1, 2026 (Asia/Taipei)**
+**Codebase: v0.38 · Status reviewed: November 1, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [研究操作介面（繁中）](docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Maintenance canary](docs/MAINTENANCE_CANARY.md) · [Repair proposals](docs/MAINTENANCE_REPAIR_PROPOSAL.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -171,7 +171,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.38 candidate suite has **367 tests**. It covers the v0.37 research/provenance/governance/maintenance stack plus accepted-baseline drift comparison and advisory repair-proposal governance. GitHub Actions run [41297817348](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41297817348) passed all 367 software tests. The matched v0.38 Maintenance Canary run [41297817372](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41297817372) recorded `HEALTHY`, preserved artifact `maintenance-canary-41297817372` (artifact ID `13079758522`), found no drift from the accepted Nov 1 baseline, and emitted `NO_REPAIR_NEEDED / HEALTHY_STABLE`. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.38 candidate suite has **367 tests**. It covers the v0.37 research/provenance/governance/maintenance stack plus accepted-baseline drift comparison and advisory repair-proposal governance. Main GitHub Actions run [41298101837](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101837) passed all 367 software tests after merge. The matched main Maintenance Canary run [41298101823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101823) recorded `HEALTHY`, preserved artifact `maintenance-canary-41298101823` (artifact ID `13079632919`), found no drift from the accepted Nov 1 baseline, and emitted `NO_REPAIR_NEEDED / HEALTHY_STABLE`. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
