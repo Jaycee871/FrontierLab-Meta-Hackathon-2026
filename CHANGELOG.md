@@ -1,3 +1,13 @@
+## 2026-11-01 · v0.39 live Meta Muse via Hugging Face Inference Providers (PR, unmerged; depends on #34)
+
+- Added `frontierlab/hf_providers.py`: a live research backend that calls `meta-models/Muse-Spark-Open-816B-A42B` (primary, provider Baseten) and falls back automatically to `meta-models/Muse-Glimmer-30B` on provider error, timeout or invalid output, through the OpenAI-compatible router `https://router.huggingface.co/v1`. Strict timeouts (60 s / 45 s), no SDK retries, `max_tokens=1536`, temperature 0.2.
+- New sidebar mode **Live Meta Muse (via Hugging Face)**. It is available only when `HF_TOKEN`, `HF_INFERENCE_TOKEN` or `HUGGINGFACEHUB_API_TOKEN` is set (otherwise it is labelled unavailable with the reason), and the Run button needs an explicit consent checkbox. Synthetic remains the default mode.
+- Cost and abuse guards: 6 attempts per session and a per-process daily cap (`FRONTIERLAB_HF_DAILY_CALL_CAP`, default 60), fallbacks included; at most 2 abstracts truncated to 3,000 characters; oversized prompts rejected before any request.
+- Every output still goes through the unchanged fail-closed verbatim evidence gate and the human review gates. If both models fail, the app shows a plain message that points to the recorded replay.
+- A receipt per call (model ID, provider when reported, timestamps, usage, latency, status) is added to the provenance export. The token is never logged, exported or shown.
+- Replaced the "Paid Meta Platforms API is disabled" sidebar line and the README lines with accurate wording; the direct billed Meta Model API adapter remains off. Added a "Built with Meta" section to `docs/SUBMISSION_COPY.md`, `models:` tags to the Space README and `docs/HF_INFERENCE_PROVIDERS_MUSE.md`.
+- No live call was made from this path while building it; no live result is recorded. Tests: **398 passed** locally (378 + 20 new in `tests/test_hf_providers.py`, all with a mocked OpenAI client).
+
 ## 2026-11-01 · v0.38 judge path + recorded real M2 replay (PR, unmerged)
 
 - Added `frontierlab/recorded_replay.py`: a zero-model-call, zero-network replay of the recorded, researcher-reviewed real M2 core (recorded 2026-10-28, Asia/Taipei). It rebuilds the run from `docs/runs/*_20261028.json` and recomputes traceability, Research Operating Interface status, planning readiness, the evidence graph and the trajectory graph with the same code used for live runs. `scripts/trace_coverage_recorded.py`, `scripts/planning_readiness_recorded.py` and `scripts/nim_research_continue_trial.py` now share this loader.

@@ -26,6 +26,8 @@ from frontierlab.literature_pilot import load_dataset, reviewer_packet
 from frontierlab.recorded_gate_ablation import run_recorded_pilot
 from frontierlab.pilot_review import canonicalize_review_upload, labels_from_review_packet
 from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
+from frontierlab import hf_providers
+from frontierlab.hf_providers import HFProvidersUnavailable
 from frontierlab.recorded_replay import build_recorded_replay
 from frontierlab.evidence import europepmc_error_message
 from frontierlab.version import __version__
@@ -411,7 +413,10 @@ with st.expander("Start here · " + REPLAY_TITLE, expanded=True):
 
 LOCAL_MODE = "Live Europe PMC + local Meta model"
 NIM_MODE = "Live Europe PMC + Meta via NVIDIA"
-MODE_LABELS = ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)", LOCAL_MODE, NIM_MODE]
+HF_MODE = hf_providers.MODE_LABEL
+MODE_LABELS = ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)", LOCAL_MODE, NIM_MODE,
+               HF_MODE]
+hf_available, hf_reason = hf_providers.live_status()
 
 
 def _mode_display(label: str) -> str:
@@ -419,17 +424,26 @@ def _mode_display(label: str) -> str:
         return label + " · not available on the public Space"
     if label == NIM_MODE and not research_enabled():
         return label + " · not available on the public Space (backend not enabled)"
+    if label == HF_MODE and not hf_available:
+        return label + " · unavailable (no Hugging Face token configured)"
     return label
 
 
 nim_authorized = False
+hf_consent = False
+hf_session_budget = st.session_state.setdefault("hf_session_budget", hf_providers.SessionBudget())
 with st.sidebar:
     st.header("Engine")
     mode_label = st.radio("Evidence mode", MODE_LABELS, index=0, format_func=_mode_display)
     mode = "demo" if mode_label.startswith("Synthetic") else "live"
     use_local_meta = mode_label == LOCAL_MODE
     use_nim = mode_label == NIM_MODE
-    st.info("Paid Meta Platforms API is disabled. Choose a local model or the optional NVIDIA-hosted Meta backend.")
+    use_hf = mode_label == HF_MODE
+    st.info(
+        "Live Meta Muse calls are available through Hugging Face Inference Providers when the app "
+        "owner has configured a token, with per-session and daily call caps. The direct billed "
+        "Meta Model API adapter remains off."
+    )
     if mode == "demo":
         st.caption("Synthetic mode: invented publications only (see the banner in the main panel).")
     elif use_nim:
@@ -439,6 +453,20 @@ with st.sidebar:
             "Allow this research question and retrieved abstracts to be sent to NVIDIA for Meta inference",
             value=False, disabled=not research_enabled(), key="nim_research_consent")
         st.caption(f"Remaining shared model calls in this server process: {remaining_calls()} / 8. Failed requests consume the allowance; no automatic retries.")
+    elif use_hf:
+        if not hf_available:
+            st.warning("Live Meta Muse is unavailable: " + hf_reason + ".")
+        hf_consent = st.checkbox(hf_providers.CONSENT_LABEL, value=False,
+                                 disabled=not hf_available, key="hf_live_consent")
+        st.caption(
+            f"Primary: {hf_providers.PRIMARY_MODEL} · automatic fallback: {hf_providers.FALLBACK_MODEL}. "
+            f"Session calls left: {hf_session_budget.remaining} / {hf_session_budget.limit} · "
+            f"server calls left today: {hf_providers.daily_budget().remaining} / {hf_providers.daily_budget().limit}. "
+            "Every attempt, including a fallback, counts. At most "
+            f"{hf_providers.MAX_LIVE_ABSTRACTS} abstracts, each truncated to "
+            f"{hf_providers.MAX_ABSTRACT_CHARS} characters. Quotes still pass the verbatim evidence gate "
+            "and every step stays human-gated."
+        )
     elif use_local_meta:
         if on_public_space:
             st.warning("Not available on the public Space: this mode needs a Muse Glimmer checkpoint served on the same machine. A run here fails safely without any model call.")
@@ -455,24 +483,34 @@ if mode == "demo":
 with st.form("research_form"):
     question = st.text_area("Scientific research question", value=QUESTION, height=85)
     query = st.text_input("Europe PMC search query", value=QUERY, disabled=(mode == "demo"))
-    n = st.slider("Maximum live abstracts", 1, 2 if use_nim else 10,
-                  2 if use_nim else 4, disabled=(mode == "demo"))
-    run_clicked = st.form_submit_button("Run research audit", width="stretch",
-                                       type="primary", disabled=use_nim and not nim_authorized)
+    capped = use_nim or use_hf
+    n = st.slider("Maximum live abstracts", 1, 2 if capped else 10,
+                  2 if capped else 4, disabled=(mode == "demo"))
+    hf_blocked = use_hf and not (hf_available and hf_consent and hf_session_budget.remaining > 0)
+    run_clicked = st.form_submit_button("Run research audit", width="stretch", type="primary",
+                                       disabled=(use_nim and not nim_authorized) or hf_blocked)
 
 if run_clicked:
     with st.spinner("Retrieving evidence and applying verification gates..."):
         try:
             st.session_state.pop("frontier_result", None)
             st.session_state.pop("frontier_model_client", None)
+            client = None
             client = (NvidiaResearchClient(authorized=nim_authorized) if use_nim else
+                      hf_providers.HFMuseResearchClient(authorized=hf_consent,
+                                                        session_budget=hf_session_budget) if use_hf else
                       OpenWeightClient() if use_local_meta else None)
             st.session_state["frontier_model_client"] = client
             result = run_research(question, query, mode=mode, model_client=client, max_papers=n)
             st.session_state["frontier_result"] = result
+        except HFProvidersUnavailable as exc:
+            st.error(str(exc))
         except Exception as exc:
             friendly = europepmc_error_message(exc)
             st.error(friendly if friendly else f"Research run failed: {type(exc).__name__}: {exc}")
+        if use_hf and client is not None and "frontier_result" not in st.session_state:
+            with st.expander("Live Meta Muse call receipts (failed run)"):
+                st.json(client.provenance)
 
 with st.expander("Published-literature pilot · 12 cases awaiting researcher annotation"):
     pilot = load_dataset()
@@ -576,6 +614,8 @@ result = st.session_state.get("frontier_result")
 if result:
     active_client = st.session_state.get("frontier_model_client")
     if result.backend == "nvidia-nim" and (not use_nim or not nim_authorized):
+        active_client = None
+    if result.backend == hf_providers.BACKEND and (not use_hf or not hf_consent or not hf_available):
         active_client = None
     stats = summary(result)
     a, b, c, d = st.columns(4)
@@ -774,6 +814,8 @@ if result:
                             continue_after_review(result, model_client=active_client)
                             st.session_state["frontier_result"]=result
                             st.success("Provisional human-gated draft created; scientific validation is still needed.")
+                        except HFProvidersUnavailable as exc:
+                            st.error(str(exc))
                         except (ValueError, PermissionError, RuntimeError) as exc:
                             st.error(f"Synthesis remains blocked: {type(exc).__name__}: {exc}")
     band("III · Spaceland — hypothesis, evaluation and plan", "cube")
@@ -851,5 +893,5 @@ if result:
     st.download_button("Download complete provenance JSON", data=export_json(result),
                        file_name="frontierlab_audit.json", mime="application/json")
 else:
-    st.info("Begin with the synthetic audit or Europe PMC. Model-backed research requires a configured local server or an explicitly enabled NVIDIA backend.")
+    st.info("Begin with the synthetic audit or Europe PMC. Model-backed research requires live Meta Muse via Hugging Face (owner-configured token and your consent), a configured local server or an explicitly enabled NVIDIA backend.")
 

@@ -55,6 +55,16 @@ Core implementation:
 
 Optional adapters for Muse Spark Open, Llama 3.1 8B, Muse2-230M, Liquid d1-2B and DetectorScope are intentionally separated from the verified Glimmer path.
 
+## Built with Meta
+
+| Model ID | Reached through | What it does in FrontierLab | Status |
+| --- | --- | --- | --- |
+| `meta-models/Muse-Spark-Open-816B-A42B` | Hugging Face Inference Providers router (`https://router.huggingface.co/v1`, OpenAI-compatible), provider `baseten` | **Primary** live model for Evidence Extraction, then (after researcher claim review) Adversarial Skeptic and Hypothesis; also Method Evaluation suggestions and the approved draft plan | Implemented in v0.39 (`frontierlab/hf_providers.py`); **no live result recorded yet** |
+| `meta-models/Muse-Glimmer-30B` | Same router, provider chosen automatically (Together, DeepInfra or Featherless AI) | **Automatic fallback** when Muse Spark Open returns a provider error, times out or gives invalid output | Implemented in v0.39; **no live result recorded yet** |
+| `meta/muse-glimmer-30b` (Muse Glimmer 30B) | NVIDIA NIM | Earlier recorded real runs on 2026-10-28 (Asia/Taipei): smoke test, strict JSON, 12-case pilot batch, 2 Evidence Extraction calls and the reviewed Skeptic → Hypothesis continuation; these drive the zero-call recorded replay | Recorded (`docs/runs/*_20261028.json`) |
+
+Guards on the live path: explicit per-session consent, a 6-call per-session cap and a per-process daily cap (`FRONTIERLAB_HF_DAILY_CALL_CAP`, default 60) that count every attempt including fallbacks, strict timeouts with no SDK retries, `max_tokens=1536`, temperature 0.2, at most two abstracts truncated to 3,000 characters, and a receipt per call (model ID, provider when reported, timestamps, token usage, latency, status) in the provenance export. Model outputs never bypass the fail-closed verbatim evidence gate or the human review gates. The direct billed Meta Model API adapter remains off.
+
 ## Meta-model usage that is genuinely demonstrated
 
 The repository preserves several dated genuine Meta Muse Glimmer / NVIDIA NIM executions, including:
@@ -120,7 +130,7 @@ Latest deployed baseline: **v0.38**. v0.38 main source `64c7aa4458d677c5048b07fb
 - M2 data/code/environment reproducibility checks remain open;
 - Stage 5 Planning is not approved or generated unless the researcher explicitly authorizes it;
 - no wet-lab experiment has been executed or scientifically validated by FrontierLab;
-- optional Spark/d1/Llama/Muse2/DetectorScope adapters do not imply live model runs.
+- optional Spark/d1/Llama/Muse2/DetectorScope adapters do not imply live model runs; the v0.39 live Hugging Face Muse Spark Open / Muse Glimmer path is implemented but has no recorded live result yet.
 
 ## Autonomy statement
 

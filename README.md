@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.38 · Status reviewed: November 1, 2026 (Asia/Taipei)**
+**Codebase: v0.39 (branch `feat/live-muse-hf-providers`, unmerged; main is v0.38) · Status reviewed: November 1, 2026 (Asia/Taipei)**
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [研究操作介面（繁中）](docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Maintenance canary](docs/MAINTENANCE_CANARY.md) · [Repair proposals](docs/MAINTENANCE_REPAIR_PROPOSAL.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -134,6 +134,8 @@ No keys are needed for the synthetic demo or Europe PMC retrieval. Model-backed 
 
 | Variable | Used for |
 | --- | --- |
+| `HF_TOKEN` (or `HF_INFERENCE_TOKEN`, `HUGGINGFACEHUB_API_TOKEN`; first non-empty wins) | Enables the **Live Meta Muse (via Hugging Face)** mode: Meta Muse Spark Open with Muse Glimmer fallback through Hugging Face Inference Providers, billed to the token owner. Needs the "Make calls to Inference Providers" permission. Never logged or shown. |
+| `FRONTIERLAB_HF_DAILY_CALL_CAP` | Per-process daily cap for live Hugging Face calls (default 60; every attempt, including fallbacks, counts). The per-session cap is fixed at 6. |
 | `NVIDIA_API_KEY` | NVIDIA NIM access to Meta Muse Glimmer. |
 | `FRONTIERLAB_NIM_RESEARCH=YES` | Owner opt-in that enables the **Meta via NVIDIA** research mode. |
 | `SPRINGER_NATURE_META_API_KEY` | Springer Nature Meta API v2. This is a bibliographic metadata API, not Meta Platforms model inference. `META_API_KEY` is accepted as a fallback. |
@@ -190,11 +192,11 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
 - **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
-Details: [HF deployment](docs/HF_DEPLOYMENT.md) · [HF Space setup](docs/HF_PRO_SETUP.md) · [local / open-weight inference notes](docs/META_OPENWEIGHT_HF_CPU.md).
+Details: [live Meta Muse via HF Inference Providers](docs/HF_INFERENCE_PROVIDERS_MUSE.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [HF Space setup](docs/HF_PRO_SETUP.md) · [local / open-weight inference notes](docs/META_OPENWEIGHT_HF_CPU.md).
 
 ## Evaluation and recorded results
 
-All numbers below come from dated run records in [`docs/runs/`](docs/runs) and the linked GitHub Actions runs. No billed Meta Platforms Model API was used.
+All numbers below come from dated run records in [`docs/runs/`](docs/runs) and the linked GitHub Actions runs. They were recorded through NVIDIA NIM; the direct billed Meta Platforms Model API was not used. No results from the new live Hugging Face Inference Providers path (v0.39) have been recorded yet.
 
 | Component | Recorded result | Scope / limits |
 | --- | --- | --- |
@@ -222,7 +224,7 @@ See [agentic-AI landscape and self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) for
 - Human labels are review decisions, not independently adjudicated scientific ground truth.
 - Conflict detection depends on model-supplied claim keys, which can be wrong.
 - Outputs are research drafts. FrontierLab has no validated clinical or wet-lab execution capability.
-- Paid Meta Model API access is disabled.
+- Live Meta Muse calls are available through Hugging Face Inference Providers when the Space owner configures a token, with a 6-call per-session cap and a per-process daily cap. The direct billed Meta Model API adapter (`frontierlab/meta.py`) remains off. No live result from this path is recorded yet.
 
 See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md), [method evaluation and planning](docs/METHOD_EVALUATION.md), and [process metrics](docs/PROCESS_METRICS.md), [trajectory audit graph](docs/TRAJECTORY_GRAPH.md), [gate ablation](docs/GATE_ABLATION.md), and [planning readiness](docs/PLANNING_READINESS.md).
 
@@ -231,7 +233,7 @@ See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human rev
 FrontierLab deliberately separates model capability from scientific governance:
 
 - **Meta Muse Glimmer 30B** — verified stable research backend with recorded real inference through NVIDIA NIM.
-- **Meta Muse Spark Open** — optional frontier multimodal backend with provider-specific capability enforcement. Together is the preferred first live Spark path for full text/image/audio/video serverless; Fireworks is retained as an image-first serverless fallback.
+- **Meta Muse Spark Open** (`meta-models/Muse-Spark-Open-816B-A42B`) — primary model of the live **Hugging Face Inference Providers** mode (`frontierlab/hf_providers.py`, router `https://router.huggingface.co/v1`, provider Baseten), with `meta-models/Muse-Glimmer-30B` as automatic fallback on provider error, timeout or invalid output. Every output still passes the verbatim evidence gate and the human review gates. The separate provider-neutral adapter (`frontierlab/muse_spark_open.py`) keeps provider-specific capability enforcement. That adapter's Together (full multimodal) and Fireworks (image-first) provider configurations are not used by the app's live mode.
 - **Liquid AI d1-2B** — optional lightweight typed multimodal evidence verifier for localization/extraction/decision signals.
 - **Muse Research Muse2-230M** — optional edge/on-device structured worker for metadata normalization, log-to-JSON, schema formatting and routing. It is explicitly blocked from scientific entailment or clinical truth judgments.
 - **Meta Llama 3.1 8B Instruct** — optional medium-size local general-purpose baseline / worker. It can run the same bounded structured JSON contract for controlled comparisons, but every receipt is marked baseline-only and cannot bypass scientific governance.
