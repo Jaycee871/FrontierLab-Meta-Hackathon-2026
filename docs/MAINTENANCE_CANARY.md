@@ -116,3 +116,29 @@ After the central version guard and canary trigger scope were synchronized, Fron
 - Promotion allowed by software canary: **true**
 
 The canary trigger scope now includes FrontierLab package code, `app.py`, scripts, tests, dependency files and the canary workflow itself, in addition to the daily schedule.
+
+
+## Phase 2 advisory proposal
+
+The canary now also emits `maintenance_repair_proposal.json`.
+
+It compares the current environment with the human-controlled Nov 1 healthy baseline and returns one of:
+
+- `NO_REPAIR_NEEDED`;
+- `DRIFT_REVIEW_REQUIRED`;
+- `REPAIR_PROPOSAL_READY`.
+
+The first integrated Phase 2 canary was GitHub Actions run **41297646386**, artifact **13079788250**. It passed **367 software tests**, matched the accepted dependency fingerprint, detected no package/requirements/Python drift, and emitted:
+
+```text
+status = NO_REPAIR_NEEDED
+classification = HEALTHY_STABLE
+automatic_repair_enabled = false
+automatic_code_edit_enabled = false
+automatic_dependency_edit_enabled = false
+automatic_commit_enabled = false
+automatic_merge_enabled = false
+automatic_deploy_enabled = false
+```
+
+See [Advisory maintenance repair proposals](MAINTENANCE_REPAIR_PROPOSAL.md).

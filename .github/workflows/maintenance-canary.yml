@@ -53,6 +53,16 @@ jobs:
           if [ -z "$code" ]; then code=99; fi
           python -m scripts.maintenance_canary --pytest-exit-code "$code" --pytest-log pytest.log --trigger "${{ github.event_name }}" > maintenance_health.json
 
+      - name: Build advisory repair proposal
+        if: always()
+        shell: bash
+        run: |
+          python -m scripts.maintenance_repair_proposal \
+            --health maintenance_health.json \
+            --baseline docs/runs/maintenance_baseline_20261101.json \
+            --pytest-log pytest.log \
+            > maintenance_repair_proposal.json
+
       - name: Upload maintenance evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -60,6 +70,7 @@ jobs:
           name: maintenance-canary-${{ github.run_id }}
           path: |
             maintenance_health.json
+            maintenance_repair_proposal.json
             pytest.log
           if-no-files-found: error
           retention-days: 30

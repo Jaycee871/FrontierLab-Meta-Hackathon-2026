@@ -11,14 +11,14 @@ The judging story is deliberately narrow:
 
 Use a revision that has passed CI and note the exact source SHA.
 
-Current software baseline at preparation time:
+Current software candidate at preparation time:
 
-- FrontierLab v0.37
-- main source: `c0c9f7ff7938b1e2814236101e6b82e3080ea863`
-- **361 tests passed** on main (run 41293104079)
-- Maintenance Canary: **HEALTHY** on the latest scheduled pre-doc main (run 41292083692; 361 tests)
+- FrontierLab v0.38 candidate
+- version-synchronized source: `244a364e854649901ee20769e987dce69f8fb1c4`
+- **367 software tests passed** (run 41297817348)
+- Maintenance Canary: **HEALTHY / HEALTHY_STABLE**, no accepted-baseline drift, advisory result **NO_REPAIR_NEEDED** (run 41297817372; artifact 13079758522)
 - Stage 5 status: **readiness complete; planning not approved or generated**
-- latest deployed v0.37 baseline: source `c0c9f7ff…` → Space commit `1509bcfc…` (run 41293111832), receipt **BUILD_PENDING**. After the final docs freeze merges, redeploy final main and verify runtime health + rendered source marker before recording
+- currently deployed HF baseline is still v0.37: source `c0c9f7ff…` → Space commit `1509bcfc…` (run 41293111832), receipt **BUILD_PENDING**. After v0.38 merges, redeploy final main and verify runtime health + rendered source marker before recording
 
 Do not call a recorded result "live". Do not call researcher review "independent gold". Do not call software tests model accuracy.
 

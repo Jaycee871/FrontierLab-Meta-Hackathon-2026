@@ -388,7 +388,7 @@ if result:
                 {
                     "Control area": "Maintainability",
                     "Status": roi["maintainability"]["status"],
-                    "Detail": "Scheduled dependency canary, version metadata and error taxonomy are active; autonomous repair and environment rebuild are not implemented.",
+                    "Detail": "Scheduled dependency canary and advisory repair proposals are active; proposals cannot edit code/dependencies, commit, merge or deploy. Autonomous repair and environment rebuild are not implemented.",
                 },
             ],
             hide_index=True,

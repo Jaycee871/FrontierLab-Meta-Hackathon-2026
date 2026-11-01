@@ -71,11 +71,13 @@ These are model-execution records, not claims of scientific accuracy.
 
 Software verification and scientific evaluation are reported separately.
 
-Current software baseline:
+Current software candidate baseline:
 
-- v0.37;
-- **361 tests on current main** (GitHub Actions run 41293104079);
-- scheduled/on-change Maintenance Canary implemented and passing on the latest scheduled run;
+- v0.38;
+- **367 software tests passed** on the version-synchronized feature branch (GitHub Actions run 41297817348);
+- matched Maintenance Canary run 41297817372 is **HEALTHY**, with no accepted-baseline dependency/environment drift and advisory status **NO_REPAIR_NEEDED / HEALTHY_STABLE**;
+- automatic repair, dependency/code edits, commit, merge and deploy remain disabled;
+- after merge, final main CI and HF redeployment still need to be checked before claiming exact release parity;
 - no normal test invokes a model.
 
 Recorded 12-case Glimmer gate replay:
@@ -141,7 +143,7 @@ The extension has three pillars:
 - **Provenance:** preserve an inspectable chain from source/data through tool/model/version/parameters/human actions to the resulting scientific artefact.
 - **Governance:** define permissions, approval boundaries, sensitive-data access, audit responsibilities and accountability for agent-assisted research.
 
-The current FrontierLab prototype now implements substantial provenance/human-governance controls plus Phase 1 maintainability: a scheduled dependency/environment canary with regression testing, dependency fingerprints and quarantine-on-failure. Autonomous repair/rebuild, institutional role-based access control and patient-data governance remain future research.
+The current FrontierLab prototype now implements substantial provenance/human-governance controls plus two bounded maintainability layers: a scheduled dependency/environment canary with regression testing, fingerprints and quarantine-on-failure, followed by an advisory repair proposal that compares against a human-controlled healthy baseline. The proposal can recommend bounded remediation and re-validation steps but cannot edit code/dependencies, commit, merge or deploy. Autonomous repair/rebuild, institutional role-based access control and patient-data governance remain future research.
 
 This three-pillar framework is a FrontierLab / Pack Kwan Low extension inspired by the shift from static papers to operable research agents; it is not presented as a result already established by Paper2Agent.
 

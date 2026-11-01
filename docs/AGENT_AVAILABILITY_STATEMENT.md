@@ -84,7 +84,7 @@ The goal of an Agent Availability statement is to make an interactive research a
 ## FrontierLab example — current prototype
 
 - Agent/project name: FrontierLab
-- Current software version: v0.37 candidate
+- Current software version: v0.38 candidate
 - Domain demonstration: biomedical literature-to-hypothesis/method-planning workflow
 - Verified Meta-backed path: Meta Muse Glimmer 30B via NVIDIA NIM
 - Human approvals required: claim review, method selection, Stage 5 planning, plan-step approval
@@ -93,7 +93,8 @@ The goal of an Agent Availability statement is to make an interactive research a
 - Human intervention log: available
 - Process metrics/error taxonomy: available
 - Dependency/environment canary: **implemented** (regression testing + provenance + quarantine policy)
-- Autonomous repair: **not implemented**
+- Advisory repair proposal: **implemented** (baseline drift comparison + bounded remediation suggestions)
+- Autonomous repair / dependency edits / code edits / commit / merge / deploy: **not permitted**
 - Institutional patient-data access controls: **not implemented**
 - Scientific accuracy / wet-lab validation: **not established**
 

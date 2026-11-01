@@ -91,7 +91,10 @@ def test_operating_status_exposes_process_not_chain_of_thought():
     assert status["schema"] == "frontierlab.research-operating-status.v1"
     assert status["traceability"]["source_trace_coverage"] == 1.0
     assert status["traceability"]["strict_extracted_coverage"] == 1.0
+    assert status["maintainability"]["advisory_repair_proposal_enabled"] is True
+    assert status["maintainability"]["accepted_baseline_is_human_controlled"] is True
     assert status["maintainability"]["automatic_repair_enabled"] is False
+    assert status["maintainability"]["status"] == "CANARY_MONITORED_ADVISORY_REPAIR"
     assert status["governance"]["plan_generated"] is True
     assert status["scientific_accuracy_measured"] is False
     assert "chain-of-thought" in status["note"]
