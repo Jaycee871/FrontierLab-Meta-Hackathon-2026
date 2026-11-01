@@ -109,7 +109,7 @@ The repository also includes a manual same-model/same-cases two-call prompt-abla
 
 ## Deployment state
 
-Latest HF source deployment: current main `c0c9f7ff7938b1e2814236101e6b82e3080ea863` → HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` (run 41293111832), after 361 tests passed. The deployment receipt is `HF_SOURCE_COMMITTED_BUILD_PENDING`, so this is source-upload evidence rather than an independently verified post-build runtime-health claim.
+Latest deployed v0.37 baseline: GitHub source `c0c9f7ff7938b1e2814236101e6b82e3080ea863` → HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` (run 41293111832), after 361 tests passed. The receipt is `HF_SOURCE_COMMITTED_BUILD_PENDING`, so this is source-upload evidence rather than a post-build runtime-health claim. The final submission-doc merge changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
 
 ## What remains deliberately incomplete
 
