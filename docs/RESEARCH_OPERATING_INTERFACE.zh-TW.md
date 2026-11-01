@@ -252,17 +252,18 @@ FrontierLab 已經在 `frontierlab/traceability.py` 實作了兩個追蹤指標�
 
 ### 相關方法
 
-簡報中列出三篇相關方法論文：
+簡報中列出三篇相關方法論文。以下書目資料已於 2026-11-01（Asia/Taipei）以 Crossref 的 DOI 紀錄核對：
 
-- **AlphaGenome**（Nature 2026）
-- **Scanpy**（Genome Biology 2018）
-- **TISSUE**（Nature Methods 2024）
+- **AlphaGenome**：Avsec, Ž., Latysheva, N., Cheng, J. *et al.* Advancing regulatory variant effect prediction with AlphaGenome. *Nature* **649**(8099), 1206–1218 (2026). https://doi.org/10.1038/s41586-025-10014-0
+- **Scanpy**：Wolf, F. A., Angerer, P. & Theis, F. J. SCANPY: large-scale single-cell gene expression data analysis. *Genome Biology* **19**, 15 (2018). https://doi.org/10.1186/s13059-017-1382-0
+- **TISSUE**：Sun, E. D., Ma, R., Navarro Negredo, P., Brunet, A. & Zou, J. TISSUE: uncertainty-calibrated prediction of single-cell spatial transcriptomics improves downstream analyses. *Nature Methods* **21**(3), 444–454 (2024). https://doi.org/10.1038/s41592-024-02184-y
 
 ### 程式碼與部署
 
-- **Paper2Agent** 的程式碼公開在 GitHub。
-- AlphaGenome、Scanpy 和 TISSUE 的代理都部署在 Hugging Face。
+- **Paper2Agent** 的程式碼公開在 GitHub：https://github.com/jmiao24/Paper2Agent
+- AlphaGenome、Scanpy 和 TISSUE 的 Paper2Agent 代理（MCP server）部署在 Hugging Face：
+  - AlphaGenome：https://huggingface.co/spaces/Paper2Agent/alphagenome_mcp
+  - Scanpy：https://huggingface.co/spaces/Paper2Agent/scanpy_mcp
+  - TISSUE：https://huggingface.co/spaces/Paper2Agent/tissue_mcp
 
-以上依簡報原文列出，本文沒有另外查證。
-
-> **待補：** 上面三篇論文的完整書目資料（作者、卷期、頁碼、DOI）和各代理的網址還沒有填入。本文刻意不自行補上，避免寫出錯的引用。Paper2Agent 本身的書目見 [Information Management extension](INFORMATION_MANAGEMENT_EXTENSION.md#references)。
+代理網址與 Paper2Agent 程式碼網址取自 [Information Management extension](INFORMATION_MANAGEMENT_EXTENSION.md#references) 的參考資料；Paper2Agent 本身的完整書目也見該處。以上文獻是 Paper2Agent 作者的案例研究（【文獻】），不是 FrontierLab 的成果。
