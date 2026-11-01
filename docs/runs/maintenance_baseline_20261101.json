@@ -1,0 +1,33 @@
+{
+  "schema": "frontierlab.maintenance-baseline.v1",
+  "recorded_at_utc": "2026-11-01T09:12:46Z",
+  "source_run_id": 41292083692,
+  "source_artifact_id": 13077402513,
+  "source_sha": "192793824d9ee3c5632a61b0240d1ba2b3c5576e",
+  "frontierlab_version": "0.37",
+  "status": "HEALTHY",
+  "environment": {
+    "python_version": "3.11.17",
+    "installed_packages": {
+      "openai": "2.54.0",
+      "pytest": "9.2.0",
+      "requests": "2.34.2",
+      "streamlit": "1.66.1"
+    },
+    "requirements_sha256": {
+      "requirements-dev.txt": "8636f9ab1a075be9f3039e2a6471837259c4f36b625bcaf7a3d9a1edd2419c6d",
+      "requirements.txt": "b0172a87e188b04aa926d3fbdaa108e359ece60f1897a44cb78b80f882fcd308"
+    },
+    "dependency_fingerprint": "ac61d837d7b2c80e5f0e6e3cb1fe6a0f5cb42705a52dba18fa2dee71f68d4b34"
+  },
+  "regression_test": {
+    "passed": 361,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "software_tests_only": true,
+    "scientific_accuracy_measured": false
+  },
+  "note": "Accepted healthy maintainability baseline from scheduled canary run 41292083692. Updating this baseline is a human-controlled repository change."
+}
