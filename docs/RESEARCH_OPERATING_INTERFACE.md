@@ -32,7 +32,7 @@ This document is a concept architecture, not a claim that every module below is 
 | Evidence Trace | claim-to-source provenance | implemented through Evidence Graph + measured Trace Coverage |
 | Process Trace | who/what happened during execution | implemented through Trajectory Audit Graph + human events |
 | Governance | permissions, approvals, accountability | partial prototype through human gates, budgets and audit rules |
-| Maintainability | failure detection, regression, rebuild/repair | scheduled maintenance canary + dependency fingerprint + quarantine policy implemented; autonomous repair/rebuild remains future work |
+| Maintainability | failure detection, regression, rebuild/repair | scheduled maintenance canary + dependency fingerprint + quarantine policy + advisory repair proposals implemented; autonomous repair/rebuild remains disabled |
 
 ## Relationship to the current five-stage pipeline
 
@@ -117,9 +117,11 @@ The canary records:
 - HEALTHY / QUARANTINE_REQUIRED status;
 - whether promotion is permitted.
 
-Automatic repair, environment rebuild, commit and merge remain disabled. A failing canary preserves its evidence and requires human-approved repair before promotion.
+The canary also emits an advisory repair proposal by comparing the current health record with a human-controlled accepted baseline. It can distinguish stable health, healthy drift and several failure classes, but it cannot edit code/dependencies, commit, merge or deploy.
 
-See [Maintenance canary](MAINTENANCE_CANARY.md).
+Automatic repair and environment rebuild remain disabled. A failing canary preserves its evidence and requires human-approved repair before promotion.
+
+See [Maintenance canary](MAINTENANCE_CANARY.md) and [Advisory maintenance repair proposals](MAINTENANCE_REPAIR_PROPOSAL.md).
 
 ## Design principle
 
