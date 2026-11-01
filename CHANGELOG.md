@@ -1,3 +1,14 @@
+## 2026-11-01 · Submission-facing freeze sync — docs only
+
+- Synchronized README, demo runbook, submission copy, release checklist and final-sprint status to current **v0.37 / 361-test** main.
+- Recorded the latest exact HF source deployment: main `c0c9f7ff7938b1e2814236101e6b82e3080ea863` -> Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` via run 41293111832 after 361 tests.
+- Kept the deployment claim narrow: the receipt remains `HF_SOURCE_COMMITTED_BUILD_PENDING`, so post-build runtime health is not asserted until separately verified.
+- Added the measured Research Operating Interface result to submission-facing copy: recorded M2 core **4/4 source-traceable (100%) / 2/4 fully EXTRACTED (50%)**, explicitly a provenance metric rather than accuracy.
+- Added the executed Maintenance Canary to the submission story and final sprint; latest scheduled pre-doc main canary run 41292083692 passed 361 tests.
+- Updated the Information Management extension: Trace Coverage is now implemented/measured, and maintainability Phase 1 (detection + provenance + quarantine) is executed; controlled fault injection / bounded repair remain future work.
+- Rechecked the official public event pages on 2026-11-01: project submissions remain due Nov 4 at 9:00 PM ET (Nov 5 at 10:00 AM Asia/Taipei).
+- No model call, Stage 5 authorization, scientific result or central version changed.
+
 ## 2026-11-01 · Paper2Agent citation and Agent Availability attribution — docs only
 
 - Completed the Paper2Agent reference in `docs/INFORMATION_MANAGEMENT_EXTENSION.md`: *Nature* 658(8138), 1272–1280 (2026), DOI, arXiv:2509.06917 preprint, GitHub repository, and the three case-study MCP server Spaces (AlphaGenome, Scanpy, TISSUE).
