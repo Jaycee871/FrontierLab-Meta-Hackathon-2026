@@ -14,7 +14,12 @@ Safety and cost guards:
 - a hard per-session call cap (default 6) and a per-process daily cap
   (``FRONTIERLAB_HF_DAILY_CALL_CAP``, default 60) count every HTTP attempt,
   including fallbacks; a capped request is never sent;
-- strict timeouts, ``max_retries=0``, small ``max_tokens``, low temperature;
+- strict timeouts, ``max_retries=0``, a bounded ``max_tokens``, low temperature;
+- both Muse models are reasoning models: hidden reasoning tokens are counted
+  against ``max_tokens`` before any answer text is produced, so the budget must
+  leave room for reasoning *and* the JSON answer (v0.40; 1536 left the answer
+  empty with ``finish_reason="length"`` on both models). Reasoning text is never
+  used as an answer, stored or shown; only its token count is receipted;
 - source abstracts are truncated to a bounded prefix before sending (a quote
   from the prefix is still a verbatim excerpt of the full abstract, and the
   unchanged fail-closed quote gate in ``audit.validate_claims`` checks it
@@ -48,8 +53,8 @@ FALLBACK_PROVIDER = None  # router auto-selection among live Glimmer providers
 
 # (role in chain, HF model id, pinned provider or None, timeout seconds, family key)
 ATTEMPTS = (
-    ("primary", PRIMARY_MODEL, PRIMARY_PROVIDER, 60.0, "muse-spark"),
-    ("fallback", FALLBACK_MODEL, FALLBACK_PROVIDER, 45.0, "muse-glimmer"),
+    ("primary", PRIMARY_MODEL, PRIMARY_PROVIDER, 90.0, "muse-spark"),
+    ("fallback", FALLBACK_MODEL, FALLBACK_PROVIDER, 75.0, "muse-glimmer"),
 )
 
 TOKEN_ENV_VARS = ("HF_TOKEN", "HF_INFERENCE_TOKEN", "HUGGINGFACEHUB_API_TOKEN")
@@ -61,7 +66,9 @@ MAX_LIVE_ABSTRACTS = 2
 MAX_ABSTRACT_CHARS = 3000
 MAX_QUESTION_CHARS = 1000
 MAX_PROMPT_CHARS = 16000
-MAX_TOKENS = 1536
+# Reasoning + answer budget. Measured 2026-11-01 on one real extraction prompt:
+# Muse Spark Open used 2,975 completion tokens (2,600 reasoning), Muse Glimmer 3,269.
+MAX_TOKENS = 8192
 TEMPERATURE = 0.2
 
 ROLES = {
@@ -223,14 +230,52 @@ def parse_json_object(text: str) -> dict:
     return answer
 
 
+def _count(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+
+
 def _safe_usage(usage: Any) -> dict:
+    """Token counts only (prompt/completion/total, plus reasoning when reported)."""
     if usage is None:
         return {}
     if not isinstance(usage, dict):
+        details = getattr(usage, "completion_tokens_details", None)
         usage = {k: getattr(usage, k, None)
                  for k in ("prompt_tokens", "completion_tokens", "total_tokens")}
-    return {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens")
-            if isinstance(usage.get(k), int) and not isinstance(usage.get(k), bool) and usage[k] >= 0}
+        usage["completion_tokens_details"] = (
+            {"reasoning_tokens": getattr(details, "reasoning_tokens", None)}
+            if details is not None and not isinstance(details, dict) else details)
+    out = {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens")
+           if _count(usage.get(k))}
+    details = usage.get("completion_tokens_details")
+    if isinstance(details, dict) and _count(details.get("reasoning_tokens")):
+        out["reasoning_tokens"] = details["reasoning_tokens"]
+    return out
+
+
+def _has_reasoning(message: Any) -> bool:
+    """True when the provider returned separate reasoning text (never read further)."""
+    extra = getattr(message, "model_extra", None)
+    fields = [getattr(message, "reasoning_content", None), getattr(message, "reasoning", None)]
+    if isinstance(extra, dict):
+        fields += [extra.get("reasoning_content"), extra.get("reasoning")]
+    return any(isinstance(f, str) and f.strip() for f in fields)
+
+
+class ReasoningBudgetExhausted(ValueError):
+    """The reasoning model spent max_tokens before producing any answer text."""
+
+
+class IncompleteOutput(ValueError):
+    """Truncated, empty or non-final answer text."""
+
+
+class InvalidJSONOutput(ValueError):
+    """Answer text was not one strict JSON object."""
+
+
+class ModelIdentityMismatch(ValueError):
+    """The provider reported a model outside the requested family."""
 
 
 def _bounded_payload(payload: dict) -> tuple[dict, bool]:
@@ -368,7 +413,10 @@ class HFMuseResearchClient:
             content = choice.message.content
             finish_reason = choice.finish_reason
             reported = getattr(completion, "model", None)
+            has_content = isinstance(content, str) and bool(content.strip())
             receipt.update(
+                answer_text_present=has_content,
+                reasoning_text_present=_has_reasoning(choice.message),
                 provider_reported=served_by if isinstance(served_by, str) and served_by else "NOT_REPORTED",
                 reported_model=reported if isinstance(reported, str) and reported else "NOT_REPORTED",
                 finish_reason=finish_reason if finish_reason in ("stop", "length") else "other",
@@ -379,10 +427,15 @@ class HFMuseResearchClient:
             identity = _identity(reported, family)
             receipt["model_identity"] = identity
             if identity == "MISMATCH":
-                raise ValueError("Provider reported an unexpected model identity")
-            if finish_reason != "stop" or not isinstance(content, str) or not content.strip():
-                raise ValueError("Model output incomplete")
-            answer = parse_json_object(content)
+                raise ModelIdentityMismatch("Provider reported an unexpected model identity")
+            if finish_reason == "length" and not has_content:
+                raise ReasoningBudgetExhausted("Reasoning used the whole token budget; no answer")
+            if finish_reason != "stop" or not has_content:
+                raise IncompleteOutput("Model output incomplete")
+            try:
+                answer = parse_json_object(content)
+            except ValueError:
+                raise InvalidJSONOutput("Model response was not one JSON object") from None
         except Exception as exc:  # fail closed; never surface message text
             receipt["status"] = "FAILED_FALLBACK_NEXT" if has_next else "FAILED"
             receipt["error"] = _error_label(exc)
@@ -393,3 +446,20 @@ class HFMuseResearchClient:
         receipt["status"] = "JSON_OBJECT_RETURNED"
         self.model = model
         return answer
+
+
+def failure_summary(provenance: dict | None) -> list[str]:
+    """One plain line per failed attempt (model, provider, error class, latency). No message text."""
+    lines = []
+    for r in (provenance or {}).get("receipts", []):
+        if not isinstance(r, dict) or not str(r.get("status", "")).startswith("FAILED"):
+            continue
+        provider = r.get("provider_reported") or r.get("provider_requested") or "auto"
+        line = (f"{r.get('chain_position', '?')}: {r.get('requested_model', '?')} via {provider} · "
+                f"{r.get('error', 'unknown error')}")
+        if r.get("finish_reason"):
+            line += f" · finish_reason={r['finish_reason']}"
+        if isinstance(r.get("elapsed_seconds"), (int, float)):
+            line += f" · {r['elapsed_seconds']:.1f} s"
+        lines.append(line)
+    return lines

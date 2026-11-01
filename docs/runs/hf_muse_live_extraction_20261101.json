@@ -1,0 +1,171 @@
+{
+  "record_type": "live_hf_inference_providers_muse_extraction",
+  "recorded_date_taipei": "2026-11-01",
+  "recorded_time_taipei": "23:18",
+  "codebase_version": "0.40",
+  "code_state": "branch fix/live-muse-reasoning (base main 5958770) working tree with the v0.40 reasoning-budget fix, run locally (not on the Space)",
+  "entry_point": "frontierlab.pipeline.run_research(mode='live', max_papers=1) with frontierlab.hf_providers.HFMuseResearchClient(authorized=True, session_budget=SessionBudget(2)); default app question and Europe PMC query",
+  "source": "Provenance export of the run (frontierlab.reporting.export_json); no credentials, no reasoning text and no full abstract text included",
+  "receipt": {
+    "schema_version": 1,
+    "question": "How might pH-dependent protein binder affinity be evaluated reproducibly?",
+    "query": "(pH dependent antibody binding) AND (histidine OR engineering)",
+    "paper": {
+      "paper_id": "MED:42959777",
+      "title": "Targeting BIGH3 in selected solid tumors through a pH-Dependent antibody engineering strategy.",
+      "year": "2026",
+      "url": "https://doi.org/10.1016/j.bbrep.2026.102769"
+    },
+    "backend": "hf-inference-providers",
+    "model": "meta-models/Muse-Spark-Open-816B-A42B",
+    "inference": {
+      "provider": "Hugging Face Inference Providers",
+      "backend": "hf-inference-providers",
+      "router_url": "https://router.huggingface.co/v1",
+      "primary_model": "meta-models/Muse-Spark-Open-816B-A42B",
+      "primary_provider_requested": "baseten",
+      "fallback_model": "meta-models/Muse-Glimmer-30B",
+      "fallback_provider_requested": "auto",
+      "session_call_cap": 2,
+      "daily_call_cap": 60,
+      "max_tokens": 8192,
+      "temperature": 0.2,
+      "max_abstract_chars": 3000,
+      "attempted_calls": 1,
+      "receipts": [
+        {
+          "role": "Evidence Extraction Agent",
+          "chain_position": "primary",
+          "requested_model": "meta-models/Muse-Spark-Open-816B-A42B",
+          "router_model_string": "meta-models/Muse-Spark-Open-816B-A42B:baseten",
+          "provider_requested": "baseten",
+          "started_at_utc": "2026-11-01T15:18:50.170685+00:00",
+          "input_sha256": "11286e8324237d5fe1c4726238819f596b039b42ef8eec2137969ce521ca6c65",
+          "input_abstract_truncated": false,
+          "max_tokens": 8192,
+          "temperature": 0.2,
+          "timeout_seconds": 90.0,
+          "answer_text_present": true,
+          "reasoning_text_present": true,
+          "provider_reported": "baseten",
+          "reported_model": "meta-models/muse-spark-open",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 810,
+            "completion_tokens": 3477,
+            "total_tokens": 4287,
+            "reasoning_tokens": 3182
+          },
+          "output_sha256": "9035cc063607546b656895727457365cd1218631d928d84482cec45aa50be308",
+          "model_identity": "MATCHED",
+          "finished_at_utc": "2026-11-01T15:18:58.159638+00:00",
+          "elapsed_seconds": 7.989,
+          "status": "JSON_OBJECT_RETURNED"
+        }
+      ],
+      "billed_to": "Hugging Face account of the project owner",
+      "direct_meta_model_api_used": false,
+      "scientific_outputs_independently_verified": false
+    },
+    "status": "JSON_OBJECT_RETURNED",
+    "decision": "INSUFFICIENT_EVIDENCE",
+    "audit": {
+      "verified_claims": [
+        {
+          "paper_id": "MED:42959777",
+          "claim_key": "kd_ec50_acidic_vs_neutral_ph_affinity_evaluation",
+          "stance": "supports",
+          "statement": "Abstract reports BIGH3 antibody binding and affinity was evaluated using KD or EC50 measurements under TME-mimicking acidic conditions versus physiological pH, suggesting comparative KD/EC50 assessment as a method to evaluate pH-dependent binder affinity for this target.",
+          "limitation": "Proof-of-concept study limited to BIGH3; abstract notes direct in vivo PK, biodistribution and tumor accumulation studies remain to be performed and provides no quantitative reproducibility metrics.",
+          "evidence_quote": "without detectable loss of antibody binding and affinity (Equilibrium dissociation constant (KD) or half-maximal effective concentration (EC50))",
+          "passage_matched": true
+        },
+        {
+          "paper_id": "MED:42959777",
+          "claim_key": "biophysical_in_vitro_ph_dependent_engagement",
+          "stance": "supports",
+          "statement": "Abstract indicates pH-dependent target engagement was assessed via biophysical analyses for stability/manufacturability combined with in vitro studies demonstrating differential binding under acidic TME-mimicking versus neutral pH conditions.",
+          "limitation": "Findings described as proof-of-concept with in vitro data and single colorectal cancer mouse model; abstract explicitly states in vivo PK/biodistribution validation is still needed.",
+          "evidence_quote": "Biophysical analyses confirmed preserved stability and manufacturability profiles, while in vitro studies demonstrated pH-dependent target engagement",
+          "passage_matched": true
+        }
+      ],
+      "rejected_claims": [],
+      "warnings": [
+        "Passage grounding checked against cited abstracts; semantic entailment is NOT verified. Researcher review of methods and full text is required.",
+        "Fewer than two distinct sources with validated source IDs; hypothesis generation stopped."
+      ]
+    },
+    "log": [
+      {
+        "time_utc": "2026-11-01T15:18:50.170410+00:00",
+        "role": "Retriever",
+        "status": "COMPLETE",
+        "note": "Retrieved 1 indexed publications with abstracts"
+      },
+      {
+        "time_utc": "2026-11-01T15:18:58.159990+00:00",
+        "role": "Extraction Agent",
+        "status": "COMPLETE",
+        "note": "2 proposed; 2 abstract-quoted; 0 rejected"
+      },
+      {
+        "time_utc": "2026-11-01T15:18:58.160000+00:00",
+        "role": "Audit Gate",
+        "status": "BLOCKED",
+        "note": "Insufficient distinct sourced claims for synthesis"
+      }
+    ]
+  },
+  "diagnosis": {
+    "symptom": "v0.39 live mode on the HF Space: Run consumed 2 calls (primary + fallback) and showed no result.",
+    "root_cause": "Both Muse models are reasoning models. Reasoning tokens count against max_tokens; with max_tokens=1536 both spent the whole budget on reasoning (finish_reason=length, answer content null/empty), which the client correctly rejected as incomplete output, so both attempts failed.",
+    "evidence_calls": [
+      {
+        "model": "meta-models/Muse-Spark-Open-816B-A42B:baseten",
+        "max_tokens": 1536,
+        "http": 200,
+        "provider_reported": "baseten",
+        "finish_reason": "length",
+        "answer_content": "null",
+        "reasoning_tokens": 1533,
+        "completion_tokens": 1536,
+        "latency_seconds": 3.84
+      },
+      {
+        "model": "meta-models/Muse-Glimmer-30B",
+        "max_tokens": 1536,
+        "http": 200,
+        "provider_reported": "deepinfra",
+        "finish_reason": "length",
+        "answer_content": "empty string",
+        "completion_tokens": 1536,
+        "latency_seconds": 7.5
+      },
+      {
+        "model": "meta-models/Muse-Spark-Open-816B-A42B:baseten",
+        "max_tokens": 8192,
+        "http": 200,
+        "provider_reported": "baseten",
+        "finish_reason": "stop",
+        "answer": "valid JSON, 2 claims",
+        "reasoning_tokens": 2600,
+        "completion_tokens": 2975,
+        "latency_seconds": 7.39
+      },
+      {
+        "model": "meta-models/Muse-Glimmer-30B",
+        "max_tokens": 8192,
+        "http": 200,
+        "provider_reported": "deepinfra",
+        "finish_reason": "stop",
+        "answer": "valid JSON, 1 claim",
+        "completion_tokens": 3269,
+        "latency_seconds": 17.1
+      }
+    ],
+    "input_sha256_all_evidence_calls": "11286e8324237d5fe1c4726238819f596b039b42ef8eec2137969ce521ca6c65",
+    "note": "All four diagnostic calls used the same Evidence Extraction prompt the app builds (same input_sha256 as this receipt) with a 180 s observation timeout."
+  },
+  "scope": "One real Europe PMC abstract, one live Evidence Extraction call. Both quotes passed the verbatim evidence gate; semantic entailment is NOT verified and researcher review is pending. One source is below the two-source threshold, so no skeptic, hypothesis or plan was generated. Not a benchmark or scientific validation."
+}

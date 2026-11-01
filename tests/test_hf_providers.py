@@ -140,8 +140,8 @@ def test_success_path_uses_spark_and_records_receipt():
     assert answer["hypotheses"]
     call = fake.calls[0]
     assert call["model"] == PRIMARY_MODEL + ":baseten"
-    assert call["max_tokens"] == hf_providers.MAX_TOKENS <= 2048
-    assert call["temperature"] <= 0.3 and call["timeout"] == 60.0 and call["stream"] is False
+    assert call["max_tokens"] == hf_providers.MAX_TOKENS and 4096 <= hf_providers.MAX_TOKENS <= 8192
+    assert call["temperature"] <= 0.3 and call["timeout"] == 90.0 and call["stream"] is False
     receipt = obj.provenance["receipts"][0]
     assert receipt["status"] == "JSON_OBJECT_RETURNED"
     assert receipt["requested_model"] == PRIMARY_MODEL and receipt["provider_reported"] == "baseten"
@@ -373,3 +373,103 @@ def test_ui_session_cap_disables_run(monkeypatch):
     assert btn(app, "Run research audit").disabled
     assert any("Session calls left: 0 / 6" in c.value for c in app.sidebar.caption)
     assert not app.exception
+
+
+# ------------------------------------------------- reasoning-model regressions (v0.40)
+
+REASONING_SECRET = "HIDDEN_CHAIN_OF_THOUGHT_MARKER"
+
+
+class ReasoningOpenAI:
+    """Mimics the 2026-11-01 live failure: reasoning eats max_tokens, content is null/empty."""
+
+    def __init__(self, content=None, finish="length", reasoning_tokens=None, reported=None):
+        self.calls = []
+        self.content, self.finish, self.reasoning_tokens, self.reported = (
+            content, finish, reasoning_tokens, reported)
+        self.chat = SimpleNamespace(completions=SimpleNamespace(
+            with_raw_response=SimpleNamespace(create=self._create)))
+
+    def _create(self, **kwargs):
+        self.calls.append(kwargs)
+        base = kwargs["model"].split(":", 1)[0]
+        message = SimpleNamespace(content=self.content,
+                                  model_extra={"reasoning_content": REASONING_SECRET})
+        tokens = kwargs["max_tokens"] if self.reasoning_tokens is None else self.reasoning_tokens
+        completion = SimpleNamespace(
+            model=self.reported or base,
+            choices=[SimpleNamespace(finish_reason=self.finish, message=message)],
+            usage=SimpleNamespace(prompt_tokens=810, completion_tokens=kwargs["max_tokens"],
+                                  total_tokens=810 + kwargs["max_tokens"],
+                                  completion_tokens_details=SimpleNamespace(reasoning_tokens=tokens)),
+        )
+        return SimpleNamespace(headers={"x-inference-provider": "baseten"}, parse=lambda: completion)
+
+
+@pytest.mark.parametrize("content", [None, "", "   "])
+def test_reasoning_budget_exhaustion_is_labelled_and_never_uses_reasoning(content):
+    fake = ReasoningOpenAI(content=content)
+    obj = make(fake)
+    with pytest.raises(HFProvidersUnavailable):
+        obj.json("Evidence Extraction Agent", "Mock task", {"question": "q"})
+    assert len(fake.calls) == 2
+    for r in obj.provenance["receipts"]:
+        assert r["error"] == "ReasoningBudgetExhausted" and r["finish_reason"] == "length"
+        assert r["answer_text_present"] is False and r["reasoning_text_present"] is True
+        assert r["usage"]["reasoning_tokens"] == hf_providers.MAX_TOKENS
+    assert REASONING_SECRET not in json.dumps(obj.provenance)
+
+
+def test_reasoning_then_json_answer_succeeds_and_receipts_reasoning_tokens():
+    fake = ReasoningOpenAI(content='{"claims": []}', finish="stop", reasoning_tokens=2600)
+    obj = make(fake)
+    assert obj.json("Evidence Extraction Agent", "Mock task", {"question": "q"}) == {"claims": []}
+    receipt = obj.provenance["receipts"][0]
+    assert receipt["status"] == "JSON_OBJECT_RETURNED" and receipt["usage"]["reasoning_tokens"] == 2600
+    assert receipt["answer_text_present"] and receipt["reasoning_text_present"]
+    assert REASONING_SECRET not in json.dumps(obj.provenance)
+
+
+def test_budget_leaves_room_for_reasoning_and_answer():
+    # Measured live 2026-11-01: 2,975 (Spark) and 3,269 (Glimmer) completion tokens per extraction.
+    assert hf_providers.MAX_TOKENS >= 2 * 3269
+    timeouts = {a[0]: a[3] for a in hf_providers.ATTEMPTS}
+    assert timeouts == {"primary": 90.0, "fallback": 75.0}
+
+
+@pytest.mark.parametrize("content,finish,label", [
+    ("not json at all", "stop", "InvalidJSONOutput"),
+    ('{"claims": [', "length", "IncompleteOutput"),
+])
+def test_other_failures_get_distinct_labels(content, finish, label):
+    obj = make(ReasoningOpenAI(content=content, finish=finish))
+    with pytest.raises(HFProvidersUnavailable):
+        obj.json("Hypothesis Agent", "Mock task", {})
+    assert {r["error"] for r in obj.provenance["receipts"]} == {label}
+
+
+def test_failure_summary_lines_are_plain_and_secret_free():
+    obj = make(ReasoningOpenAI())
+    with pytest.raises(HFProvidersUnavailable):
+        obj.json("Hypothesis Agent", "Mock task", {})
+    lines = hf_providers.failure_summary(obj.provenance)
+    assert len(lines) == 2
+    assert lines[0].startswith("primary: " + PRIMARY_MODEL + " via baseten · ReasoningBudgetExhausted")
+    assert "finish_reason=length" in lines[1] and lines[1].startswith("fallback: " + FALLBACK_MODEL)
+    assert hf_providers.failure_summary(None) == [] and hf_providers.failure_summary({}) == []
+    assert all(DUMMY_TOKEN not in line and REASONING_SECRET not in line for line in lines)
+
+
+def test_ui_failed_run_shows_attempt_reasons_and_open_receipts(monkeypatch):
+    fake = ReasoningOpenAI()
+    app = configure_ui(monkeypatch, fake)
+    next(c for c in app.checkbox if c.key == "hf_live_consent").check().run()
+    btn(app, "Run research audit").click().run()
+    assert not app.exception
+    assert any(e.value == hf_providers.BOTH_FAILED_MESSAGE for e in app.error)
+    captions = [c.value for c in app.caption if c.value.startswith("Failed attempt · ")]
+    assert len(captions) == 2 and all("ReasoningBudgetExhausted" in c for c in captions)
+    panel = next(e for e in app.expander if e.label == "Live Meta Muse call receipts (failed run)")
+    assert panel.proto.expanded
+    text = all_text(app)
+    assert DUMMY_TOKEN not in text and REASONING_SECRET not in text

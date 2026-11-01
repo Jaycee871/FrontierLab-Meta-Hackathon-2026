@@ -1,3 +1,11 @@
+## 2026-11-01 · v0.40 fix live Meta Muse reasoning budget (PR, unmerged)
+
+- Root cause of the failed live run on the Space: both Muse models are reasoning models, and hidden reasoning tokens count against `max_tokens`. With `max_tokens=1536` Muse Spark Open (Baseten) and Muse Glimmer (DeepInfra) both used the whole budget on reasoning and returned `finish_reason="length"` with no answer text, so every extraction step failed (HTTP 200, 3.8 s and 7.5 s; nothing hung).
+- `frontierlab/hf_providers.py`: `max_tokens` 1536 → 8192, timeouts 60/45 s → 90/75 s. Receipts now record `reasoning_tokens`, `answer_text_present` and `reasoning_text_present`; reasoning text is never used as an answer, stored or shown. Failures are labelled `ReasoningBudgetExhausted`, `IncompleteOutput`, `InvalidJSONOutput` or `ModelIdentityMismatch`.
+- `app.py`: a failed live run shows one plain line per attempt (model, provider, error, finish reason, latency) and opens the receipts panel; the sidebar says a call can take up to 90 s.
+- One real live extraction recorded locally: `docs/runs/hf_muse_live_extraction_20261101.json` (Muse Spark Open via Baseten, 8.0 s, 3,477 completion tokens of which 3,182 reasoning; 2 claims, both passed the verbatim quote gate; researcher review pending; one source, so synthesis correctly stopped). Includes the four diagnostic calls.
+- Version 0.39 → 0.40. Tests: **407 passed** locally (398 + 9 new in `tests/test_hf_providers.py`). Not deployed to the Space.
+
 ## 2026-11-01 · v0.39 live Meta Muse via Hugging Face Inference Providers (PR, unmerged; depends on #34)
 
 - Added `frontierlab/hf_providers.py`: a live research backend that calls `meta-models/Muse-Spark-Open-816B-A42B` (primary, provider Baseten) and falls back automatically to `meta-models/Muse-Glimmer-30B` on provider error, timeout or invalid output, through the OpenAI-compatible router `https://router.huggingface.co/v1`. Strict timeouts (60 s / 45 s), no SDK retries, `max_tokens=1536`, temperature 0.2.
