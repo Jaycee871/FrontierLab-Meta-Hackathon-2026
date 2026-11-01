@@ -340,7 +340,7 @@ See [Maintainability benchmark — proposed experiment](MAINTAINABILITY_BENCHMAR
 
 Modern journals increasingly request data- and code-availability statements.
 
-The idea of an additional **Agent Availability** reporting section comes from the Paper2Agent authors, not from FrontierLab. In the Discussion of the Paper2Agent paper (arXiv:2509.06917v2, §3) they write:
+The idea of an additional **Agent Availability** reporting section comes from the Paper2Agent authors, not from FrontierLab. In the Discussion of the published Paper2Agent paper (Miao et al., *Nature* 658, 1272–1280, 2026; the same sentence appears in the arXiv:2509.06917v2 preprint) they write:
 
 > “Looking forward, just as many journals now require data and code availability sections, we anticipate the emergence of an ‘agent availability’ section that specifies whether and how the contribution has been embodied as an interactive agent.”
 
@@ -387,6 +387,16 @@ passive research artefact -> operable paper agent
 FrontierLab IM extension:
 operable research agents -> maintainable + traceable + governable research infrastructure
 ```
+
+### What the Paper2Agent paper does and does not cover
+
+To keep the boundary of this extension precise, the published *Nature* version of Paper2Agent was checked against the three pillars:
+
+- **Maintainability.** The paper notes in one sentence of its Discussion that "paper agents require ongoing maintenance as upstream codebases and dependencies evolve", and treats this as an inherent cost of publishing executable research. It does not develop maintenance into a measurement, canary, quarantine policy or management framework.
+- **Provenance.** The term does not appear in the main text. Evidence tracing, content-hash identifiers, quote anchoring and trace-coverage metrics are not part of the paper.
+- **Governance.** The term does not appear in the main text. Security, intellectual-property and attribution challenges are mentioned once and deferred to the Supplementary Note; human approval gates, institutional authorization and responsibility boundaries are not developed.
+
+The paper also does not propose a Research Operating Interface. These elements — the three-pillar framework, its research questions, and the Research Operating Interface — are the Information Management extension proposed by Pack Kwan Low in this project. Paper2Agent is cited as the prior work that made the question possible, not as their source.
 
 ## References
 
