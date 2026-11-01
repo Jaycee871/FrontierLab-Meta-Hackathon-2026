@@ -27,15 +27,17 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 
 | Deliverable | Status | Evidence / limitation |
 | --- | --- | --- |
-| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.35 candidate; 348-test branch suite passed after Stage-5 readiness UI integration. Test count is software coverage, not model accuracy. |
+| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.37 current main; **361 tests passed** on run 41293104079. Test count is software coverage, not model accuracy. |
 | Manuscript-to-abstract source matching | SOFTWARE VERIFIED | Valid DOI and verbatim excerpt checks are not semantic entailment |
 | Human review gate, version-bound annotations | SOFTWARE + RECORDED REVIEW VERIFIED | Two real core claims have explicit researcher SUPPORTED judgments; these are not independent expert gold labels |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
-| HF public Streamlit Space | v0.16 DEPLOYED AND VERIFIED RUNNING | CPU Basic frontend is revision-bound and shows the completed human review; NIM remains owner-disabled there |
+| HF public Streamlit Space | CURRENT v0.37 SOURCE UPLOADED; RUNTIME RECHECK REQUIRED | Main `c0c9f7ff…` uploaded by run 41293111832 to Space commit `1509bcfc…` after 361 tests. Receipt is `HF_SOURCE_COMMITTED_BUILD_PENDING`, so post-build runtime/health/source-marker verification remains required. NIM remains owner-disabled there. |
 | Authentic Meta Muse Glimmer response | MULTIPLE RECORDED NIM RUNS | Synthetic smoke, strict JSON, 12-case batch and two-call core extraction recorded; no scientific accuracy claim |
 | Human-reviewed live continuation | EXECUTED AND RECORDED | Run 40574846326 completed the bounded skeptic → hypothesis continuation; artifact provenance validated and exact outputs preserved |
 | Researcher method selection | COMPLETED | M2 selected; M1 retained as comparator; canonical evaluation bound to exact live hypotheses and human rationale stored separately |
 | M2 planning readiness | COMPLETED, NOT AUTHORIZED | Zero-call packet validates current context and carries data/code/environment gaps plus SPR/avidity/search-bias/replication obligations. `planning_approved=false`; no plan generated. |
+| Research Operating Interface | IMPLEMENTED / MEASURED | Recorded M2 core: 4/4 source-traceable artifacts (100%) and 2/4 fully EXTRACTED (50%); provenance metric, not accuracy. |
+| Maintainability canary | EXECUTED / SCHEDULED | Daily/on-change canary records dependency fingerprint + regression results and quarantines failure. Latest scheduled run 41292083692 passed 361 tests. Autonomous repair remains disabled. |
 | Gate-ablation comparison | PARTIALLY EXECUTED | Recorded 12-case post-generation replay is implemented: 8 decisive / 4 abstaining outputs, 0 new abstentions from the source/quote post gate, 8 human reviews pending. A true same-model/same-cases two-call prompt-level workflow is prepared but not yet executed. No accuracy claim. |
 | Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
 | Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
@@ -128,7 +130,7 @@ This is not a claim that Paper2Agent or another cited paper already validated th
 
 Post-submission priorities:
 
-- run the proposed maintainability benchmark using controlled dependency/API/environment failures;
+- extend the already executed maintenance canary into controlled dependency/API/environment fault-injection and bounded-repair experiments;
 - extend provenance from paper/model/human records to code/data/environment artefacts;
 - study institutional tool/data authorization and responsibility boundaries;
 - evaluate a Research Operating Interface that manages Paper / Code / Data, MCP-style tools/resources/prompts, Evidence Trace, Governance and Maintainability;
