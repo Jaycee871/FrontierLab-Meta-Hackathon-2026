@@ -1,7 +1,7 @@
 # FrontierLab — release & submission checklist
 
 **Target public release:** current v0.37 main plus final submission-facing documentation sync.  
-**Public event deadline rechecked 2026-10-30 Asia/Taipei:** Nov 4, 2026 at 9:00 PM ET = **Nov 5, 2026 at 10:00 AM Asia/Taipei**. Organizer dates may change.
+**Public event deadline rechecked 2026-11-01 Asia/Taipei:** Nov 4, 2026 at 9:00 PM ET = **Nov 5, 2026 at 10:00 AM Asia/Taipei**. Organizer dates may change.
 
 Official public references:
 
