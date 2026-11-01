@@ -171,7 +171,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.37 candidate suite has **361 tests**. It covers the v0.36 research workflow/provenance/governance stack plus maintainability health records, dependency fingerprinting, regression-result parsing and quarantine policy. The final v0.37 maintenance canary (GitHub Actions run [41064836504](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41064836504)) recorded `HEALTHY`, passed all 361 software tests and preserved artifact `maintenance-canary-41064836504` (artifact ID `12982122350`). Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.38 candidate suite has **367 tests**. It covers the v0.37 research/provenance/governance/maintenance stack plus accepted-baseline drift comparison and advisory repair-proposal governance. GitHub Actions run [41297817348](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41297817348) passed all 367 software tests. The matched v0.38 Maintenance Canary run [41297817372](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41297817372) recorded `HEALTHY`, preserved artifact `maintenance-canary-41297817372` (artifact ID `13079758522`), found no drift from the accepted Nov 1 baseline, and emitted `NO_REPAIR_NEEDED / HEALTHY_STABLE`. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
