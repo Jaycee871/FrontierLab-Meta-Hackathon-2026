@@ -1,3 +1,14 @@
+## 2026-11-01 · v0.38 — Advisory maintenance repair proposals
+
+- Added `frontierlab/maintenance_repair.py` to compare current canary evidence with a human-controlled healthy baseline and classify stable health, compatible drift or likely failure classes.
+- Accepted baseline is recorded in `docs/runs/maintenance_baseline_20261101.json`, sourced from scheduled canary run 41292083692 / artifact 13077402513 (v0.37, 361/361 tests, dependency fingerprint `ac61d837...`).
+- Added deterministic advisory categories including missing dependency, dependency compatibility, interface/schema drift, external-resource/network failure, dependency/environment drift, test-environment error and software regression.
+- Added `scripts/maintenance_repair_proposal.py`; the Maintenance Canary now uploads `maintenance_health.json`, `maintenance_repair_proposal.json` and `pytest.log`.
+- First integrated Phase 2 canary: run **41297646386**, artifact **13079788250**, **367 tests passed**, no baseline drift, proposal status **NO_REPAIR_NEEDED / HEALTHY_STABLE**.
+- Repair proposals are advisory only. Automatic dependency/code edits, repair, commit, merge and deploy are all disabled; baseline updates and promotion require human review/approval.
+- Research Operating Interface reports the advisory capability separately from autonomous repair.
+- No scientific-accuracy claim, model call or Stage 5 authorization was added.
+
 ## 2026-11-01 · Submission-facing freeze sync — docs only
 
 - Synchronized README, demo runbook, submission copy, release checklist and final-sprint status to current **v0.37 / 361-test** main.
