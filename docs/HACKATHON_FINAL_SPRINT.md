@@ -27,7 +27,7 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 
 | Deliverable | Status | Evidence / limitation |
 | --- | --- | --- |
-| Python research evidence/provenance pipeline | SOFTWARE VERIFIED ON v0.38 CANDIDATE | **367 tests passed** on version-synchronized run 41297817348. Merge-to-main CI remains to be rechecked. Test count is software coverage, not model accuracy. |
+| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.38 main; **367 tests passed** after merge on run 41298101837. Test count is software coverage, not model accuracy. |
 | Manuscript-to-abstract source matching | SOFTWARE VERIFIED | Valid DOI and verbatim excerpt checks are not semantic entailment |
 | Human review gate, version-bound annotations | SOFTWARE + RECORDED REVIEW VERIFIED | Two real core claims have explicit researcher SUPPORTED judgments; these are not independent expert gold labels |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
@@ -37,7 +37,7 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 | Researcher method selection | COMPLETED | M2 selected; M1 retained as comparator; canonical evaluation bound to exact live hypotheses and human rationale stored separately |
 | M2 planning readiness | COMPLETED, NOT AUTHORIZED | Zero-call packet validates current context and carries data/code/environment gaps plus SPR/avidity/search-bias/replication obligations. `planning_approved=false`; no plan generated. |
 | Research Operating Interface | IMPLEMENTED / MEASURED | Recorded M2 core: 4/4 source-traceable artifacts (100%) and 2/4 fully EXTRACTED (50%); provenance metric, not accuracy. |
-| Maintainability canary + advisory repair proposal | EXECUTED / SCHEDULED | v0.38 canary run 41297817372 passed 367 tests, matched the accepted Nov 1 dependency baseline, and emitted NO_REPAIR_NEEDED / HEALTHY_STABLE. Failures remain quarantined; repair proposals are advisory only and cannot edit/commit/merge/deploy. |
+| Maintainability canary + advisory repair proposal | EXECUTED / SCHEDULED | Main v0.38 canary run 41298101823 passed 367 tests, matched the accepted Nov 1 dependency baseline, and emitted NO_REPAIR_NEEDED / HEALTHY_STABLE; artifact 13079632919. Failures remain quarantined; repair proposals are advisory only and cannot edit/commit/merge/deploy. |
 | Gate-ablation comparison | PARTIALLY EXECUTED | Recorded 12-case post-generation replay is implemented: 8 decisive / 4 abstaining outputs, 0 new abstentions from the source/quote post gate, 8 human reviews pending. A true same-model/same-cases two-call prompt-level workflow is prepared but not yet executed. No accuracy claim. |
 | Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
 | Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
