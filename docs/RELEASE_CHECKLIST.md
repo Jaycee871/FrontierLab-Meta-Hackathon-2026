@@ -21,7 +21,7 @@ Official public references:
 
 ## B. Hugging Face deployment
 
-**Current deployment reference (2026-11-01):** the deployed baseline is still v0.37 source `c0c9f7ff7938b1e2814236101e6b82e3080ea863`, uploaded by run 41293111832 to HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` after 361 tests. Receipt status: `HF_SOURCE_COMMITTED_BUILD_PENDING`. v0.38 is now on main: run 41298101837 passed 367 software tests and matched main canary run 41298101823 is HEALTHY / HEALTHY_STABLE with artifact 13079632919. It is **not yet the Space baseline**. Redeploy final main before claiming exact Space/main SHA parity, then verify runtime health and the rendered source marker.
+**Current deployment reference (2026-11-01):** the deployed baseline is **v0.38**. v0.38 main source `64c7aa4458d677c5048b07fbc1d99a5f734dcf3d` was uploaded by run [41300778009](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41300778009) (2026-11-01 19:11 Asia/Taipei) to HF Space commit `0cca430e625faedbab24562728a4354b99085065` after **367 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.38` and that source SHA. Main CI run 41298101837 passed 367 software tests and matched main canary run 41298101823 is HEALTHY / HEALTHY_STABLE with artifact 13079632919. Any later merge needs one more manual deploy before claiming exact Space/main SHA parity; then re-verify runtime health and the rendered source marker.
 
 The deployment workflow is manual (`workflow_dispatch`).
 

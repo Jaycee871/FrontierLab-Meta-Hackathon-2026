@@ -9,7 +9,7 @@ import json
 
 from frontierlab.evidence_graph import build_evidence_graph
 from frontierlab.traceability import source_audit_summary, trace_coverage
-from scripts.planning_readiness_recorded import load_recorded_m2_run
+from frontierlab.recorded_replay import load_recorded_m2_run
 
 
 def run() -> dict:

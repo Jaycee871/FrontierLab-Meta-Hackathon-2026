@@ -1,3 +1,15 @@
+## 2026-11-01 · v0.38 judge path + recorded real M2 replay (PR, unmerged)
+
+- Added `frontierlab/recorded_replay.py`: a zero-model-call, zero-network replay of the recorded, researcher-reviewed real M2 core (recorded 2026-10-28, Asia/Taipei). It rebuilds the run from `docs/runs/*_20261028.json` and recomputes traceability, Research Operating Interface status, planning readiness, the evidence graph and the trajectory graph with the same code used for live runs. `scripts/trace_coverage_recorded.py`, `scripts/planning_readiness_recorded.py` and `scripts/nim_research_continue_trial.py` now share this loader.
+- New first view in `app.py`: a 3-step **Judge path** box and an expanded **"Replay recorded real M2 case (no model call)"** panel with Research Operating Interface, Planning readiness, Evidence graph, Trajectory and recorded Skeptic → Hypothesis tabs. Rendered values are computed, not hard-coded: **100% source trace / 50% strict EXTRACTED / 9 planning obligations / 0 model calls in replay**. Tampered recorded files or a selection that authorizes planning fail closed.
+- Synthetic mode: strict-coverage caption explains 0% is by design (fixture has no evidence quotes) and points to the recorded 100% / 50% replay. Repeated SYNTHETIC/FICTIONAL warnings are consolidated into one banner; the disclosures remain as captions and labels. The three fictional fixture panels are grouped into one expander with tabs.
+- Sidebar labels modes that cannot work on the public Space (local model server on the Space; NVIDIA mode when the backend is not enabled). The paid-API wording is unchanged.
+- Europe PMC HTTP/network failures now show a friendly message instead of a raw `HTTPError`.
+- Pinned `streamlit==1.66.1` (the version recorded by the accepted maintenance baseline) and replaced deprecated `use_container_width` with `width="stretch"`. The Maintenance Canary will report the `requirements.txt` hash change against the human-controlled baseline until the owner accepts a new baseline.
+- `frontierlab.__version__` now re-exports `frontierlab.version.__version__` (was a stale `0.1.0`).
+- Synced stale deployment/version references to the verified v0.38 deployment (run 41300778009, Space commit `0cca430e…`) and fixed the stale `304 tests` "current main" reference. Added the full Paper2Agent citation to README Credits.
+- Tests: **378 passed** locally (367 + 11 new in `tests/test_recorded_replay.py`). No model call, Stage 5 authorization, scientific result or central version changed.
+
 ## 2026-11-01 · v0.38 main validation sync — docs only
 
 - PR #32 merged the advisory maintainability layer to main at feature merge `145603bf61c82c26528d5322045e6f2b9b85e5e6`.

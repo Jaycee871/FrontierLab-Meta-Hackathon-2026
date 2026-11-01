@@ -77,7 +77,7 @@ Current software baseline:
 - **367 software tests passed** after merge (GitHub Actions run 41298101837);
 - matched main Maintenance Canary run 41298101823 is **HEALTHY**, with no accepted-baseline dependency/environment drift and advisory status **NO_REPAIR_NEEDED / HEALTHY_STABLE**;
 - automatic repair, dependency/code edits, commit, merge and deploy remain disabled;
-- HF redeployment and runtime verification still need to be completed before claiming exact Space/main release parity;
+- v0.38 is the deployed HF Space baseline: source `64c7aa4…` → Space commit `0cca430e…` (run 41300778009, receipt `HF_SOURCE_COMMITTED_BUILD_PENDING`; the public Space API later reported runtime `RUNNING` with a v0.38 `deployment.json`). Any later merge needs one more manual deploy for exact Space/main parity;
 - no normal test invokes a model.
 
 Recorded 12-case Glimmer gate replay:
@@ -111,7 +111,7 @@ The repository also includes a manual same-model/same-cases two-call prompt-abla
 
 ## Deployment state
 
-Latest deployed v0.37 baseline: GitHub source `c0c9f7ff7938b1e2814236101e6b82e3080ea863` → HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` (run 41293111832), after 361 tests passed. The receipt is `HF_SOURCE_COMMITTED_BUILD_PENDING`, so this is source-upload evidence rather than a post-build runtime-health claim. The final submission-doc merge changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
+Latest deployed baseline: **v0.38**. v0.38 main source `64c7aa4458d677c5048b07fbc1d99a5f734dcf3d` was uploaded by run [41300778009](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41300778009) (2026-11-01 19:11 Asia/Taipei) to HF Space commit `0cca430e625faedbab24562728a4354b99085065` after **367 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.38` and that source SHA. Any later merge changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
 
 ## What remains deliberately incomplete
 

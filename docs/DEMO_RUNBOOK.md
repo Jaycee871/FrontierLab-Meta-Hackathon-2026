@@ -18,7 +18,7 @@ Current software baseline at preparation time:
 - **367 software tests passed after merge** (run 41298101837)
 - Maintenance Canary: **HEALTHY / HEALTHY_STABLE**, no accepted-baseline drift, advisory result **NO_REPAIR_NEEDED** (main run 41298101823; artifact 13079632919)
 - Stage 5 status: **readiness complete; planning not approved or generated**
-- currently deployed HF baseline is still v0.37: source `c0c9f7ff…` → Space commit `1509bcfc…` (run 41293111832), receipt **BUILD_PENDING**. After v0.38 merges, redeploy final main and verify runtime health + rendered source marker before recording
+- currently deployed HF baseline is **v0.38**: source `64c7aa4…` → Space commit `0cca430e…` (run 41300778009, 367 tests, receipt BUILD_PENDING; public Space API later showed runtime RUNNING with a v0.38 source marker). Re-verify the rendered source marker before recording; any later merge needs one more deploy for exact parity
 
 Do not call a recorded result "live". Do not call researcher review "independent gold". Do not call software tests model accuracy.
 

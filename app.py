@@ -26,6 +26,8 @@ from frontierlab.literature_pilot import load_dataset, reviewer_packet
 from frontierlab.recorded_gate_ablation import run_recorded_pilot
 from frontierlab.pilot_review import canonicalize_review_upload, labels_from_review_packet
 from frontierlab.research_backend import NvidiaResearchClient, research_enabled, remaining_calls
+from frontierlab.recorded_replay import build_recorded_replay
+from frontierlab.evidence import europepmc_error_message
 from frontierlab.version import __version__
 
 
@@ -63,6 +65,7 @@ a {{ color: var(--fl-ink) !important; text-decoration: underline; text-underline
 [data-testid="stSidebar"] {{ background: #1A1A1A; border-right: 1px solid var(--fl-line); }}
 [data-testid="stExpander"] details {{ border: 1px solid var(--fl-line); border-radius: 0; background: transparent; }}
 [data-testid="stForm"] {{ border: 1px solid var(--fl-line); border-radius: 0; }}
+.st-key-judge_path {{ border: 1px solid var(--fl-ink) !important; border-radius: 0 !important; }}
 [data-testid="stAlert"] > div, [data-testid="stAlertContainer"] {{ background: transparent !important;
            border: 1px solid var(--fl-line); border-radius: 0; color: var(--fl-ink); }}
 [data-testid="stAlertContentWarning"], [data-testid="stAlertContentError"],
@@ -110,6 +113,192 @@ def band(label: str, icon: str) -> None:
     st.markdown(f'<div class="fl-band">{BAND_ICONS[icon]}<span>{label}</span></div>', unsafe_allow_html=True)
 
 
+def _pct(value) -> str:
+    return "N/A" if value is None else f"{value * 100:.0f}%"
+
+
+def render_operating_status(roi: dict, *, key: str, download_label: str, file_name: str,
+                            synthetic_note: str | None = None) -> None:
+    """Research Operating Interface body; shared by live runs and the recorded replay."""
+    trace = roi["traceability"]
+    source_cov = trace["source_trace_coverage"]
+    strict_cov = trace["strict_extracted_coverage"]
+    o1, o2, o3, o4 = st.columns(4)
+    o1.metric("Next required stage", roi["current_activity"]["next_required_stage"].title())
+    o2.metric("Source trace coverage", _pct(source_cov))
+    o3.metric("Strict extracted coverage", _pct(strict_cov))
+    o4.metric("Auto repair", "OFF")
+    if synthetic_note:
+        st.caption(synthetic_note)
+    st.caption(
+        "Trace Coverage is measured from the current Evidence Graph. "
+        "It measures provenance coverage, not scientific accuracy or semantic truth."
+    )
+    if source_cov is not None and strict_cov is not None and strict_cov < source_cov:
+        st.info(
+            "Some artifacts can be traced to a source but do not have an all-EXTRACTED path. "
+            "FrontierLab preserves those provenance disagreements instead of promoting them to strict evidence."
+        )
+        blocked_rows = []
+        for artifact in trace["artifacts"]:
+            if artifact["strict_extracted"]:
+                continue
+            if artifact["blocking_edges"]:
+                for edge in artifact["blocking_edges"]:
+                    blocked_rows.append({
+                        "Artifact": artifact["artifact_id"],
+                        "Type": artifact["artifact_type"],
+                        "Blocking provenance": edge["provenance"],
+                        "Reason": edge["reason"],
+                    })
+            elif artifact["unresolved_evidence_ids"] or artifact["dead_ends"]:
+                blocked_rows.append({
+                    "Artifact": artifact["artifact_id"],
+                    "Type": artifact["artifact_type"],
+                    "Blocking provenance": "UNRESOLVED",
+                    "Reason": (
+                        f"unknown sources={artifact['unresolved_evidence_ids']} · "
+                        f"dead ends={artifact['dead_ends']}"
+                    ),
+                })
+        if blocked_rows:
+            st.dataframe(blocked_rows, hide_index=True, width="stretch")
+    a1, a2, a3, a4 = st.columns(4)
+    audit_state = roi["source_audit"]
+    a1.metric("Active papers", audit_state["papers"])
+    a2.metric("Anchored passed claims", audit_state["anchored_passed_claims"])
+    a3.metric(
+        "Rejected claims",
+        audit_state["rejected_claims_attached"] + audit_state["rejected_claims_unattached"],
+    )
+    a4.metric("Human events", roi["governance"]["human_events_recorded"])
+    st.dataframe(
+        [
+            {
+                "Control area": "Provenance",
+                "Status": "MEASURED",
+                "Detail": (
+                    f"{trace['source_traceable_artifacts']} / {trace['material_artifacts']} "
+                    "in-scope artifacts reach a known paper"
+                ),
+            },
+            {
+                "Control area": "Governance",
+                "Status": "HUMAN-GATED",
+                "Detail": (
+                    f"Claim review: {roi['governance']['claim_review_status']} · "
+                    f"Method evaluation: {'saved' if roi['governance']['method_evaluation_saved'] else 'not saved'} · "
+                    f"Planning authorization recorded: "
+                    f"{'yes' if roi['governance']['planning_authorized_recorded'] else 'no'}"
+                ),
+            },
+            {
+                "Control area": "Maintainability",
+                "Status": roi["maintainability"]["status"],
+                "Detail": "Scheduled dependency canary and advisory repair proposals are active; proposals cannot edit code/dependencies, commit, merge or deploy. Autonomous repair and environment rebuild are not implemented.",
+            },
+        ],
+        hide_index=True,
+        width="stretch",
+    )
+    if roi["active_sources"]:
+        st.caption(
+            "Active sources: " + ", ".join(source["paper_id"] for source in roi["active_sources"])
+        )
+    st.download_button(
+        download_label,
+        data=json.dumps(roi, ensure_ascii=False, indent=2, sort_keys=True),
+        file_name=file_name,
+        mime="application/json",
+        key=f"{key}_roi_download",
+    )
+
+
+def render_planning_readiness(readiness: dict, ready_stats: dict, *, key: str,
+                              download_label: str, file_name: str) -> None:
+    """Planning-readiness body; shared by live runs and the recorded replay."""
+    st.warning(
+        "READY ≠ APPROVED. This packet validates the current reviewed context and "
+        "selected method, but it does not authorize or call the Planning Agent."
+    )
+    p1, p2, p3, p4 = st.columns(4)
+    p1.metric("Selected method", ready_stats["selected_candidate_id"])
+    p2.metric("Open reproducibility checks", len(ready_stats["open_reproducibility_checks"]))
+    p3.metric("Required planning obligations", ready_stats["required_obligations"])
+    p4.metric("Planning approved", "YES" if ready_stats["planning_approved"] else "NO")
+    st.caption(
+        "Open checks: " + ", ".join(ready_stats["open_reproducibility_checks"]) +
+        ". The future plan must preserve evidence/citation gates and address all obligations."
+    )
+    st.dataframe(
+        [{
+            "Obligation": item["obligation_id"],
+            "Category": item["category"],
+            "Status": item["status"],
+            "Requirement": item["requirement"],
+        } for item in readiness["planning_obligations"]],
+        hide_index=True,
+        width="stretch",
+    )
+    st.download_button(
+        download_label,
+        data=json.dumps(readiness, ensure_ascii=False, indent=2, sort_keys=True),
+        file_name=file_name,
+        mime="application/json",
+        key=f"{key}_readiness_download",
+    )
+
+
+def render_graph_overview(graph: dict, g_stats: dict) -> None:
+    """Evidence-graph legend, edge counts, drawing and surfaced links (read-only)."""
+    st.caption("EXTRACTED: passage located in the cited abstract and source IDs checked (not semantic entailment). "
+               "INFERRED: model stance without an anchored quote. AMBIGUOUS: conflicting labels. "
+               "Only all-EXTRACTED paths to a paper count as evidence.")
+    e_count = g_stats["edges_by_provenance"]
+    x, y, z = st.columns(3)
+    x.metric("EXTRACTED edges", e_count["EXTRACTED"])
+    y.metric("INFERRED edges (not evidence)", e_count["INFERRED"])
+    z.metric("AMBIGUOUS edges (not evidence)", e_count["AMBIGUOUS"])
+    drawing = graph_svg(graph)
+    if drawing:
+        st.markdown('<img class="fl-hero" alt="Evidence provenance graph: solid lines EXTRACTED, dashed INFERRED, dotted AMBIGUOUS" '
+                    f'src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode("utf-8")).decode("ascii")}">',
+                    unsafe_allow_html=True)
+    else:
+        st.caption("Graph too large to draw legibly; use the tables and graph.json below.")
+    if g_stats["surfaced_for_review"]:
+        st.warning("Surfaced for researcher review. These links are NOT counted as evidence.")
+        st.dataframe([{"Provenance": e["provenance"], "From": e["source"], "Relation": e["relation"],
+                       "To": e["target"], "Why": e["reason"]} for e in g_stats["surfaced_for_review"]],
+                     hide_index=True, width="stretch")
+
+
+def render_trajectory(trajectory: dict, t_stats: dict, *, key: str, model_calls_label: str,
+                      download_label: str, file_name: str) -> None:
+    """Trajectory audit graph body; shared by live runs and the recorded replay."""
+    st.caption(
+        "Audit-only process graph. It records model calls, human interventions, "
+        "method evaluation, rejected claims and process signals. It never participates "
+        "in the scientific evidence gate."
+    )
+    t1, t2, t3, t4 = st.columns(4)
+    t1.metric(model_calls_label, t_stats["model_calls"])
+    t2.metric("Human events", t_stats["human_events"])
+    t3.metric("Rejected claims", t_stats["rejected_claims"])
+    t4.metric("Process signals", t_stats["process_signals"])
+    st.dataframe(
+        [{"Node type": k, "Count": v} for k, v in t_stats["nodes_by_type"].items()],
+        hide_index=True, width="stretch"
+    )
+    st.download_button(
+        download_label,
+        data=trajectory_json(trajectory),
+        file_name=file_name,
+        mime="application/json",
+        key=f"{key}_trajectory_download",
+    )
+
+
 _hero_path = ASSETS / "flatland-hero.svg"
 if _hero_path.exists():
     _hero = base64.b64encode(_hero_path.read_bytes()).decode("ascii")
@@ -121,42 +310,154 @@ st.caption("META GLOBAL AI DEVELOPER HACKATHON 2026  /  INDIE DEVELOPER  /  PUSH
 st.title("FrontierLab  /  Research Intelligence")
 st.caption(f"Research → Evidence → Hypothesis → Evaluation → Planning · v{__version__}")
 deployment_path = Path(__file__).resolve().parent / "deployment.json"
-if deployment_path.exists():
+on_public_space = deployment_path.exists()
+if on_public_space:
     deployment = json.loads(deployment_path.read_text(encoding="utf-8"))
     st.caption(f"Deployed source: {deployment['source_sha'][:12]} · {deployment['version']} · {deployment['space_id']}")
 st.write("An evidence-grounded scientific research workflow that **records disagreement instead of hiding it**.")
 
+# Recorded real M2 core (2026-10-28): recomputed from docs/runs/*.json on every render.
+# Zero model calls and zero network requests; see frontierlab/recorded_replay.py.
+try:
+    replay = build_recorded_replay()
+    replay_error = None
+except (OSError, ValueError, KeyError, TypeError, PermissionError) as exc:
+    replay, replay_error = None, exc
+
+REPLAY_TITLE = "Replay recorded real M2 case (no model call)"
+SYNTHETIC_BANNER = (
+    "SYNTHETIC / FICTIONAL MODE. Every publication, effect size, benchmark case, failure injection, "
+    "method strategy and plan in this mode is invented for testing. None of it is real scientific "
+    "evidence or a literature citation, and no model or laboratory experiment runs. It exists to show "
+    "the gates failing closed. For real recorded results, see “" + REPLAY_TITLE + "” at the top."
+)
+
+with st.container(border=True, key="judge_path"):
+    st.markdown(
+        "**Judge path · start here (about 3 minutes)**\n\n"
+        f"1. **Read the recorded real case.** “{REPLAY_TITLE}” is open just below: two published "
+        "abstracts, real Meta Muse Glimmer outputs recorded on 2026-10-28, researcher-reviewed. "
+        "Every number is recomputed from the recorded files; nothing calls a model.\n"
+        "2. **Run the gates yourself.** Keep *Synthetic audit demonstration* selected in the sidebar and "
+        "click **Run research audit**. The data is fictional and the gates fail closed by design.\n"
+        "3. **Inspect provenance.** In either path, open *Research Operating Interface*, *Evidence graph* "
+        "and *Trajectory*, and download the JSON receipts."
+    )
+
+with st.expander("Start here · " + REPLAY_TITLE, expanded=True):
+    if replay is None:
+        st.error(f"Recorded replay unavailable: {type(replay_error).__name__}: {replay_error}")
+    else:
+        r_calls = replay["recorded_calls"]
+        r_run = replay["run"]
+        r_sel = replay["selection"]
+        r_trace = replay["trace_coverage"]
+        r_ready = replay["readiness_summary"]
+        st.info(
+            f"RECORDED REAL RUN · REPLAY ONLY. Recorded on {r_calls['recorded_date_taipei']} (Asia/Taipei): "
+            f"{r_calls['extraction_calls']} Evidence Extraction calls and {r_calls['continuation_calls']} "
+            f"reviewed-continuation calls ({' → '.join(r_calls['continuation_roles'])}) to {r_calls['model']} "
+            f"via {r_calls['provider']} on {len(r_run.papers)} published abstracts; claims reviewed and method "
+            f"{r_sel['selected_candidate_id']} selected by {r_sel['reviewer']}. This panel recomputes every number "
+            f"from docs/runs/*.json with the same code used for live runs and makes "
+            f"{replay['new_model_calls']} model calls. Coverage measures provenance, not scientific accuracy. "
+            "Planning is NOT approved."
+        )
+        k1, k2, k3, k4 = st.columns(4)
+        k1.metric("Source trace coverage", _pct(r_trace["source_trace_coverage"]))
+        k2.metric("Strict EXTRACTED coverage", _pct(r_trace["strict_extracted_coverage"]))
+        k3.metric("Planning obligations", r_ready["required_obligations"])
+        k4.metric("Model calls in this replay", replay["new_model_calls"])
+        st.caption(
+            f"{r_trace['source_traceable_artifacts']} / {r_trace['material_artifacts']} artifacts reach a known paper; "
+            f"{r_trace['strict_extracted_artifacts']} / {r_trace['material_artifacts']} have an all-EXTRACTED path. "
+            "Sources: " + ", ".join(p.paper_id for p in r_run.papers) + ". "
+            f"Recorded runs: [extraction]({r_calls['extraction_run_url']}) · "
+            f"[Skeptic → Hypothesis]({r_calls['continuation_run_url']})."
+        )
+        rt1, rt2, rt3, rt4, rt5 = st.tabs(["Research Operating Interface", "Planning readiness",
+                                           "Evidence graph", "Trajectory", "Skeptic → Hypothesis"])
+        with rt1:
+            render_operating_status(replay["operating_status"], key="replay",
+                                    download_label="Download recorded operating-status JSON",
+                                    file_name="research_operating_status_recorded_20261028.json")
+        with rt2:
+            render_planning_readiness(replay["planning_readiness"], r_ready, key="replay",
+                                      download_label="Download recorded planning-readiness JSON",
+                                      file_name="planning_readiness_recorded_20261028.json")
+        with rt3:
+            render_graph_overview(replay["evidence_graph"], replay["graph_summary"])
+            st.caption("No plan exists in the recorded case: planning approval was never granted.")
+            st.download_button("Download recorded graph.json", data=graph_json(replay["evidence_graph"]),
+                               file_name="graph_recorded_20261028.json", mime="application/json",
+                               key="replay_graph_download")
+        with rt4:
+            render_trajectory(replay["trajectory"], replay["trajectory_summary"], key="replay",
+                              model_calls_label="Model calls in recorded receipt",
+                              download_label="Download recorded trajectory.json",
+                              file_name="trajectory_recorded_20261028.json")
+            st.caption(
+                "The trajectory is rebuilt from the extraction receipt (recorded 2026-10-28). The "
+                f"{r_calls['continuation_calls']} continuation calls are preserved separately in "
+                "docs/runs/nim_reviewed_continuation_20261028.json. No call is made during replay."
+            )
+        with rt5:
+            st.caption("Recorded verbatim on 2026-10-28 after researcher claim review. Not independently "
+                       "verified; scientific accuracy is not measured.")
+            st.markdown("**Adversarial Skeptic Agent (recorded)**")
+            st.json(r_run.skeptic, expanded=False)
+            st.markdown("**Hypothesis Agent (recorded)**")
+            st.json(r_run.hypotheses, expanded=False)
+
+LOCAL_MODE = "Live Europe PMC + local Meta model"
+NIM_MODE = "Live Europe PMC + Meta via NVIDIA"
+MODE_LABELS = ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)", LOCAL_MODE, NIM_MODE]
+
+
+def _mode_display(label: str) -> str:
+    if label == LOCAL_MODE and on_public_space:
+        return label + " · not available on the public Space"
+    if label == NIM_MODE and not research_enabled():
+        return label + " · not available on the public Space (backend not enabled)"
+    return label
+
+
 nim_authorized = False
 with st.sidebar:
     st.header("Engine")
-    mode_label = st.radio("Evidence mode", ["Synthetic audit demonstration", "Live Europe PMC metadata (no model calls)", "Live Europe PMC + local Meta model", "Live Europe PMC + Meta via NVIDIA"], index=0)
+    mode_label = st.radio("Evidence mode", MODE_LABELS, index=0, format_func=_mode_display)
     mode = "demo" if mode_label.startswith("Synthetic") else "live"
-    use_local_meta = mode_label == "Live Europe PMC + local Meta model"
-    use_nim = mode_label == "Live Europe PMC + Meta via NVIDIA"
+    use_local_meta = mode_label == LOCAL_MODE
+    use_nim = mode_label == NIM_MODE
     st.info("Paid Meta Platforms API is disabled. Choose a local model or the optional NVIDIA-hosted Meta backend.")
     if mode == "demo":
-        st.warning("SYNTHETIC DATA. Invented publications demonstrate auditing; none are real scientific evidence.")
+        st.caption("Synthetic mode: invented publications only (see the banner in the main panel).")
     elif use_nim:
         if not research_enabled():
-            st.warning("NVIDIA research inference has not been enabled by the app owner.")
+            st.warning("Not available on the public Space: NVIDIA research inference has not been enabled by the app owner.")
         nim_authorized = st.checkbox(
             "Allow this research question and retrieved abstracts to be sent to NVIDIA for Meta inference",
             value=False, disabled=not research_enabled(), key="nim_research_consent")
         st.caption(f"Remaining shared model calls in this server process: {remaining_calls()} / 8. Failed requests consume the allowance; no automatic retries.")
     elif use_local_meta:
-        st.warning("Experimental real open-weight model mode. Requires an actual Muse Glimmer checkpoint served on THIS machine; charges no Meta API credits. Never expose the local server publicly.")
+        if on_public_space:
+            st.warning("Not available on the public Space: this mode needs a Muse Glimmer checkpoint served on the same machine. A run here fails safely without any model call.")
+        else:
+            st.warning("Experimental real open-weight model mode. Requires an actual Muse Glimmer checkpoint served on THIS machine; charges no Meta API credits. Never expose the local server publicly.")
     else:
         st.info("Europe PMC metadata only. No model inference, no paid API requests.")
     st.caption("No autonomous wet-lab execution, clinical advice or unverified study claims.")
 
 band("I · Flatland — question and evidence", "point")
 st.subheader("1 · Research question")
+if mode == "demo":
+    st.warning(SYNTHETIC_BANNER)
 with st.form("research_form"):
     question = st.text_area("Scientific research question", value=QUESTION, height=85)
     query = st.text_input("Europe PMC search query", value=QUERY, disabled=(mode == "demo"))
     n = st.slider("Maximum live abstracts", 1, 2 if use_nim else 10,
                   2 if use_nim else 4, disabled=(mode == "demo"))
-    run_clicked = st.form_submit_button("Run research audit", use_container_width=True,
+    run_clicked = st.form_submit_button("Run research audit", width="stretch",
                                        type="primary", disabled=use_nim and not nim_authorized)
 
 if run_clicked:
@@ -170,7 +471,8 @@ if run_clicked:
             result = run_research(question, query, mode=mode, model_client=client, max_papers=n)
             st.session_state["frontier_result"] = result
         except Exception as exc:
-            st.error(f"Research run failed: {type(exc).__name__}: {exc}")
+            friendly = europepmc_error_message(exc)
+            st.error(friendly if friendly else f"Research run failed: {type(exc).__name__}: {exc}")
 
 with st.expander("Published-literature pilot · 12 cases awaiting researcher annotation"):
     pilot = load_dataset()
@@ -267,7 +569,7 @@ with st.expander("Published-literature pilot · 12 cases awaiting researcher ann
         reviewed = json.loads(review_path.read_text(encoding="utf-8"))
         st.success("RECORDED CORE RUN · Jaycee871 reviewed both claims as SUPPORTED on October 28, 2026. These judgments cover two claims, separate from the 12-case pilot.")
         st.caption("The original extraction receipt is preserved. No hypothesis, method selection or plan was generated by recording this review; this panel makes no model call.")
-        st.dataframe([{"Case": c["case_id"], "Claim": c["claim"], "Human judgment": c["review_label"], "Reason": c["review_note"]} for c in reviewed["cases"]], hide_index=True, use_container_width=True)
+        st.dataframe([{"Case": c["case_id"], "Claim": c["claim"], "Human judgment": c["review_label"], "Reason": c["review_note"]} for c in reviewed["cases"]], hide_index=True, width="stretch")
         st.download_button("Download completed core-workflow human review", data=review_path.read_text(encoding="utf-8"), file_name=review_path.name, mime="application/json")
 
 result = st.session_state.get("frontier_result")
@@ -311,147 +613,76 @@ if result:
 
     with st.expander("Research Operating Interface · operational status", expanded=False):
         roi = research_operating_status(result)
-        trace = roi["traceability"]
-        source_cov = trace["source_trace_coverage"]
-        strict_cov = trace["strict_extracted_coverage"]
-        o1, o2, o3, o4 = st.columns(4)
-        o1.metric("Next required stage", roi["current_activity"]["next_required_stage"].title())
-        o2.metric("Source trace coverage", "N/A" if source_cov is None else f"{source_cov * 100:.0f}%")
-        o3.metric("Strict extracted coverage", "N/A" if strict_cov is None else f"{strict_cov * 100:.0f}%")
-        o4.metric("Auto repair", "OFF")
-        st.caption(
-            "Trace Coverage is measured from the current Evidence Graph. "
-            "It measures provenance coverage, not scientific accuracy or semantic truth."
-        )
-        if (
-            source_cov is not None
-            and strict_cov is not None
-            and strict_cov < source_cov
-        ):
-            st.info(
-                "Some artifacts can be traced to a source but do not have an all-EXTRACTED path. "
-                "FrontierLab preserves those provenance disagreements instead of promoting them to strict evidence."
+        synthetic_note = None
+        if result.mode == "demo":
+            synthetic_strict = roi["traceability"]["strict_extracted_coverage"]
+            synthetic_note = (
+                "The synthetic fixture contains no evidence quotes, so strict EXTRACTED coverage is "
+                f"{_pct(synthetic_strict)} by design (fail-closed)."
             )
-            blocked_rows = []
-            for artifact in trace["artifacts"]:
-                if artifact["strict_extracted"]:
-                    continue
-                if artifact["blocking_edges"]:
-                    for edge in artifact["blocking_edges"]:
-                        blocked_rows.append({
-                            "Artifact": artifact["artifact_id"],
-                            "Type": artifact["artifact_type"],
-                            "Blocking provenance": edge["provenance"],
-                            "Reason": edge["reason"],
-                        })
-                elif artifact["unresolved_evidence_ids"] or artifact["dead_ends"]:
-                    blocked_rows.append({
-                        "Artifact": artifact["artifact_id"],
-                        "Type": artifact["artifact_type"],
-                        "Blocking provenance": "UNRESOLVED",
-                        "Reason": (
-                            f"unknown sources={artifact['unresolved_evidence_ids']} · "
-                            f"dead ends={artifact['dead_ends']}"
-                        ),
-                    })
-            if blocked_rows:
-                st.dataframe(blocked_rows, hide_index=True, use_container_width=True)
-        a1, a2, a3, a4 = st.columns(4)
-        audit_state = roi["source_audit"]
-        a1.metric("Active papers", audit_state["papers"])
-        a2.metric("Anchored passed claims", audit_state["anchored_passed_claims"])
-        a3.metric(
-            "Rejected claims",
-            audit_state["rejected_claims_attached"] + audit_state["rejected_claims_unattached"],
-        )
-        a4.metric("Human events", roi["governance"]["human_events_recorded"])
-        st.dataframe(
-            [
-                {
-                    "Control area": "Provenance",
-                    "Status": "MEASURED",
-                    "Detail": (
-                        f"{trace['source_traceable_artifacts']} / {trace['material_artifacts']} "
-                        "in-scope artifacts reach a known paper"
-                    ),
-                },
-                {
-                    "Control area": "Governance",
-                    "Status": "HUMAN-GATED",
-                    "Detail": (
-                        f"Claim review: {roi['governance']['claim_review_status']} · "
-                        f"Method evaluation: {'saved' if roi['governance']['method_evaluation_saved'] else 'not saved'} · "
-                        f"Planning authorization recorded: "
-                        f"{'yes' if roi['governance']['planning_authorized_recorded'] else 'no'}"
-                    ),
-                },
-                {
-                    "Control area": "Maintainability",
-                    "Status": roi["maintainability"]["status"],
-                    "Detail": "Scheduled dependency canary and advisory repair proposals are active; proposals cannot edit code/dependencies, commit, merge or deploy. Autonomous repair and environment rebuild are not implemented.",
-                },
-            ],
-            hide_index=True,
-            use_container_width=True,
-        )
-        if roi["active_sources"]:
-            st.caption(
-                "Active sources: " + ", ".join(source["paper_id"] for source in roi["active_sources"])
-            )
-        st.download_button(
-            "Download operating-status JSON",
-            data=json.dumps(roi, ensure_ascii=False, indent=2, sort_keys=True),
-            file_name="research_operating_status.json",
-            mime="application/json",
-        )
+            if replay is not None:
+                synthetic_note += (
+                    " The recorded real M2 core measures "
+                    f"{_pct(replay['trace_coverage']['source_trace_coverage'])} source / "
+                    f"{_pct(replay['trace_coverage']['strict_extracted_coverage'])} strict: see "
+                    f"“{REPLAY_TITLE}” at the top of the page."
+                )
+        render_operating_status(roi, key="live", download_label="Download operating-status JSON",
+                                file_name="research_operating_status.json", synthetic_note=synthetic_note)
 
     for warning in result.audit.warnings:
+        if result.mode == "demo" and warning.startswith("SYNTHETIC FIXTURE"):
+            continue  # disclosed once by the synthetic banner
         st.warning(warning)
+    if result.mode == "demo" and mode != "demo":
+        st.warning(SYNTHETIC_BANNER)
     if result.mode == "demo":
-        with st.expander("Wolfram-validated heterogeneity example (FICTIONAL numbers)", expanded=False):
-            stats_q = inverse_variance_heterogeneity([0.4, -0.3], [0.15, 0.1])
-            st.error("SYNTHETIC: These invented effect sizes do NOT represent observed studies.")
-            x, y, z = st.columns(3)
-            x.metric("Pooled effect (not a conclusion)", f"{stats_q['pooled_effect']:.4f}")
-            y.metric("Cochran Q", f"{stats_q['Q']:.4f}")
-            z.metric("I²", f"{stats_q['I2'] * 100:.1f}%")
-            st.caption("High inconsistency: do NOT force consensus. Independently checked with Wolfram Language; no online Wolfram call is made by this app.")
-    if result.mode == "demo":
-        with st.expander("Claim-to-passage audit benchmark (FICTIONAL · hand-labeled)", expanded=False):
-            fixture_papers, fixture_cases = benchmark()
-            verified = audit_predictions(fixture_papers, fixture_cases)
-            st.warning("All ten examples and predictions are HAND-AUTHORED FICTION. Scores do not represent Meta/NVIDIA model accuracy, nor prove scientific validity.")
-            x, y, z = st.columns(3)
-            x.metric("Known source IDs", f"{verified['source_id_coverage']:.0%}")
-            y.metric("Verbatim excerpt matches", f"{verified['verbatim_passage_coverage']:.0%}")
-            z.metric("Synthetic gold-label agreement", f"{verified['label_accuracy_vs_independent_gold']:.0%}")
-            st.caption("A quotation can exist yet be used to support a FALSE statement; genuine semantic verification needs independently annotated evidence.")
-            st.json({"cases": verified["cases"], "missing_conflict_detection_example":
-                     conflict_transparency([], [("SYNTHETIC:A","SYNTHETIC:B")])})
-    if result.mode == "demo":
-        with st.expander("Research Failure Lab · 12 fictional failure injections", expanded=False):
-            lab = suite_report()
-            st.warning(
-                "OFFLINE HAND-AUTHORED POLICY TESTS ONLY: no actual Meta inference, "
-                "real biomedical model call, independent scientific assessment or "
-                "human learning experiment has occurred."
-            )
-            u, v, w = st.columns(3)
-            u.metric("Policy test cases", lab["total"])
-            v.metric("Expected guard decisions matched", lab["matched_expectations"])
-            w.metric("Real model calls", lab["model_calls"])
-            st.caption(
-                "Cross-stage scenarios: stale source snapshots, unsupported excerpts, "
-                "unverified BioNeMo origin, train/test peptide leakage, and human teachability evidence. "
-                "A quote that exists can still be semantically wrong."
-            )
-            st.json(lab["cases"])
-            st.download_button(
-                "Download fictional failure-injection results",
-                data=json.dumps(lab, indent=2, ensure_ascii=False),
-                file_name="frontierlab_v011_failure_lab_fictional.json",
-                mime="application/json",
-            )
+        with st.expander("Synthetic audit fixtures (FICTIONAL) · heterogeneity, claim benchmark, failure lab", expanded=False):
+            fx1, fx2, fx3 = st.tabs(["Wolfram-validated heterogeneity (FICTIONAL numbers)",
+                                     "Claim-to-passage audit benchmark (FICTIONAL · hand-labeled)",
+                                     "Research Failure Lab · 12 fictional failure injections"])
+            with fx1:
+                stats_q = inverse_variance_heterogeneity([0.4, -0.3], [0.15, 0.1])
+                st.caption("SYNTHETIC: These invented effect sizes do NOT represent observed studies.")
+                x, y, z = st.columns(3)
+                x.metric("Pooled effect (not a conclusion)", f"{stats_q['pooled_effect']:.4f}")
+                y.metric("Cochran Q", f"{stats_q['Q']:.4f}")
+                z.metric("I²", f"{stats_q['I2'] * 100:.1f}%")
+                st.caption("High inconsistency: do NOT force consensus. Independently checked with Wolfram Language; no online Wolfram call is made by this app.")
+            with fx2:
+                fixture_papers, fixture_cases = benchmark()
+                verified = audit_predictions(fixture_papers, fixture_cases)
+                st.caption("All ten examples and predictions are HAND-AUTHORED FICTION. Scores do not represent Meta/NVIDIA model accuracy, nor prove scientific validity.")
+                x, y, z = st.columns(3)
+                x.metric("Known source IDs", f"{verified['source_id_coverage']:.0%}")
+                y.metric("Verbatim excerpt matches", f"{verified['verbatim_passage_coverage']:.0%}")
+                z.metric("Synthetic gold-label agreement", f"{verified['label_accuracy_vs_independent_gold']:.0%}")
+                st.caption("A quotation can exist yet be used to support a FALSE statement; genuine semantic verification needs independently annotated evidence.")
+                st.json({"cases": verified["cases"], "missing_conflict_detection_example":
+                         conflict_transparency([], [("SYNTHETIC:A","SYNTHETIC:B")])})
+            with fx3:
+                lab = suite_report()
+                st.caption(
+                    "OFFLINE HAND-AUTHORED POLICY TESTS ONLY: no actual Meta inference, "
+                    "real biomedical model call, independent scientific assessment or "
+                    "human learning experiment has occurred."
+                )
+                u, v, w = st.columns(3)
+                u.metric("Policy test cases", lab["total"])
+                v.metric("Expected guard decisions matched", lab["matched_expectations"])
+                w.metric("Real model calls", lab["model_calls"])
+                st.caption(
+                    "Cross-stage scenarios: stale source snapshots, unsupported excerpts, "
+                    "unverified BioNeMo origin, train/test peptide leakage, and human teachability evidence. "
+                    "A quote that exists can still be semantically wrong."
+                )
+                st.json(lab["cases"])
+                st.download_button(
+                    "Download fictional failure-injection results",
+                    data=json.dumps(lab, indent=2, ensure_ascii=False),
+                    file_name="frontierlab_v011_failure_lab_fictional.json",
+                    mime="application/json",
+                )
     with st.expander("2 · Evidence catalogue", expanded=True):
         for p in result.papers:
             st.markdown(f"**{p.title}**  ·  {p.paper_id}  ·  {p.year}")
@@ -561,35 +792,9 @@ if result:
             readiness = build_planning_readiness(result)
             ready_stats = readiness_summary(readiness)
             with st.expander("Planning readiness · pre-approval contract", expanded=False):
-                st.warning(
-                    "READY ≠ APPROVED. This packet validates the current reviewed context and "
-                    "selected method, but it does not authorize or call the Planning Agent."
-                )
-                p1, p2, p3, p4 = st.columns(4)
-                p1.metric("Selected method", ready_stats["selected_candidate_id"])
-                p2.metric("Open reproducibility checks", len(ready_stats["open_reproducibility_checks"]))
-                p3.metric("Required planning obligations", ready_stats["required_obligations"])
-                p4.metric("Planning approved", "NO")
-                st.caption(
-                    "Open checks: " + ", ".join(ready_stats["open_reproducibility_checks"]) +
-                    ". The future plan must preserve evidence/citation gates and address all obligations."
-                )
-                st.dataframe(
-                    [{
-                        "Obligation": item["obligation_id"],
-                        "Category": item["category"],
-                        "Status": item["status"],
-                        "Requirement": item["requirement"],
-                    } for item in readiness["planning_obligations"]],
-                    hide_index=True,
-                    use_container_width=True,
-                )
-                st.download_button(
-                    "Download planning-readiness JSON",
-                    data=json.dumps(readiness, ensure_ascii=False, indent=2, sort_keys=True),
-                    file_name="planning_readiness.json",
-                    mime="application/json",
-                )
+                render_planning_readiness(readiness, ready_stats, key="live",
+                                          download_label="Download planning-readiness JSON",
+                                          file_name="planning_readiness.json")
         except (ValueError, PermissionError) as exc:
             st.info(f"Planning readiness not available: {exc}")
     approved = st.checkbox("I have reviewed the evidence, conflicts and limitations. Allow a DRAFT research plan.")
@@ -606,26 +811,7 @@ if result:
     graph = refresh_evidence_graph(result)
     g_stats = graph_summary(graph)
     with st.expander("6 · Evidence graph · provenance of every plan step", expanded=False):
-        st.caption("EXTRACTED: passage located in the cited abstract and source IDs checked (not semantic entailment). "
-                   "INFERRED: model stance without an anchored quote. AMBIGUOUS: conflicting labels. "
-                   "Only all-EXTRACTED paths to a paper count as evidence.")
-        e_count = g_stats["edges_by_provenance"]
-        x, y, z = st.columns(3)
-        x.metric("EXTRACTED edges", e_count["EXTRACTED"])
-        y.metric("INFERRED edges (not evidence)", e_count["INFERRED"])
-        z.metric("AMBIGUOUS edges (not evidence)", e_count["AMBIGUOUS"])
-        drawing = graph_svg(graph)
-        if drawing:
-            st.markdown('<img class="fl-hero" alt="Evidence provenance graph: solid lines EXTRACTED, dashed INFERRED, dotted AMBIGUOUS" '
-                        f'src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode("utf-8")).decode("ascii")}">',
-                        unsafe_allow_html=True)
-        else:
-            st.caption("Graph too large to draw legibly; use the tables and graph.json below.")
-        if g_stats["surfaced_for_review"]:
-            st.warning("Surfaced for researcher review. These links are NOT counted as evidence.")
-            st.dataframe([{"Provenance": e["provenance"], "From": e["source"], "Relation": e["relation"],
-                           "To": e["target"], "Why": e["reason"]} for e in g_stats["surfaced_for_review"]],
-                         hide_index=True, use_container_width=True)
+        render_graph_overview(graph, g_stats)
         steps = [n for n in graph["nodes"] if n["type"] == "plan_step"]
         if steps:
             gates = {n["id"]: step_gate(graph, n["id"]) for n in steps}
@@ -633,7 +819,7 @@ if result:
                            "Path gate": "ALL EXTRACTED" if gates[n["id"]]["approvable"] else "BLOCKED",
                            "Researcher approval": "RECORDED" if n["id"] in graph["approvals"] else "—",
                            "Reasons": "; ".join(gates[n["id"]]["reasons"])} for n in steps],
-                         hide_index=True, use_container_width=True)
+                         hide_index=True, width="stretch")
             eligible = [n["id"] for n in steps if gates[n["id"]]["approvable"] and n["id"] not in graph["approvals"]]
             if eligible:
                 with st.form("plan_step_approval_form"):
@@ -658,26 +844,8 @@ if result:
     trajectory = build_trajectory_graph(result)
     t_stats = trajectory_summary(trajectory)
     with st.expander("7 · Trajectory audit graph · process trace", expanded=False):
-        st.caption(
-            "Audit-only process graph. It records model calls, human interventions, "
-            "method evaluation, rejected claims and process signals. It never participates "
-            "in the scientific evidence gate."
-        )
-        t1, t2, t3, t4 = st.columns(4)
-        t1.metric("Model calls", t_stats["model_calls"])
-        t2.metric("Human events", t_stats["human_events"])
-        t3.metric("Rejected claims", t_stats["rejected_claims"])
-        t4.metric("Process signals", t_stats["process_signals"])
-        st.dataframe(
-            [{"Node type": key, "Count": value} for key, value in t_stats["nodes_by_type"].items()],
-            hide_index=True, use_container_width=True
-        )
-        st.download_button(
-            "Download trajectory.json",
-            data=trajectory_json(trajectory),
-            file_name="trajectory.json",
-            mime="application/json",
-        )
+        render_trajectory(trajectory, t_stats, key="live", model_calls_label="Model calls",
+                          download_label="Download trajectory.json", file_name="trajectory.json")
     with st.expander("Audit trail", expanded=False):
         st.json(result.log)
     st.download_button("Download complete provenance JSON", data=export_json(result),
