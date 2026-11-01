@@ -1,3 +1,11 @@
+## 2026-11-01 · Paper2Agent citation and Agent Availability attribution — docs only
+
+- Completed the Paper2Agent reference in `docs/INFORMATION_MANAGEMENT_EXTENSION.md`: *Nature* 658(8138), 1272–1280 (2026), DOI, arXiv:2509.06917 preprint, GitHub repository, and the three case-study MCP server Spaces (AlphaGenome, Scanpy, TISSUE).
+- Corrected the Agent Availability attribution: the Paper2Agent Discussion (*Nature* 2026; also arXiv:2509.06917v2) already anticipates an “agent availability” section, so the concept is credited to the original authors. FrontierLab's contribution is described as the concrete field list / template.
+- Made `README.md`, `docs/AGENT_AVAILABILITY_STATEMENT.md`, `docs/SUBMISSION_COPY.md` and `docs/HACKATHON_FINAL_SPRINT.md` consistent with that attribution.
+- Added a short scope note to §9 of `docs/INFORMATION_MANAGEMENT_EXTENSION.md`, checked against the published *Nature* text, stating what Paper2Agent does and does not cover, so the three-pillar framework and Research Operating Interface are clearly identified as Pack Kwan Low's extension.
+- No code, test, fixture, measured number or central version changed.
+
 ## 2026-10-30 · Research Operating Interface Traditional Chinese companion — docs only
 
 - Added `docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md`, a Traditional Chinese write-up of the Research Operating Interface concept, the three Information Management aspects, the Agent Availability idea and the five research directions.

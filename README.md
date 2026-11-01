@@ -59,7 +59,7 @@ This three-pillar framing is a **FrontierLab / Pack Kwan Low research extension*
 
 The long-term concept is a **Research Operating Interface**: a management layer over Paper / Code / Data, MCP-style tools/resources/prompts, Evidence Trace, Governance and Maintainability. The current prototype already implements parts of provenance and governance; autonomous repair/rebuild and institutional access control remain future research.
 
-A related forward-looking proposal is an **Agent Availability statement**, analogous in spirit to Data Availability / Code Availability reporting, that would disclose an agent's version, represented artefacts, validation status, provenance, permissions and maintenance state. This is a proposed research-reporting concept, not an existing journal standard.
+A related forward-looking idea is an **Agent Availability statement**, analogous in spirit to Data Availability / Code Availability reporting. The Paper2Agent authors anticipated such an “agent availability” section in their Discussion; FrontierLab proposes a concrete field list for it that would disclose an agent's version, represented artefacts, validation status, provenance, permissions and maintenance state. This is not an existing journal standard.
 
 See [Information Management extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md), [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md), and [Agent Availability statement proposal](docs/AGENT_AVAILABILITY_STATEMENT.md).
 

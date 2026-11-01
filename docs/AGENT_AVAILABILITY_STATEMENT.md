@@ -1,6 +1,8 @@
-# Agent Availability statement — FrontierLab proposal
+# Agent Availability statement — FrontierLab template
 
 > **Status:** proposed research-reporting template. This is not a current journal requirement or established standard.
+
+> **Attribution:** the idea of an “agent availability” section, analogous to data and code availability sections, was anticipated by the Paper2Agent authors (Miao et al., *Nature* 2026; arXiv:2509.06917, Discussion). The detailed field list below is FrontierLab's proposed operationalisation of that idea.
 
 The goal of an Agent Availability statement is to make an interactive research agent inspectable in the same spirit that Data Availability and Code Availability statements make datasets and software discoverable.
 
