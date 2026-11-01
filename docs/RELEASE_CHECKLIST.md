@@ -1,6 +1,6 @@
 # FrontierLab — release & submission checklist
 
-**Target public release:** v0.38 after final merge, main CI, HF redeploy and runtime verification.  
+**Target public release:** v0.38 main after HF redeploy and runtime verification.  
 **Public event deadline rechecked 2026-11-01 Asia/Taipei:** Nov 4, 2026 at 9:00 PM ET = **Nov 5, 2026 at 10:00 AM Asia/Taipei**. Organizer dates may change.
 
 Official public references:
@@ -21,7 +21,7 @@ Official public references:
 
 ## B. Hugging Face deployment
 
-**Current deployment reference (2026-11-01):** the deployed baseline is still v0.37 source `c0c9f7ff7938b1e2814236101e6b82e3080ea863`, uploaded by run 41293111832 to HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` after 361 tests. Receipt status: `HF_SOURCE_COMMITTED_BUILD_PENDING`. The v0.38 candidate has passed 367 software tests and a matched HEALTHY canary, but it is **not yet the Space baseline**. After v0.38 merges, redeploy final main before claiming exact Space/main SHA parity, then verify runtime health and the rendered source marker.
+**Current deployment reference (2026-11-01):** the deployed baseline is still v0.37 source `c0c9f7ff7938b1e2814236101e6b82e3080ea863`, uploaded by run 41293111832 to HF Space commit `1509bcfc7cbeb20eafd4e451fb3ee562b6a9f692` after 361 tests. Receipt status: `HF_SOURCE_COMMITTED_BUILD_PENDING`. v0.38 is now on main: run 41298101837 passed 367 software tests and matched main canary run 41298101823 is HEALTHY / HEALTHY_STABLE with artifact 13079632919. It is **not yet the Space baseline**. Redeploy final main before claiming exact Space/main SHA parity, then verify runtime health and the rendered source marker.
 
 The deployment workflow is manual (`workflow_dispatch`).
 

@@ -71,13 +71,13 @@ These are model-execution records, not claims of scientific accuracy.
 
 Software verification and scientific evaluation are reported separately.
 
-Current software candidate baseline:
+Current software baseline:
 
-- v0.38;
-- **367 software tests passed** on the version-synchronized feature branch (GitHub Actions run 41297817348);
-- matched Maintenance Canary run 41297817372 is **HEALTHY**, with no accepted-baseline dependency/environment drift and advisory status **NO_REPAIR_NEEDED / HEALTHY_STABLE**;
+- v0.38 on main;
+- **367 software tests passed** after merge (GitHub Actions run 41298101837);
+- matched main Maintenance Canary run 41298101823 is **HEALTHY**, with no accepted-baseline dependency/environment drift and advisory status **NO_REPAIR_NEEDED / HEALTHY_STABLE**;
 - automatic repair, dependency/code edits, commit, merge and deploy remain disabled;
-- after merge, final main CI and HF redeployment still need to be checked before claiming exact release parity;
+- HF redeployment and runtime verification still need to be completed before claiming exact Space/main release parity;
 - no normal test invokes a model.
 
 Recorded 12-case Glimmer gate replay:

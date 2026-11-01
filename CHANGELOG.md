@@ -1,3 +1,11 @@
+## 2026-11-01 · v0.38 main validation sync — docs only
+
+- PR #32 merged the advisory maintainability layer to main at feature merge `145603bf61c82c26528d5322045e6f2b9b85e5e6`.
+- Main software test run **41298101837** passed **367 tests**.
+- Main Maintenance Canary run **41298101823** recorded **HEALTHY / HEALTHY_STABLE**, no accepted-baseline drift, proposal status **NO_REPAIR_NEEDED**, and preserved artifact **13079632919**.
+- HF Space is still on the prior v0.37 baseline until the manual deployment workflow is rerun; runtime health must be verified separately after deployment.
+- No model call, Stage 5 authorization or scientific result changed.
+
 ## 2026-11-01 · v0.38 — Advisory maintenance repair proposals
 
 - Added `frontierlab/maintenance_repair.py` to compare current canary evidence with a human-controlled healthy baseline and classify stable health, compatible drift or likely failure classes.
