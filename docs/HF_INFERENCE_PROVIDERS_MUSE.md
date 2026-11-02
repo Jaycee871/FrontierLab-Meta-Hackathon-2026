@@ -1,6 +1,6 @@
-# Live Meta Muse via Hugging Face Inference Providers (v0.39)
+# Live Meta Muse via Hugging Face Inference Providers (v0.39, reasoning-budget fix v0.40)
 
-Status: **implemented, no live result recorded yet.** All tests mock the OpenAI client; no live call was made while building this path.
+Status: **implemented; one live extraction recorded on 2026-11-01** (`docs/runs/hf_muse_live_extraction_20261101.json`). All tests mock the OpenAI client.
 
 ## What it does
 
@@ -8,12 +8,14 @@ Status: **implemented, no live result recorded yet.** All tests mock the OpenAI 
 
 | Position | Model ID sent to the router | Provider | Timeout |
 | --- | --- | --- | --- |
-| Primary | `meta-models/Muse-Spark-Open-816B-A42B:baseten` | Baseten (pinned) | 60 s |
-| Fallback | `meta-models/Muse-Glimmer-30B` | chosen by the router (Together, DeepInfra or Featherless AI) | 45 s |
+| Primary | `meta-models/Muse-Spark-Open-816B-A42B:baseten` | Baseten (pinned) | 90 s |
+| Fallback | `meta-models/Muse-Glimmer-30B` | chosen by the router (Together, DeepInfra or Featherless AI) | 75 s |
 
 - Router: `https://router.huggingface.co/v1` (`chat/completions`), per <https://huggingface.co/docs/inference-providers>. `model:provider` pins a provider; no suffix means the router's default `:fastest` policy.
 - Fallback happens on any provider error, timeout, HTTP error, empty or truncated output (`finish_reason != "stop"`), unexpected reported model identity, or unparseable / non-object / duplicate-key JSON. If both fail, the step stops with a plain message that points to the recorded replay.
-- Request: system + user message, `max_tokens=1536`, `temperature=0.2`, `stream=false`, OpenAI SDK `max_retries=0`.
+- Request: system + user message, `max_tokens=8192`, `temperature=0.2`, `stream=false`, OpenAI SDK `max_retries=0`.
+- Both models are **reasoning models**: hidden reasoning tokens count against `max_tokens` before any answer text. In v0.39 `max_tokens=1536` was used up entirely by reasoning on both models (`finish_reason="length"`, empty answer), so every live run failed. v0.40 raises the budget to 8,192 (a real extraction used 2,975 tokens on Spark and 3,269 on Glimmer) and timeouts to 90 s / 75 s. Reasoning text is never used as an answer, stored or shown; receipts record only `reasoning_tokens`, `reasoning_text_present` and `answer_text_present`.
+- Failed attempts are labelled `ReasoningBudgetExhausted`, `IncompleteOutput`, `InvalidJSONOutput`, `ModelIdentityMismatch` or the SDK error class plus HTTP status. A failed run shows one plain line per attempt and an expanded receipts panel.
 - Roles: Evidence Extraction; after researcher claim review, Adversarial Skeptic and Hypothesis; then Method Evaluation suggestions and the approved draft plan through the same client.
 
 ## What it does not change

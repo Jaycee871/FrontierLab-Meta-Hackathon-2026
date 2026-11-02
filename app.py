@@ -462,7 +462,8 @@ with st.sidebar:
             f"Primary: {hf_providers.PRIMARY_MODEL} · automatic fallback: {hf_providers.FALLBACK_MODEL}. "
             f"Session calls left: {hf_session_budget.remaining} / {hf_session_budget.limit} · "
             f"server calls left today: {hf_providers.daily_budget().remaining} / {hf_providers.daily_budget().limit}. "
-            "Every attempt, including a fallback, counts. At most "
+            "Every attempt, including a fallback, counts. Both models reason before answering, so "
+            "one call can take up to 90 s (fallback 75 s). At most "
             f"{hf_providers.MAX_LIVE_ABSTRACTS} abstracts, each truncated to "
             f"{hf_providers.MAX_ABSTRACT_CHARS} characters. Quotes still pass the verbatim evidence gate "
             "and every step stays human-gated."
@@ -509,8 +510,10 @@ if run_clicked:
             friendly = europepmc_error_message(exc)
             st.error(friendly if friendly else f"Research run failed: {type(exc).__name__}: {exc}")
         if use_hf and client is not None and "frontier_result" not in st.session_state:
-            with st.expander("Live Meta Muse call receipts (failed run)"):
-                st.json(client.provenance)
+            for line in hf_providers.failure_summary(getattr(client, "provenance", None)):
+                st.caption("Failed attempt · " + line)
+            with st.expander("Live Meta Muse call receipts (failed run)", expanded=True):
+                st.json(getattr(client, "provenance", {}))
 
 with st.expander("Published-literature pilot · 12 cases awaiting researcher annotation"):
     pilot = load_dataset()

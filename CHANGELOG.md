@@ -1,3 +1,11 @@
+## 2026-11-01 · v0.40 fix live Meta Muse reasoning budget (PR, unmerged)
+
+- Root cause of the failed live run on the Space: both Muse models are reasoning models, and hidden reasoning tokens count against `max_tokens`. With `max_tokens=1536` Muse Spark Open (Baseten) and Muse Glimmer (DeepInfra) both used the whole budget on reasoning and returned `finish_reason="length"` with no answer text, so every extraction step failed (HTTP 200, 3.8 s and 7.5 s; nothing hung).
+- `frontierlab/hf_providers.py`: `max_tokens` 1536 → 8192, timeouts 60/45 s → 90/75 s. Receipts now record `reasoning_tokens`, `answer_text_present` and `reasoning_text_present`; reasoning text is never used as an answer, stored or shown. Failures are labelled `ReasoningBudgetExhausted`, `IncompleteOutput`, `InvalidJSONOutput` or `ModelIdentityMismatch`.
+- `app.py`: a failed live run shows one plain line per attempt (model, provider, error, finish reason, latency) and opens the receipts panel; the sidebar says a call can take up to 90 s.
+- One real live extraction recorded locally: `docs/runs/hf_muse_live_extraction_20261101.json` (Muse Spark Open via Baseten, 8.0 s, 3,477 completion tokens of which 3,182 reasoning; 2 claims, both passed the verbatim quote gate; researcher review pending; one source, so synthesis correctly stopped). Includes the four diagnostic calls.
+- Version 0.39 → 0.40. Tests: **407 passed** locally (398 + 9 new in `tests/test_hf_providers.py`). Not deployed to the Space.
+
 ## 2026-11-01 · v0.39 submission polish — docs only
 
 - `docs/SUBMISSION_COPY.md`: added a *Submission at a glance* table (author/representative Pack Kwan Low · GitHub Jaycee871 · HF Jaycee766, repo, Space and direct app URLs, deadline) and a new **Impact** section grounded in the recorded real M2 replay (100% source trace / 50% strict EXTRACTED / 9 planning obligations / 0 model calls), the evidence/governance gates and the v0.39 Maintenance Canary result. Short description and technical implementation now name the live Hugging Face Inference Providers path (Muse Spark Open primary, Muse Glimmer 30B fallback).
