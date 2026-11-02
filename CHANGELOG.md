@@ -1,6 +1,7 @@
 ## 2026-11-02 · Demo video link and team field — docs only
 
 - Added the recorded demo video ([Demo video (3 min)](https://youtu.be/d3VaysvMFuA), YouTube, unlisted, 3:00) to README and `docs/SUBMISSION_COPY.md`, replacing the demo-video `[TODO Jaycee: …]` placeholders.
+- Demo video visibility changed from unlisted to public on YouTube (2026-11-02); `docs/SUBMISSION_COPY.md` updated to match. Project submitted on the Cerebral Valley portal on 2026-11-02 (Asia/Taipei).
 - `docs/SUBMISSION_COPY.md` team members: **Solo — Pack Kwan Low (Jaycee), Indie Developer track**.
 - `docs/DEMO_VIDEO_SCRIPT.md` narration now says the canary re-runs all **407** tests (was 398), matching the current suite (`pytest -q`: 407 passed).
 - No code, test, fixture or run record changed.

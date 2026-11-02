@@ -12,7 +12,7 @@ This file contains reusable public-facing copy. Update only claims that have act
 | Team members | Solo — Pack Kwan Low (Jaycee), Indie Developer track |
 | Code repository | https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026 (MIT License) |
 | Live demo (HF Space) | https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026 · direct app: https://jaycee766-frontierlab-meta-hackathon-2026.hf.space |
-| Demo video | [Demo video (3 min)](https://youtu.be/d3VaysvMFuA) (YouTube, unlisted; follows [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md)) |
+| Demo video | [Demo video (3 min)](https://youtu.be/d3VaysvMFuA) (YouTube, public; follows [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md)) |
 | Version | v0.40 on main (`6f0f7d2`), deployed to the Space (Space commit `94bc1eb3…`) |
 | Submission deadline | 2026-11-04 21:00 ET = 2026-11-05 10:00 Asia/Taipei (recheck the participant portal) |
 
