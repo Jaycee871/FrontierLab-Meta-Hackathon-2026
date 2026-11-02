@@ -13,11 +13,11 @@ Use a revision that has passed CI and note the exact source SHA.
 
 Current software baseline at preparation time:
 
-- FrontierLab v0.39 on main (merge `5958770f581d9afa4fc8054172f888941c4d46ee`; later docs-only commits may change the final main SHA without changing runtime code)
-- **398 software tests passed after merge** (run 41311197281)
-- Maintenance Canary: **HEALTHY** (398 tests), advisory result **DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT** because the `requirements.txt` hash differs from the accepted Nov 1 baseline (main run 41311197269); accepting a new baseline is the owner's decision
+- FrontierLab v0.40 on main (merge `6f0f7d2431548621c3f2481939823058d2b9a72d`, PR #37; later docs-only commits may change the final main SHA without changing runtime code)
+- **407 software tests passed after merge** (run 41408148161)
+- Maintenance Canary: **HEALTHY** (407 tests), advisory result **DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT** because the `requirements.txt` hash differs from the accepted Nov 1 baseline (main run 41408148311); accepting a new baseline is the owner's decision
 - Stage 5 status: **readiness complete; planning not approved or generated**
-- currently deployed HF baseline is **v0.39**: source `5958770…` → Space commit `1e162166…` (run 41311275823, 398 tests, receipt BUILD_PENDING; public Space API later showed runtime RUNNING with a v0.39 source marker). Re-verify the rendered source marker and the sidebar's live-Muse status before recording; any later merge needs one more deploy for exact parity
+- currently deployed HF baseline is **v0.40**: source `6f0f7d2…` → Space commit `94bc1eb3…` (run 41408148915, 2026-11-02, 407 tests, receipt BUILD_PENDING; public Space API later showed runtime RUNNING with a v0.40 source marker). Re-verify the rendered source marker and the sidebar's live-Muse status before recording; any later merge needs one more deploy for exact parity
 
 The shot-by-shot video script that follows the in-app Judge path (recorded replay → live Meta Muse via Hugging Face → provenance/governance) is in [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md). This runbook remains the claims checklist.
 

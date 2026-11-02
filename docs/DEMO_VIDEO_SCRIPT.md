@@ -12,7 +12,7 @@ Judging weights to keep in mind while cutting: **Impact 30% · Use of Meta AI to
 
 | Check | How | Pass condition |
 | --- | --- | --- |
-| Deployed version | Open `https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026/raw/main/deployment.json` | `version` and `source_sha` match the revision you describe (v0.39: `5958770…`) |
+| Deployed version | Open `https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026/raw/main/deployment.json` | `version` and `source_sha` match the revision you describe (v0.40: `6f0f7d2…`) |
 | Live Muse status | App sidebar, mode list | Reads **Live Meta Muse (via Hugging Face)** with *no* "· unavailable" suffix. If it still says "unavailable (no Hugging Face token configured)", use **Plan B** in Shot 5 |
 | Call budget | Sidebar caption under the HF mode | "Session calls left: 6 / 6". Use a fresh browser session for the take |
 | Spending limit | Hugging Face account billing | A spending limit is set (the app caps are not HF billing limits) |

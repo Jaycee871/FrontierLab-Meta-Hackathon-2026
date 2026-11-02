@@ -9,7 +9,7 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.39 on main (merge `5958770`, deployed to the HF Space) · Status reviewed: November 1, 2026 (Asia/Taipei)**
+**Codebase: v0.40 on main (merge `6f0f7d2`, deployed to the HF Space) · Status reviewed: November 2, 2026 (Asia/Taipei)**
 
 **Author / representative:** Pack Kwan Low (Jaycee) · GitHub [Jaycee871](https://github.com/Jaycee871) · Hugging Face [Jaycee766](https://huggingface.co/Jaycee766) · **Demo video:** [TODO Jaycee: demo-video URL]
 
@@ -176,7 +176,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.39 suite on main has **398 tests** (the v0.37 research/provenance/governance/maintenance stack, accepted-baseline drift comparison and advisory repair proposals, the recorded-replay / judge path, and the mocked live Hugging Face Muse client). Main GitHub Actions run [41311197281](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311197281) passed all 398 tests after merge. The matched main Maintenance Canary run [41311197269](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311197269) recorded `HEALTHY` and an advisory `DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT`: the `requirements.txt` hash differs from the accepted Nov 1 baseline, so accepting a new baseline is left to the owner. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.40 suite on main has **407 tests** (the v0.37 research/provenance/governance/maintenance stack, accepted-baseline drift comparison and advisory repair proposals, the recorded-replay / judge path, and the mocked live Hugging Face Muse client including the v0.40 reasoning-budget checks). Main GitHub Actions run [41408148161](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41408148161) passed all 407 tests after merge. The matched main Maintenance Canary run [41408148311](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41408148311) recorded `HEALTHY` and an advisory `DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT`: the `requirements.txt` hash differs from the accepted Nov 1 baseline, so accepting a new baseline is left to the owner. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -191,7 +191,7 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 ## Deployment (Hugging Face Space)
 
 - **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
-- **Status:** the latest deployed baseline is **v0.39**: main source `5958770f581d9afa4fc8054172f888941c4d46ee` was uploaded by run [41311275823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311275823) (2026-11-01 21:27 Asia/Taipei) to HF Space commit `1e162166450c254b3136ecd0fc7378a1db72d3ff` after **398 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.39` and that source SHA. Any later merge (including docs) changes the GitHub source SHA and needs one more manual deploy if the Space source marker must exactly match main.
+- **Status:** the latest deployed baseline is **v0.40**. v0.40 main source `6f0f7d2431548621c3f2481939823058d2b9a72d` (merge of PR #37) was uploaded by run [41408148915](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41408148915) (2026-11-02 15:43 Asia/Taipei) to HF Space commit `94bc1eb3cf8d216c17573fe958fa2ec01bef885d` after **407 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-02, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.40` and that source SHA. The recorded live Muse extraction was run locally on the v0.40 code, not on the Space, so confirm the sidebar shows the live Muse mode as available (Space secret `HF_TOKEN` set) before demonstrating it there. Any later merge (including docs) changes the GitHub source SHA and needs one more manual deploy if the Space source marker must exactly match main.
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
 - **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. The live Hugging Face Muse mode works only when the owner has set a token as a Space secret; otherwise the sidebar labels it unavailable. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
@@ -199,7 +199,7 @@ Details: [live Meta Muse via HF Inference Providers](docs/HF_INFERENCE_PROVIDERS
 
 ## Evaluation and recorded results
 
-All numbers below come from dated run records in [`docs/runs/`](docs/runs) and the linked GitHub Actions runs. They were recorded through NVIDIA NIM; the direct billed Meta Platforms Model API was not used. No results from the new live Hugging Face Inference Providers path (v0.39) have been recorded yet.
+All numbers below come from dated run records in [`docs/runs/`](docs/runs) and the linked GitHub Actions runs. Unless stated otherwise they were recorded through NVIDIA NIM; the direct billed Meta Platforms Model API was not used. The live Hugging Face Inference Providers path has one live Evidence Extraction run recorded on 2026-11-01 (`docs/runs/hf_muse_live_extraction_20261101.json`): Muse Spark Open via Baseten, 7.99 s, 4,287 tokens, paper MED:42959777 (BIGH3), 2 claims, both quotes verified; it is a single-paper execution record, not an accuracy result.
 
 | Component | Recorded result | Scope / limits |
 | --- | --- | --- |
@@ -227,7 +227,7 @@ See [agentic-AI landscape and self-assessment](docs/AGENTIC_AI_LANDSCAPE.md) for
 - Human labels are review decisions, not independently adjudicated scientific ground truth.
 - Conflict detection depends on model-supplied claim keys, which can be wrong.
 - Outputs are research drafts. FrontierLab has no validated clinical or wet-lab execution capability.
-- Live Meta Muse calls are available through Hugging Face Inference Providers when the Space owner configures a token, with a 6-call per-session cap and a per-process daily cap. The direct billed Meta Model API adapter (`frontierlab/meta.py`) remains off. No live result from this path is recorded yet.
+- Live Meta Muse calls are available through Hugging Face Inference Providers when the Space owner configures a token, with a 6-call per-session cap and a per-process daily cap. The direct billed Meta Model API adapter (`frontierlab/meta.py`) remains off. One live result from this path is recorded: [`docs/runs/hf_muse_live_extraction_20261101.json`](docs/runs/hf_muse_live_extraction_20261101.json) — Muse Spark Open (`meta-models/Muse-Spark-Open-816B-A42B` via Baseten through HF Inference Providers), 7.99 s, 4,287 tokens, paper MED:42959777 (BIGH3), 2 claims, both quotes verified by the verbatim gate. It was run locally on the v0.40 code; with one source the pipeline correctly stopped at `INSUFFICIENT_EVIDENCE`, and researcher review is pending.
 
 See the [verbatim evidence gate](docs/VERBATIM_EVIDENCE_GATE.md), the [human review protocol](docs/HUMAN_REVIEW_GATE.md), [method evaluation and planning](docs/METHOD_EVALUATION.md), and [process metrics](docs/PROCESS_METRICS.md), [trajectory audit graph](docs/TRAJECTORY_GRAPH.md), [gate ablation](docs/GATE_ABLATION.md), and [planning readiness](docs/PLANNING_READINESS.md).
 
@@ -303,7 +303,7 @@ FrontierLab was built for the [Meta Global AI Developer Hackathon](https://cereb
 1. **Stage 5 is still human-gated.** M2 is formally selected, but Planning has not been approved or generated.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison.** Use the same model and cases to compare three setups: no gate, source/quote checks, and checks plus human review. Report abstention and intervention separately.
-4. **Record the public demo.** v0.39 is deployed with a checked revision (see Deployment above). Record a roughly three-minute demonstration of actual behavior with the [demo video script](docs/DEMO_VIDEO_SCRIPT.md), starting from the in-app Judge path and the recorded real M2 replay.
+4. **Record the public demo.** v0.40 is deployed with a checked revision (see Deployment above). Record a roughly three-minute demonstration of actual behavior with the [demo video script](docs/DEMO_VIDEO_SCRIPT.md), starting from the in-app Judge path and the recorded real M2 replay.
 5. **Submit the entry.** Check the participant portal's current requirements and complete the formal submission.
 
 See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repository and hosting a demo do not count as formal submission.

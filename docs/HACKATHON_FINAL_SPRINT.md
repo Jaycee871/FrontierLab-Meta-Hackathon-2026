@@ -1,6 +1,6 @@
 # FrontierLab — Meta Hackathon Final Sprint
 
-**Updated 2026-11-01 (Asia/Taipei) · Planning memo, NOT proof of completed inference or submission.**
+**Updated 2026-11-02 (Asia/Taipei) · Planning memo, NOT proof of completed inference or submission.**
 
 ## Verified inference update — October 28, 2026
 
@@ -31,7 +31,7 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 | Manuscript-to-abstract source matching | SOFTWARE VERIFIED | Valid DOI and verbatim excerpt checks are not semantic entailment |
 | Human review gate, version-bound annotations | SOFTWARE + RECORDED REVIEW VERIFIED | Two real core claims have explicit researcher SUPPORTED judgments; these are not independent expert gold labels |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
-| HF public Streamlit Space | v0.38 DEPLOYED | Source `64c7aa4…` uploaded by run 41300778009 to Space commit `0cca430e…` after 367 tests. Receipt is `HF_SOURCE_COMMITTED_BUILD_PENDING`; the public Space API later reported runtime `RUNNING` with a v0.38 `deployment.json`. Any later merge needs one more deploy for exact source parity. NIM remains owner-disabled there. |
+| HF public Streamlit Space | v0.40 DEPLOYED | Source `6f0f7d2…` uploaded by run 41408148915 (2026-11-02) to Space commit `94bc1eb3…` after 407 tests. Receipt is `HF_SOURCE_COMMITTED_BUILD_PENDING`; the public Space API later reported runtime `RUNNING` with a v0.40 `deployment.json`. Any later merge needs one more deploy for exact source parity. NIM remains owner-disabled there. |
 | Authentic Meta Muse Glimmer response | MULTIPLE RECORDED NIM RUNS | Synthetic smoke, strict JSON, 12-case batch and two-call core extraction recorded; no scientific accuracy claim |
 | Human-reviewed live continuation | EXECUTED AND RECORDED | Run 40574846326 completed the bounded skeptic → hypothesis continuation; artifact provenance validated and exact outputs preserved |
 | Researcher method selection | COMPLETED | M2 selected; M1 retained as comparator; canonical evaluation bound to exact live hypotheses and human rationale stored separately |
@@ -66,7 +66,7 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 - Do not make Spark a submission blocker: the verified Glimmer path remains the stable demo baseline.
 - If hosted Spark access is obtained, use one bounded multimodal evidence case tied to M2 (for example, a structure or assay figure) and preserve the provider/model receipt.
 - Liquid d1-2B remains a lightweight evidence-verification option; Spark is the Meta-native frontier reasoning layer.
-- No live Spark inference is currently claimed.
+- One live Muse Spark Open text extraction is recorded through Hugging Face Inference Providers (Baseten), not through this adapter: `docs/runs/hf_muse_live_extraction_20261101.json` (single paper, 2 claims with verified quotes, researcher review pending). No multimodal Spark inference is claimed.
 
 ## Optional edge extension: Muse2-230M edge worker
 

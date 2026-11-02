@@ -1,10 +1,17 @@
-## 2026-11-01 · v0.40 fix live Meta Muse reasoning budget (PR, unmerged)
+## 2026-11-02 · v0.40 status sync — docs only
+
+- Synced README, `docs/SUBMISSION_COPY.md`, demo runbook, demo video script, release checklist and final-sprint memo to the merged and deployed **v0.40**: main `6f0f7d2` (PR #37), **407 tests** passed (run 41408148161), Maintenance Canary run 41408148311 `HEALTHY` with advisory `DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT`, deployed by run 41408148915 to Space commit `94bc1eb3…` (public Space API: `RUNNING`, `deployment.json` `version: v0.40`).
+- Live-path guards now state `max_tokens=8192` with 90 s / 75 s timeouts and note that reasoning tokens count against `max_tokens` (was `1536`).
+- Replaced "no live result recorded yet" with the recorded run `docs/runs/hf_muse_live_extraction_20261101.json`: Muse Spark Open via Baseten through HF Inference Providers, 7.99 s, 4,287 tokens, paper MED:42959777 (BIGH3), 2 claims, both quotes verified; single source, so `INSUFFICIENT_EVIDENCE`; researcher review pending. No Muse Glimmer fallback result is claimed.
+- Marked the v0.40 changelog entry as merged and deployed. No code, test, fixture or run record changed; `[TODO Jaycee: …]` placeholders left as they are.
+
+## 2026-11-01 · v0.40 fix live Meta Muse reasoning budget (merged in PR #37, deployed 2026-11-02)
 
 - Root cause of the failed live run on the Space: both Muse models are reasoning models, and hidden reasoning tokens count against `max_tokens`. With `max_tokens=1536` Muse Spark Open (Baseten) and Muse Glimmer (DeepInfra) both used the whole budget on reasoning and returned `finish_reason="length"` with no answer text, so every extraction step failed (HTTP 200, 3.8 s and 7.5 s; nothing hung).
 - `frontierlab/hf_providers.py`: `max_tokens` 1536 → 8192, timeouts 60/45 s → 90/75 s. Receipts now record `reasoning_tokens`, `answer_text_present` and `reasoning_text_present`; reasoning text is never used as an answer, stored or shown. Failures are labelled `ReasoningBudgetExhausted`, `IncompleteOutput`, `InvalidJSONOutput` or `ModelIdentityMismatch`.
 - `app.py`: a failed live run shows one plain line per attempt (model, provider, error, finish reason, latency) and opens the receipts panel; the sidebar says a call can take up to 90 s.
 - One real live extraction recorded locally: `docs/runs/hf_muse_live_extraction_20261101.json` (Muse Spark Open via Baseten, 8.0 s, 3,477 completion tokens of which 3,182 reasoning; 2 claims, both passed the verbatim quote gate; researcher review pending; one source, so synthesis correctly stopped). Includes the four diagnostic calls.
-- Version 0.39 → 0.40. Tests: **407 passed** locally (398 + 9 new in `tests/test_hf_providers.py`). Not deployed to the Space.
+- Version 0.39 → 0.40. Tests: **407 passed** locally (398 + 9 new in `tests/test_hf_providers.py`). Merged to main as `6f0f7d2` (PR #37; main CI run 41408148161, 407 passed) and deployed to the Space on 2026-11-02 (run 41408148915, Space commit `94bc1eb3…`, about 15:44 Asia/Taipei).
 
 ## 2026-11-01 · v0.39 submission polish — docs only
 

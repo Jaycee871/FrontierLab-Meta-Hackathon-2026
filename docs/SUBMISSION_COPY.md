@@ -13,7 +13,7 @@ This file contains reusable public-facing copy. Update only claims that have act
 | Code repository | https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026 (MIT License) |
 | Live demo (HF Space) | https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026 · direct app: https://jaycee766-frontierlab-meta-hackathon-2026.hf.space |
 | Demo video | [TODO Jaycee: public demo-video URL after recording, following [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md)] |
-| Version | v0.39 on main (`5958770`), deployed to the Space (Space commit `1e162166…`) |
+| Version | v0.40 on main (`6f0f7d2`), deployed to the Space (Space commit `94bc1eb3…`) |
 | Submission deadline | 2026-11-04 21:00 ET = 2026-11-05 10:00 Asia/Taipei (recheck the participant portal) |
 
 ## One-line description
@@ -44,7 +44,7 @@ The current biomedical demonstration uses published pH-dependent antibody-engine
 - **Provenance becomes a number a reviewer can recompute.** On the recorded, researcher-reviewed real M2 case (two published abstracts; real Meta Muse Glimmer 30B outputs recorded 2026-10-28, Asia/Taipei), the app recomputes from the files in `docs/runs/`: **100% source trace coverage (4/4 artifacts reach a known paper), 50% strict EXTRACTED coverage (2/4 have an all-EXTRACTED path), 9 planning obligations carried into Stage 5, and 0 model calls to replay**. The 50% is not hidden or "fixed": it preserves a real model/researcher provenance disagreement on PMC4314675. These are provenance metrics on a very small sample, not accuracy.
 - **Reproducibility does not require trust, keys or money.** Anyone can open the public Space and replay the real case with no API key and no model call; tampered recorded files or a selection that would authorize planning fail closed.
 - **Governance is enforced, not described.** Claim review, method selection and Stage 5 planning authorization are explicit researcher actions bound to content hashes. In the recorded case the researcher selected M2, yet planning remains **not approved**: readiness carries open data/code/environment checks and obligations such as monomeric-Fab SPR, avidity/stoichiometry handling, search-bias disclosure, replication and falsification.
-- **Maintainability is measured, not assumed.** A scheduled Maintenance Canary re-runs the full regression suite and compares the environment with a human-accepted baseline. On the v0.39 main merge (run 41311197269) all 398 tests passed and the canary reported `HEALTHY`, while the advisory proposal correctly flagged `DRIFT_REVIEW_REQUIRED` because `requirements.txt` changed — detection plus human review, with automatic repair, commit, merge and deploy disabled.
+- **Maintainability is measured, not assumed.** A scheduled Maintenance Canary re-runs the full regression suite and compares the environment with a human-accepted baseline. On the v0.40 main merge (run 41408148311) all 407 tests passed and the canary reported `HEALTHY`, while the advisory proposal correctly flagged `DRIFT_REVIEW_REQUIRED` because `requirements.txt` changed — detection plus human review, with automatic repair, commit, merge and deploy disabled.
 
 **Why it matters beyond this demo.** The five-stage contract, the evidence gate and the provenance/trajectory graphs are domain-agnostic; the pH-dependent antibody-engineering case is the first worked domain. The broader contribution is Pack Kwan Low's Information Management extension — maintainability, provenance and research governance as the three pillars for managing paper-derived agents as research infrastructure — and the Research Operating Interface that reports those pillars as operational status. FrontierLab also proposes a concrete field list for an Agent Availability statement; the Agent Availability concept itself was anticipated by the Paper2Agent authors.
 
@@ -70,7 +70,7 @@ Core implementation:
 
 - Python + Streamlit;
 - Europe PMC literature retrieval;
-- Meta Muse Spark Open (primary) and Muse Glimmer 30B (automatic fallback) through the Hugging Face Inference Providers router for the live path (v0.39);
+- Meta Muse Spark Open (primary) and Muse Glimmer 30B (automatic fallback) through the Hugging Face Inference Providers router for the live path (v0.39, reasoning-budget fix v0.40);
 - Meta Muse Glimmer 30B through NVIDIA NIM for the recorded model-backed research runs;
 - zero-call recorded replay of the real reviewed M2 case;
 - strict structured JSON contracts;
@@ -94,11 +94,11 @@ Optional adapters for Muse Spark Open, Llama 3.1 8B, Muse2-230M, Liquid d1-2B an
 
 | Model ID | Reached through | What it does in FrontierLab | Status |
 | --- | --- | --- | --- |
-| `meta-models/Muse-Spark-Open-816B-A42B` | Hugging Face Inference Providers router (`https://router.huggingface.co/v1`, OpenAI-compatible), provider `baseten` | **Primary** live model for Evidence Extraction, then (after researcher claim review) Adversarial Skeptic and Hypothesis; also Method Evaluation suggestions and the approved draft plan | Implemented in v0.39 (`frontierlab/hf_providers.py`); **no live result recorded yet** |
-| `meta-models/Muse-Glimmer-30B` | Same router, provider chosen automatically (Together, DeepInfra or Featherless AI) | **Automatic fallback** when Muse Spark Open returns a provider error, times out or gives invalid output | Implemented in v0.39; **no live result recorded yet** |
+| `meta-models/Muse-Spark-Open-816B-A42B` | Hugging Face Inference Providers router (`https://router.huggingface.co/v1`, OpenAI-compatible), provider `baseten` | **Primary** live model for Evidence Extraction, then (after researcher claim review) Adversarial Skeptic and Hypothesis; also Method Evaluation suggestions and the approved draft plan | Implemented in v0.39 (`frontierlab/hf_providers.py`), reasoning-budget fix in v0.40; **one live extraction recorded** 2026-11-01 (`docs/runs/hf_muse_live_extraction_20261101.json`: Baseten, 7.99 s, 4,287 tokens, paper MED:42959777 (BIGH3), 2 claims, both quotes verified) |
+| `meta-models/Muse-Glimmer-30B` | Same router, provider chosen automatically (Together, DeepInfra or Featherless AI) | **Automatic fallback** when Muse Spark Open returns a provider error, times out or gives invalid output | Implemented in v0.39; not invoked in the recorded live run (the primary succeeded), so **no live fallback result recorded yet** |
 | `meta/muse-glimmer-30b` (Muse Glimmer 30B) | NVIDIA NIM | Earlier recorded real runs on 2026-10-28 (Asia/Taipei): smoke test, strict JSON, 12-case pilot batch, 2 Evidence Extraction calls and the reviewed Skeptic → Hypothesis continuation; these drive the zero-call recorded replay | Recorded (`docs/runs/*_20261028.json`) |
 
-Guards on the live path: explicit per-session consent, a 6-call per-session cap and a per-process daily cap (`FRONTIERLAB_HF_DAILY_CALL_CAP`, default 60) that count every attempt including fallbacks, strict timeouts with no SDK retries, `max_tokens=1536`, temperature 0.2, at most two abstracts truncated to 3,000 characters, and a receipt per call (model ID, provider when reported, timestamps, token usage, latency, status) in the provenance export. Model outputs never bypass the fail-closed verbatim evidence gate or the human review gates. The direct billed Meta Model API adapter remains off.
+Guards on the live path: explicit per-session consent, a 6-call per-session cap and a per-process daily cap (`FRONTIERLAB_HF_DAILY_CALL_CAP`, default 60) that count every attempt including fallbacks, strict timeouts (90 s primary / 75 s fallback) with no SDK retries, `max_tokens=8192` (both Muse models are reasoning models and hidden reasoning tokens count against `max_tokens`; v0.39's 1,536 was used up by reasoning), temperature 0.2, at most two abstracts truncated to 3,000 characters, and a receipt per call (model ID, provider when reported, timestamps, token usage, latency, status) in the provenance export. Model outputs never bypass the fail-closed verbatim evidence gate or the human review gates. The direct billed Meta Model API adapter remains off.
 
 ## Meta-model usage that is genuinely demonstrated
 
@@ -112,17 +112,19 @@ The repository preserves several dated genuine Meta Muse Glimmer / NVIDIA NIM ex
 
 These are model-execution records, not claims of scientific accuracy.
 
+The live Hugging Face Inference Providers path also has one recorded run ([`docs/runs/hf_muse_live_extraction_20261101.json`](runs/hf_muse_live_extraction_20261101.json), 2026-11-01 23:18 Asia/Taipei, run locally on the v0.40 code): one Evidence Extraction call to `meta-models/Muse-Spark-Open-816B-A42B` via Baseten through HF Inference Providers, 7.99 s, 4,287 tokens (810 prompt + 3,477 completion, of which 3,182 reasoning), `finish_reason="stop"`, model identity matched. On paper MED:42959777 (BIGH3, pH-dependent antibody engineering) it returned 2 claims and both evidence quotes passed the verbatim quote gate. With a single source the pipeline correctly stopped at `INSUFFICIENT_EVIDENCE` before hypothesis generation; researcher review of the claims is pending.
+
 ## Current evaluation story
 
 Software verification and scientific evaluation are reported separately.
 
 Current software baseline:
 
-- v0.39 on main (merge `5958770`, PR #35);
-- **398 software tests passed** after merge (GitHub Actions run 41311197281);
-- matched main Maintenance Canary run 41311197269 is **HEALTHY** (398 tests passed); its advisory proposal is **DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT** because the `requirements.txt` hash differs from the accepted Nov 1 baseline (v0.38–v0.39 dependency changes). Accepting a new baseline is a human decision;
+- v0.40 on main (merge `6f0f7d2`, PR #37);
+- **407 software tests passed** after merge (GitHub Actions run 41408148161);
+- matched main Maintenance Canary run 41408148311 is **HEALTHY** (407 tests passed); its advisory proposal is **DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT** because the `requirements.txt` hash differs from the accepted Nov 1 baseline (v0.38–v0.39 dependency changes). Accepting a new baseline is a human decision;
 - automatic repair, dependency/code edits, commit, merge and deploy remain disabled;
-- v0.39 is the deployed HF Space baseline: source `5958770…` → Space commit `1e162166…` (run 41311275823, 398 tests, receipt `HF_SOURCE_COMMITTED_BUILD_PENDING`; a read-only check of the public Space API on 2026-11-01 showed runtime `RUNNING` and a served `deployment.json` with `version: v0.39` and that source SHA). Any later merge needs one more manual deploy for exact Space/main parity;
+- v0.40 is the deployed HF Space baseline: source `6f0f7d2…` → Space commit `94bc1eb3…` (run 41408148915, 407 tests, receipt `HF_SOURCE_COMMITTED_BUILD_PENDING`; a read-only check of the public Space API on 2026-11-02 showed runtime `RUNNING` and a served `deployment.json` with `version: v0.40` and that source SHA). Any later merge needs one more manual deploy for exact Space/main parity;
 - no normal test invokes a model.
 
 Recorded 12-case Glimmer gate replay:
@@ -156,7 +158,7 @@ The repository also includes a manual same-model/same-cases two-call prompt-abla
 
 ## Deployment state
 
-Latest deployed baseline: **v0.39**. v0.39 main source `5958770f581d9afa4fc8054172f888941c4d46ee` was uploaded by run [41311275823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311275823) (2026-11-01 21:27 Asia/Taipei) to HF Space commit `1e162166450c254b3136ecd0fc7378a1db72d3ff` after **398 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.39` and that source SHA. At that check the live sidebar still read "Live Meta Muse (via Hugging Face) · unavailable (no Hugging Face token configured)", so the live Muse path must be re-verified on the Space before it is demonstrated. Any later merge (including this docs change) changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
+Latest deployed baseline: **v0.40**. v0.40 main source `6f0f7d2431548621c3f2481939823058d2b9a72d` (merge of PR #37) was uploaded by run [41408148915](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41408148915) (2026-11-02 15:43 Asia/Taipei) to HF Space commit `94bc1eb3cf8d216c17573fe958fa2ec01bef885d` after **407 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-02, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.40` and that source SHA. The recorded live Muse extraction was run locally on the v0.40 code, not on the Space, so confirm the sidebar shows the live Muse mode as available (Space secret `HF_TOKEN` set) before demonstrating it there. Any later merge (including this docs change) changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
 
 ## What remains deliberately incomplete
 
@@ -165,7 +167,7 @@ Latest deployed baseline: **v0.39**. v0.39 main source `5958770f581d9afa4fc80541
 - M2 data/code/environment reproducibility checks remain open;
 - Stage 5 Planning is not approved or generated unless the researcher explicitly authorizes it;
 - no wet-lab experiment has been executed or scientifically validated by FrontierLab;
-- optional Spark/d1/Llama/Muse2/DetectorScope adapters do not imply live model runs; the v0.39 live Hugging Face Muse Spark Open / Muse Glimmer path is implemented but has no recorded live result yet.
+- optional Spark/d1/Llama/Muse2/DetectorScope adapters do not imply live model runs; the live Hugging Face Muse path has one recorded Muse Spark Open extraction (single paper, researcher review pending) and no recorded Muse Glimmer fallback result; it is not an accuracy evaluation.
 
 ## Autonomy statement
 
