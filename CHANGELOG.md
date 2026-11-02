@@ -1,3 +1,10 @@
+## 2026-11-02 · Demo video link and team field — docs only
+
+- Added the recorded demo video ([Demo video (3 min)](https://youtu.be/d3VaysvMFuA), YouTube, unlisted, 3:00) to README and `docs/SUBMISSION_COPY.md`, replacing the demo-video `[TODO Jaycee: …]` placeholders.
+- `docs/SUBMISSION_COPY.md` team members: **Solo — Pack Kwan Low (Jaycee), Indie Developer track**.
+- `docs/DEMO_VIDEO_SCRIPT.md` narration now says the canary re-runs all **407** tests (was 398), matching the current suite (`pytest -q`: 407 passed).
+- No code, test, fixture or run record changed.
+
 ## 2026-11-02 · v0.40 status sync — docs only
 
 - Synced README, `docs/SUBMISSION_COPY.md`, demo runbook, demo video script, release checklist and final-sprint memo to the merged and deployed **v0.40**: main `6f0f7d2` (PR #37), **407 tests** passed (run 41408148161), Maintenance Canary run 41408148311 `HEALTHY` with advisory `DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT`, deployed by run 41408148915 to Space commit `94bc1eb3…` (public Space API: `RUNNING`, `deployment.json` `version: v0.40`).
