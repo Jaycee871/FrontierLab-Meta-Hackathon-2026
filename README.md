@@ -9,9 +9,11 @@
 
 FrontierLab helps a researcher turn a scientific question into a falsifiable hypothesis and a reviewable research plan. Every claim must cite and quote its source, and nothing moves forward until a human has reviewed it.
 
-**Codebase: v0.39 (branch `feat/live-muse-hf-providers`, unmerged; main is v0.38) · Status reviewed: November 1, 2026 (Asia/Taipei)**
+**Codebase: v0.39 on main (merge `5958770`, deployed to the HF Space) · Status reviewed: November 1, 2026 (Asia/Taipei)**
 
-[Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [研究操作介面（繁中）](docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Maintenance canary](docs/MAINTENANCE_CANARY.md) · [Repair proposals](docs/MAINTENANCE_REPAIR_PROPOSAL.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
+**Author / representative:** Pack Kwan Low (Jaycee) · GitHub [Jaycee871](https://github.com/Jaycee871) · Hugging Face [Jaycee766](https://huggingface.co/Jaycee766) · **Demo video:** [TODO Jaycee: demo-video URL]
+
+[Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [研究操作介面（繁中）](docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Maintenance canary](docs/MAINTENANCE_CANARY.md) · [Repair proposals](docs/MAINTENANCE_REPAIR_PROPOSAL.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Demo video script](docs/DEMO_VIDEO_SCRIPT.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
 ---
 
@@ -162,6 +164,7 @@ Choose a mode in the sidebar:
 | **Synthetic audit demonstration** | Uses labeled, hand-authored fictional publications to show disagreement, approval and planning. | No keys, model or external calls. |
 | **Live Europe PMC metadata (no model calls)** | Retrieves real publication metadata and available abstracts. | Internet connection; no API key. |
 | **Live Europe PMC + local Meta model** | Attempts model-based claim extraction and the human-reviewed synthesis workflow. | A real Muse Glimmer checkpoint served by llama.cpp on the same host at `127.0.0.1:8080` (see `scripts/start_muse_local.sh`). Experimental and unverified. |
+| **Live Meta Muse (via Hugging Face)** | Live Evidence Extraction and, after researcher claim review, Skeptic → Hypothesis on Meta Muse Spark Open (primary, provider Baseten) with automatic fallback to Muse Glimmer 30B, through `https://router.huggingface.co/v1`. | `HF_TOKEN`, `HF_INFERENCE_TOKEN` or `HUGGINGFACEHUB_API_TOKEN` set server-side, explicit consent checkbox, 6 calls per session and a per-process daily cap. [Details](docs/HF_INFERENCE_PROVIDERS_MUSE.md). |
 | **Live Europe PMC + Meta via NVIDIA** | Reuses one NIM research client across extraction, reviewed synthesis, method proposals and planning. | Owner-enabled backend, server-side credential, explicit consent to send the question and abstracts, and a shared cap of eight attempted calls per server process. [Setup](docs/NIM_RESEARCH_BACKEND.md). |
 
 To try the full five-stage flow without a model, run the **Synthetic audit demonstration**. Then follow the walkthrough in [method evaluation and planning](docs/METHOD_EVALUATION.md#try-both-paths-without-a-model).
@@ -173,7 +176,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The v0.38 suite on main has **367 tests**; this branch's recorded-replay / judge-path work adds 11 more (**378 tests** locally). It covers the v0.37 research/provenance/governance/maintenance stack plus accepted-baseline drift comparison and advisory repair-proposal governance. Main GitHub Actions run [41298101837](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101837) passed all 367 software tests after merge. The matched main Maintenance Canary run [41298101823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41298101823) recorded `HEALTHY`, preserved artifact `maintenance-canary-41298101823` (artifact ID `13079632919`), found no drift from the accepted Nov 1 baseline, and emitted `NO_REPAIR_NEEDED / HEALTHY_STABLE`. Normal tests make no model calls. **The test count is not a model-accuracy score.**
+The v0.39 suite on main has **398 tests** (the v0.37 research/provenance/governance/maintenance stack, accepted-baseline drift comparison and advisory repair proposals, the recorded-replay / judge path, and the mocked live Hugging Face Muse client). Main GitHub Actions run [41311197281](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311197281) passed all 398 tests after merge. The matched main Maintenance Canary run [41311197269](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311197269) recorded `HEALTHY` and an advisory `DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT`: the `requirements.txt` hash differs from the accepted Nov 1 baseline, so accepting a new baseline is left to the owner. Normal tests make no model calls. **The test count is not a model-accuracy score.**
 
 Optional offline demonstrations:
 
@@ -188,9 +191,9 @@ python -m scripts.real_literature_benchmark --kind evaluate --predictions docs/r
 ## Deployment (Hugging Face Space)
 
 - **Space:** https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026. This is a public Docker Space on CPU Basic. Template: [`deploy/hf-space/`](deploy/hf-space).
-- **Status:** the latest deployed baseline is **v0.38**: v0.38 main source `64c7aa4458d677c5048b07fbc1d99a5f734dcf3d` was uploaded by run [41300778009](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41300778009) (2026-11-01 19:11 Asia/Taipei) to HF Space commit `0cca430e625faedbab24562728a4354b99085065` after **367 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.38` and that source SHA. Any later merge (including docs) changes the GitHub source SHA and needs one more manual deploy if the Space source marker must exactly match main.
+- **Status:** the latest deployed baseline is **v0.39**: main source `5958770f581d9afa4fc8054172f888941c4d46ee` was uploaded by run [41311275823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311275823) (2026-11-01 21:27 Asia/Taipei) to HF Space commit `1e162166450c254b3136ecd0fc7378a1db72d3ff` after **398 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.39` and that source SHA. Any later merge (including docs) changes the GitHub source SHA and needs one more manual deploy if the Space source marker must exactly match main.
 - **How it deploys:** the manual `Deploy FrontierLab to existing HF Space` workflow (`.github/workflows/deploy-hf-space.yml`) runs the test suite. It then calls `python -m scripts.deploy_hf_space`, which uploads a fixed source snapshot plus a `deployment.json` holding the source SHA and asset hashes. It updates only the existing Space and does not change hardware. Docker builds don't clone a moving branch.
-- **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
+- **Limits:** the CPU Space hosts the interface and the retrieval and audit tools. It has no loaded Muse Glimmer model, and NIM inference is owner-disabled there. The live Hugging Face Muse mode works only when the owner has set a token as a Space secret; otherwise the sidebar labels it unavailable. No NVIDIA credential is transferred. A remote Kaggle server is not reachable through the Space's localhost address.
 
 Details: [live Meta Muse via HF Inference Providers](docs/HF_INFERENCE_PROVIDERS_MUSE.md) · [HF deployment](docs/HF_DEPLOYMENT.md) · [HF Space setup](docs/HF_PRO_SETUP.md) · [local / open-weight inference notes](docs/META_OPENWEIGHT_HF_CPU.md).
 
@@ -300,7 +303,7 @@ FrontierLab was built for the [Meta Global AI Developer Hackathon](https://cereb
 1. **Stage 5 is still human-gated.** M2 is formally selected, but Planning has not been approved or generated.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison.** Use the same model and cases to compare three setups: no gate, source/quote checks, and checks plus human review. Report abstention and intervention separately.
-4. **Record the public demo.** v0.38 is deployed with a checked revision (see Deployment above). Record a roughly three-minute demonstration of actual behavior, starting from the in-app Judge path and the recorded real M2 replay.
+4. **Record the public demo.** v0.39 is deployed with a checked revision (see Deployment above). Record a roughly three-minute demonstration of actual behavior with the [demo video script](docs/DEMO_VIDEO_SCRIPT.md), starting from the in-app Judge path and the recorded real M2 replay.
 5. **Submit the entry.** Check the participant portal's current requirements and complete the formal submission.
 
 See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repository and hosting a demo do not count as formal submission.
