@@ -11,7 +11,7 @@ FrontierLab helps a researcher turn a scientific question into a falsifiable hyp
 
 **Codebase: v0.40 on main (merge `6f0f7d2`, deployed to the HF Space) · Status reviewed: November 2, 2026 (Asia/Taipei)**
 
-**Author / representative:** Pack Kwan Low (Jaycee) · GitHub [Jaycee871](https://github.com/Jaycee871) · Hugging Face [Jaycee766](https://huggingface.co/Jaycee766) · **Demo video:** [TODO Jaycee: demo-video URL]
+**Author / representative:** Pack Kwan Low (Jaycee) · GitHub [Jaycee871](https://github.com/Jaycee871) · Hugging Face [Jaycee766](https://huggingface.co/Jaycee766) · **Demo video:** [Demo video (3 min)](https://youtu.be/d3VaysvMFuA)
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [研究操作介面（繁中）](docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Maintenance canary](docs/MAINTENANCE_CANARY.md) · [Repair proposals](docs/MAINTENANCE_REPAIR_PROPOSAL.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Demo video script](docs/DEMO_VIDEO_SCRIPT.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 

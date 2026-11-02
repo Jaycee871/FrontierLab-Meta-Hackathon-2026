@@ -107,7 +107,7 @@ After a successful live take, download the provenance JSON and commit it under `
 3. **Trajectory** tab: model calls, human interventions and method evaluation as an audit-only graph.
 4. GitHub Actions page for Maintenance canary run 41311197269: `HEALTHY`, advisory `DRIFT_REVIEW_REQUIRED`. Or skip this and click **Download recorded trajectory.json** instead.
 
-> **Narration:** "Two kinds of provenance, kept separate. The evidence graph asks: can this claim trace back through a checked passage to a paper? The trajectory graph asks: what happened — which model ran, who approved what? Process events never count as evidence. And maintainability: a canary re-runs all 398 tests on every change. Here it passed, but it flagged a dependency drift for human review. It can't repair, commit or deploy on its own."
+> **Narration:** "Two kinds of provenance, kept separate. The evidence graph asks: can this claim trace back through a checked passage to a paper? The trajectory graph asks: what happened — which model ran, who approved what? Process events never count as evidence. And maintainability: a canary re-runs all 407 tests on every change. Here it passed, but it flagged a dependency drift for human review. It can't repair, commit or deploy on its own."
 
 [zh-TW] 證據圖（科學溯源）與軌跡圖（流程溯源）分開；Maintenance Canary 偵測到相依套件漂移時，只會提出建議、交由人審查，不會自動修復或部署。
 
