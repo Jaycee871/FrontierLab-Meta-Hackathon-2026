@@ -2,13 +2,27 @@
 
 This file contains reusable public-facing copy. Update only claims that have actually changed.
 
+## Submission at a glance
+
+| Field | Value |
+| --- | --- |
+| Project | FrontierLab — evidence-grounded, human-gated multi-agent AI for scientific research |
+| Event / track / theme | Meta Global AI Developer Hackathon 2026 · Indie Developer Track · Push the Frontier |
+| Representative / author | Pack Kwan Low (Jaycee) · GitHub [Jaycee871](https://github.com/Jaycee871) · Hugging Face [Jaycee766](https://huggingface.co/Jaycee766) |
+| Team members | [TODO Jaycee: confirm "solo entry (Pack Kwan Low)" or list every team member exactly as registered in the participant portal] |
+| Code repository | https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026 (MIT License) |
+| Live demo (HF Space) | https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026 · direct app: https://jaycee766-frontierlab-meta-hackathon-2026.hf.space |
+| Demo video | [TODO Jaycee: public demo-video URL after recording, following [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md)] |
+| Version | v0.39 on main (`5958770`), deployed to the Space (Space commit `1e162166…`) |
+| Submission deadline | 2026-11-04 21:00 ET = 2026-11-05 10:00 Asia/Taipei (recheck the participant portal) |
+
 ## One-line description
 
 **FrontierLab is an evidence-grounded, human-gated scientific research pipeline that uses Meta models to turn literature into reviewable hypotheses and plans without hiding the evidence, uncertainty or researcher decisions in between.**
 
 ## Short description
 
-FrontierLab uses Meta Muse Glimmer 30B inside a five-stage scientific workflow: Research → Evidence → Hypothesis → Evaluation → Planning. Model claims must cite exact source passages, critical transitions require researcher review, and evidence/process provenance are exported separately. The system is designed to make scientific AI more auditable rather than more theatrically autonomous.
+FrontierLab uses Meta Muse models — Muse Spark Open (primary) and Muse Glimmer 30B (fallback) through Hugging Face Inference Providers, plus recorded Muse Glimmer 30B runs through NVIDIA NIM — inside a five-stage scientific workflow: Research → Evidence → Hypothesis → Evaluation → Planning. Model claims must cite exact source passages, critical transitions require researcher review, and evidence/process provenance are exported separately. The system is designed to make scientific AI more auditable rather than more theatrically autonomous.
 
 ## Project description
 
@@ -17,6 +31,24 @@ Scientific language models can cite a real paper while still overstating what th
 A Meta Muse Glimmer 30B backend proposes source-linked claims, receives adversarial critique and produces falsifiable hypotheses. Deterministic source/quote checks reject unanchored claims, while explicit researcher gates control semantic review, method selection and planning authorization. A provenance-tagged Evidence Graph traces scientific artifacts back to source passages; a separate Trajectory Audit Graph records model calls, human interventions, rejected claims and process failures without treating those events as scientific evidence.
 
 The current biomedical demonstration uses published pH-dependent antibody-engineering literature. The researcher selected a structure-based dual-pH design route, while FrontierLab carries unresolved reproducibility checks and orthogonal-validation requirements into a pre-planning contract. Planning remains deliberately human-authorized.
+
+## Impact
+
+**Who it is for.** Biomedical researchers who use language models to read literature, the PIs and reviewers who must sign off on what those models produce, and the research-integrity, journal and funder staff who increasingly have to ask "where did this AI-assisted claim come from, and who approved it?"
+
+**The problem it addresses.** A model can cite a real paper and still assert something the paper does not support. In biomedical work that error is not cosmetic: an unsupported claim about binding, safety or mechanism can steer which experiment gets funded or run. At the same time, work such as Paper2Agent (Miao et al., *Nature* 2026, cited prior work) shows that papers and their code/data can become operable agents. Once research artefacts become agents, the open question is no longer only "can the model answer?" but "can anyone reproduce, trace and govern what the agent did?"
+
+**What FrontierLab changes, concretely and checkably.**
+
+- **Claims are bound to verbatim evidence.** A model claim that does not cite a retrieved source ID with a contiguous 24–500-character quotation from that source is rejected before synthesis. Quote presence is then separately reviewed by a human, because a matching quote is not proof of support.
+- **Provenance becomes a number a reviewer can recompute.** On the recorded, researcher-reviewed real M2 case (two published abstracts; real Meta Muse Glimmer 30B outputs recorded 2026-10-28, Asia/Taipei), the app recomputes from the files in `docs/runs/`: **100% source trace coverage (4/4 artifacts reach a known paper), 50% strict EXTRACTED coverage (2/4 have an all-EXTRACTED path), 9 planning obligations carried into Stage 5, and 0 model calls to replay**. The 50% is not hidden or "fixed": it preserves a real model/researcher provenance disagreement on PMC4314675. These are provenance metrics on a very small sample, not accuracy.
+- **Reproducibility does not require trust, keys or money.** Anyone can open the public Space and replay the real case with no API key and no model call; tampered recorded files or a selection that would authorize planning fail closed.
+- **Governance is enforced, not described.** Claim review, method selection and Stage 5 planning authorization are explicit researcher actions bound to content hashes. In the recorded case the researcher selected M2, yet planning remains **not approved**: readiness carries open data/code/environment checks and obligations such as monomeric-Fab SPR, avidity/stoichiometry handling, search-bias disclosure, replication and falsification.
+- **Maintainability is measured, not assumed.** A scheduled Maintenance Canary re-runs the full regression suite and compares the environment with a human-accepted baseline. On the v0.39 main merge (run 41311197269) all 398 tests passed and the canary reported `HEALTHY`, while the advisory proposal correctly flagged `DRIFT_REVIEW_REQUIRED` because `requirements.txt` changed — detection plus human review, with automatic repair, commit, merge and deploy disabled.
+
+**Why it matters beyond this demo.** The five-stage contract, the evidence gate and the provenance/trajectory graphs are domain-agnostic; the pH-dependent antibody-engineering case is the first worked domain. The broader contribution is Pack Kwan Low's Information Management extension — maintainability, provenance and research governance as the three pillars for managing paper-derived agents as research infrastructure — and the Research Operating Interface that reports those pillars as operational status. FrontierLab also proposes a concrete field list for an Agent Availability statement; the Agent Availability concept itself was anticipated by the Paper2Agent authors.
+
+**What we do not claim.** No scientific-accuracy score, no independently adjudicated gold standard, no wet-lab or clinical validation, and no recorded result yet from the live Hugging Face Muse path. The impact claimed is narrower and verifiable: model-assisted scientific steps become inspectable, challengeable and reproducible.
 
 ## Why this fits Push the Frontier
 
@@ -38,7 +70,9 @@ Core implementation:
 
 - Python + Streamlit;
 - Europe PMC literature retrieval;
-- Meta Muse Glimmer 30B through NVIDIA NIM for the verified model-backed research path;
+- Meta Muse Spark Open (primary) and Muse Glimmer 30B (automatic fallback) through the Hugging Face Inference Providers router for the live path (v0.39);
+- Meta Muse Glimmer 30B through NVIDIA NIM for the recorded model-backed research runs;
+- zero-call recorded replay of the real reviewed M2 case;
 - strict structured JSON contracts;
 - deterministic source-ID and verbatim-passage gates;
 - source-bound human review;
@@ -51,7 +85,8 @@ Core implementation:
 - separate Trajectory Audit Graph;
 - recorded gate-ablation tooling;
 - source-bound 12-case review workspace;
-- deterministic M2 planning-readiness contract.
+- deterministic M2 planning-readiness contract;
+- scheduled Maintenance Canary with advisory, human-gated repair proposals.
 
 Optional adapters for Muse Spark Open, Llama 3.1 8B, Muse2-230M, Liquid d1-2B and DetectorScope are intentionally separated from the verified Glimmer path.
 
@@ -83,11 +118,11 @@ Software verification and scientific evaluation are reported separately.
 
 Current software baseline:
 
-- v0.38 on main;
-- **367 software tests passed** after merge (GitHub Actions run 41298101837);
-- matched main Maintenance Canary run 41298101823 is **HEALTHY**, with no accepted-baseline dependency/environment drift and advisory status **NO_REPAIR_NEEDED / HEALTHY_STABLE**;
+- v0.39 on main (merge `5958770`, PR #35);
+- **398 software tests passed** after merge (GitHub Actions run 41311197281);
+- matched main Maintenance Canary run 41311197269 is **HEALTHY** (398 tests passed); its advisory proposal is **DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT** because the `requirements.txt` hash differs from the accepted Nov 1 baseline (v0.38–v0.39 dependency changes). Accepting a new baseline is a human decision;
 - automatic repair, dependency/code edits, commit, merge and deploy remain disabled;
-- v0.38 is the deployed HF Space baseline: source `64c7aa4…` → Space commit `0cca430e…` (run 41300778009, receipt `HF_SOURCE_COMMITTED_BUILD_PENDING`; the public Space API later reported runtime `RUNNING` with a v0.38 `deployment.json`). Any later merge needs one more manual deploy for exact Space/main parity;
+- v0.39 is the deployed HF Space baseline: source `5958770…` → Space commit `1e162166…` (run 41311275823, 398 tests, receipt `HF_SOURCE_COMMITTED_BUILD_PENDING`; a read-only check of the public Space API on 2026-11-01 showed runtime `RUNNING` and a served `deployment.json` with `version: v0.39` and that source SHA). Any later merge needs one more manual deploy for exact Space/main parity;
 - no normal test invokes a model.
 
 Recorded 12-case Glimmer gate replay:
@@ -121,7 +156,7 @@ The repository also includes a manual same-model/same-cases two-call prompt-abla
 
 ## Deployment state
 
-Latest deployed baseline: **v0.38**. v0.38 main source `64c7aa4458d677c5048b07fbc1d99a5f734dcf3d` was uploaded by run [41300778009](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41300778009) (2026-11-01 19:11 Asia/Taipei) to HF Space commit `0cca430e625faedbab24562728a4354b99085065` after **367 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.38` and that source SHA. Any later merge changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
+Latest deployed baseline: **v0.39**. v0.39 main source `5958770f581d9afa4fc8054172f888941c4d46ee` was uploaded by run [41311275823](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41311275823) (2026-11-01 21:27 Asia/Taipei) to HF Space commit `1e162166450c254b3136ecd0fc7378a1db72d3ff` after **398 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-01, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.39` and that source SHA. At that check the live sidebar still read "Live Meta Muse (via Hugging Face) · unavailable (no Hugging Face token configured)", so the live Muse path must be re-verified on the Space before it is demonstrated. Any later merge (including this docs change) changes the GitHub revision and should be followed by one final deploy if exact Space/main source parity is required.
 
 ## What remains deliberately incomplete
 
