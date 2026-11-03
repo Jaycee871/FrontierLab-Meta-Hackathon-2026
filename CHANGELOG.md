@@ -1,3 +1,10 @@
+## 2026-11-03 · Space/main resync, deploy allow-list and status text — docs + deploy script
+
+- `scripts/deploy_hf_space.py` now also uploads `docs/runs/*.png`, so the live-run screenshot linked from `docs/SUBMISSION_COPY.md` and `docs/runs/space_live_muse_20261102.md` resolves on the Space (deployment test asserts it). `docs/EVIDENCE_GRAPH.md` links its test file by absolute GitHub URL because tests are intentionally not deployed.
+- Deployment status in README, `docs/SUBMISSION_COPY.md`, `docs/HACKATHON_FINAL_SPRINT.md`, `docs/RELEASE_CHECKLIST.md`, `docs/DEMO_RUNBOOK.md` and `docs/DEMO_VIDEO_SCRIPT.md` no longer claims `6f0f7d2` → `94bc1eb` is the latest deploy; it records the full 2026-11-02 deploy history, the `f339cbf` hand edit, and the 2026-11-03 workflow redeploy of this merge, with the served `deployment.json` as the authority.
+- `docs/HUMAN_REVIEW_GATE.md`: replaced the pre-v0.39 statement that the Space does not run Meta Muse with the live Muse Spark Open / Glimmer-fallback path. `docs/RELEASE_CHECKLIST.md` now targets v0.40.
+- No application code, fixture or run record changed.
+
 ## 2026-11-03 · Demo video re-upload and post-submission status sync — docs only
 
 - The demo video was re-uploaded. Every link now points to the new public video [FrontierLab - Meta Global AI Developer Hackathon 2026 Demo](https://youtu.be/agYFr2HgZ5Y) (YouTube, public, 3:03). The previous upload is private and its link no longer plays. The Cerebral Valley submission form already uses the new link.
