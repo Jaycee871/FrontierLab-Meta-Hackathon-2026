@@ -13,11 +13,11 @@ Use a revision that has passed CI and note the exact source SHA.
 
 Current software baseline at preparation time:
 
-- FrontierLab v0.40 on main (merge `6f0f7d2431548621c3f2481939823058d2b9a72d`, PR #37; later docs-only commits may change the final main SHA without changing runtime code)
+- FrontierLab v0.40 on main (runtime code from merge `6f0f7d2431548621c3f2481939823058d2b9a72d`, PR #37; later commits are docs and deploy-allow-list only, so the current main SHA differs without any runtime-code change; the served `deployment.json` records the exact deployed source SHA)
 - **407 software tests passed after merge** (run 41408148161)
 - Maintenance Canary: **HEALTHY** (407 tests), advisory result **DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT** because the `requirements.txt` hash differs from the accepted Nov 1 baseline (main run 41408148311); accepting a new baseline is the owner's decision
 - Stage 5 status: **readiness complete; planning not approved or generated**
-- currently deployed HF baseline is **v0.40**, synced to main at the merge of PR #42 by the deploy workflow on 2026-11-03 (407 tests; public Space API then showed runtime RUNNING; exact source SHA in the served `deployment.json`). Live Muse on the Space was verified on 2026-11-02 (Space commit `94bc1eb`, same runtime code) (about 16:13 Asia/Taipei): sidebar mode available, one Muse Spark Open call via Baseten, 23.07 s, 2 passage-grounded claims on MED:42959777, decision INSUFFICIENT_EVIDENCE (single source), session counter 6/6 → 5/6 (record: `docs/runs/space_live_muse_20261102.md`). Each live run uses part of the 6-call session / 60-call daily caps; re-check the source marker before recording; any later merge needs one more deploy for exact parity
+- currently deployed HF baseline is **v0.40**, synced to the latest main merge by the deploy workflow (most recent redeploy 2026-11-03 Asia/Taipei; 407 tests; public Space API then showed runtime RUNNING; exact source SHA in the served `deployment.json`). Live Muse on the Space was verified on 2026-11-02 (Space commit `94bc1eb`, same runtime code) (about 16:13 Asia/Taipei): sidebar mode available, one Muse Spark Open call via Baseten, 23.07 s, 2 passage-grounded claims on MED:42959777, decision INSUFFICIENT_EVIDENCE (single source), session counter 6/6 → 5/6 (record: `docs/runs/space_live_muse_20261102.md`). Each live run uses part of the 6-call session / 60-call daily caps; re-check the source marker before recording; any later merge needs one more deploy for exact parity
 
 The shot-by-shot video script that follows the in-app Judge path (recorded replay → live Meta Muse via Hugging Face → provenance/governance) is in [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md). This runbook remains the claims checklist.
 

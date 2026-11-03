@@ -132,11 +132,11 @@ After a successful live take, download the provenance JSON and commit it under `
 - any live Muse Spark Open result that is not in a saved receipt;
 - "independent gold" for the researcher's own review.
 
-## Post-production checklist
+## Post-production checklist — closed
 
-- [ ] Total length ≈ 3:00; no dead air longer than 2 s; cut long model waits and label the cuts.
-- [ ] Captions burned in; every number on screen matches the app at recording time.
-- [ ] Banners "RECORDED REAL RUN · REPLAY ONLY" and "Planning is NOT approved" visible when on screen.
-- [ ] No token, account e-mail or billing page visible in any frame.
-- [ ] Export 1080p MP4 (H.264, AAC); upload as public or unlisted; test the link in a private window.
-- [ ] Add the URL to `docs/SUBMISSION_COPY.md` and README (replace the `[TODO Jaycee: …]` placeholders) and to the submission form.
+The video is recorded and published: https://youtu.be/agYFr2HgZ5Y (YouTube, public, 3:03). Nothing in this checklist is outstanding.
+
+- [x] Recorded and edited to about 3:00 (published length 3:03).
+- [x] Uploaded to YouTube as **public** (not unlisted). The earlier upload is private and is no longer linked from any current file.
+- [x] URL added to README, `docs/SUBMISSION_COPY.md` and the Cerebral Valley submission form; the earlier `[TODO Jaycee: …]` placeholders were replaced.
+- Production rules for any re-cut: no dead air longer than 2 s; label long model waits that were cut; captions and on-screen numbers match the app at recording time; the "RECORDED REAL RUN · REPLAY ONLY" and "Planning is NOT approved" banners stay visible when on screen; no token, account e-mail or billing page in any frame.

@@ -31,7 +31,7 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 | Manuscript-to-abstract source matching | SOFTWARE VERIFIED | Valid DOI and verbatim excerpt checks are not semantic entailment |
 | Human review gate, version-bound annotations | SOFTWARE + RECORDED REVIEW VERIFIED | Two real core claims have explicit researcher SUPPORTED judgments; these are not independent expert gold labels |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
-| HF public Streamlit Space | v0.40 DEPLOYED, IN SYNC WITH MAIN | Redeployed by the deploy workflow from the merge of PR #42 on 2026-11-03 after 407 tests; the public Space API then reported runtime `RUNNING`, and the served `deployment.json` records the exact source SHA. Earlier deploys: `6f0f7d2` → `94bc1eb`, `21f9092` → `714c31d`, `a0a6a51` → `8f3db35`, `1012ce5` → `6041356` (2026-11-02), then a docs-only hand edit `f339cbf`. Any later merge needs one more deploy for exact source parity. NIM remains owner-disabled there. |
+| HF public Streamlit Space | v0.40 DEPLOYED, IN SYNC WITH MAIN | Redeployed by the deploy workflow from the latest main merge (most recent 2026-11-03) after 407 tests; the public Space API then reported runtime `RUNNING`, and the served `deployment.json` records the exact source SHA. Earlier deploys: `6f0f7d2` → `94bc1eb`, `21f9092` → `714c31d`, `a0a6a51` → `8f3db35`, `1012ce5` → `6041356` (2026-11-02), then a docs-only hand edit `f339cbf` and `e6a81fa` (PR #42) → `ec5d057` (run 41596184744, 2026-11-03 15:25). Any later merge needs one more deploy for exact source parity. NIM remains owner-disabled there. |
 | Authentic Meta Muse Glimmer response | MULTIPLE RECORDED NIM RUNS | Synthetic smoke, strict JSON, 12-case batch and two-call core extraction recorded; no scientific accuracy claim |
 | Human-reviewed live continuation | EXECUTED AND RECORDED | Run 40574846326 completed the bounded skeptic → hypothesis continuation; artifact provenance validated and exact outputs preserved |
 | Researcher method selection | COMPLETED | M2 selected; M1 retained as comparator; canonical evaluation bound to exact live hypotheses and human rationale stored separately |
@@ -103,13 +103,13 @@ Official references:
 - https://dev.meta.ai/events/global-hackathon
 - https://events.cerebralvalley.ai/e/meta-ai-developer-hackathon
 
-The participant portal may contain additional submission-form fields that are not visible on the public event pages, so the logged-in final form still needs a separate check.
+The participant portal may contain additional submission-form fields that are not visible on the public event pages, so the logged-in final form needed a separate check (done: submitted on the portal on 2026-11-02).
 
 ## Priority 4: release and submission
 
 - Follow [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md): manually deploy current main to the existing HF Space, then verify exact source SHA, current central version, RUNNING runtime, health endpoint and rendered marker.
 - Use [`SUBMISSION_COPY.md`](SUBMISSION_COPY.md) as the source of truth for public one-line/short/long descriptions and limitations; edit only when shipped behavior changes.
-- Confirm actual current requirements within the logged-in Cerebral Valley participant portal; complete all mandatory fields, video, code and links.
+- Confirm actual current requirements within the logged-in Cerebral Valley participant portal; complete all mandatory fields, video, code and links. (Done: submitted on 2026-11-02.)
 - Target internal completion by 2026-11-04 in Taipei to leave room for portal and upload failures; formal deadline remains 2026-11-05 10:00 Taiwan time.
 
 ## Features deferred until after project submission
