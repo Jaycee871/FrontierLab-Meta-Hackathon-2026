@@ -11,7 +11,7 @@ FrontierLab helps a researcher turn a scientific question into a falsifiable hyp
 
 **Codebase: v0.40 on main (merge `6f0f7d2`, deployed to the HF Space) · Status reviewed: November 2, 2026 (Asia/Taipei)**
 
-**Author / representative:** Pack Kwan Low (Jaycee) · GitHub [Jaycee871](https://github.com/Jaycee871) · Hugging Face [Jaycee766](https://huggingface.co/Jaycee766) · **Demo video:** [Demo video (3 min)](https://youtu.be/d3VaysvMFuA)
+**Author / representative:** Pack Kwan Low (Jaycee) · GitHub [Jaycee871](https://github.com/Jaycee871) · Hugging Face [Jaycee766](https://huggingface.co/Jaycee766) · **Demo video:** [Demo video (3:03)](https://youtu.be/agYFr2HgZ5Y)
 
 [Hosted Space](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026) · [Project charter](docs/ORIGINAL_PROJECT_CHARTER.md) · [IM extension](docs/INFORMATION_MANAGEMENT_EXTENSION.md) · [Research Operating Interface](docs/RESEARCH_OPERATING_INTERFACE.md) · [研究操作介面（繁中）](docs/RESEARCH_OPERATING_INTERFACE.zh-TW.md) · [Trace Coverage](docs/TRACE_COVERAGE.md) · [Maintenance canary](docs/MAINTENANCE_CANARY.md) · [Repair proposals](docs/MAINTENANCE_REPAIR_PROPOSAL.md) · [Demo runbook](docs/DEMO_RUNBOOK.md) · [Demo video script](docs/DEMO_VIDEO_SCRIPT.md) · [Submission copy](docs/SUBMISSION_COPY.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Final sprint](docs/HACKATHON_FINAL_SPRINT.md) · [Changelog](CHANGELOG.md) · [Tests](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/workflows/tests.yml)
 
@@ -303,10 +303,10 @@ FrontierLab was built for the [Meta Global AI Developer Hackathon](https://cereb
 1. **Stage 5 is still human-gated.** M2 is formally selected, but Planning has not been approved or generated.
 2. **Complete one live five-stage case:** question, literature, human-reviewed claims, hypothesis, evaluation and approved plan.
 3. **Run a controlled comparison.** Use the same model and cases to compare three setups: no gate, source/quote checks, and checks plus human review. Report abstention and intervention separately.
-4. **Record the public demo.** v0.40 is deployed with a checked revision (see Deployment above). Record a roughly three-minute demonstration of actual behavior with the [demo video script](docs/DEMO_VIDEO_SCRIPT.md), starting from the in-app Judge path and the recorded real M2 replay.
-5. **Submit the entry.** Check the participant portal's current requirements and complete the formal submission.
+4. **Public demo video — done.** The [demo video](https://youtu.be/agYFr2HgZ5Y) (YouTube, public, 3:03) follows the [demo video script](docs/DEMO_VIDEO_SCRIPT.md), starting from the in-app Judge path and the recorded real M2 replay.
+5. **Formal submission — done.** FrontierLab was submitted on the Cerebral Valley portal on 2026-11-02 (Indie Developer Track, Push the Frontier, team FrontierLab, solo entry). Submissions close 2026-11-04 9:00 PM ET (2026-11-05 10:00 Asia/Taipei).
 
-See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). Publishing the repository and hosting a demo do not count as formal submission.
+See the [final sprint plan](docs/HACKATHON_FINAL_SPRINT.md). The formal entry is the Cerebral Valley submission; publishing the repository and hosting a demo do not count as submission on their own.
 
 ## License
 

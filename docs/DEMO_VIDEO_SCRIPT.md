@@ -1,6 +1,7 @@
 # FrontierLab — 3-minute demo video script
 
 **Target length:** ~3:00 (internal production target; recheck the participant portal for any official limit).
+**Published video:** https://youtu.be/agYFr2HgZ5Y (YouTube, public, 3:03).
 **Follows:** the in-app **Judge path · start here** box, in this order: (1) *Start here · Replay recorded real M2 case (no model call)* → (2) live Meta Muse via Hugging Face, only if the Space shows it available → (3) provenance and governance views.
 **Claims checklist:** [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md). Every sentence below must stay true of the build you record.
 

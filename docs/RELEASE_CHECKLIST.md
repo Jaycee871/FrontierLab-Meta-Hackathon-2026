@@ -1,6 +1,7 @@
 # FrontierLab — release & submission checklist
 
-**Target public release:** v0.38 main after HF redeploy and runtime verification.  
+**Target public release:** v0.38 main after HF redeploy and runtime verification (superseded: v0.40 is the deployed baseline).  
+**Status 2026-11-03 Asia/Taipei:** submitted on the Cerebral Valley portal on 2026-11-02 (Indie Developer Track, Push the Frontier, team FrontierLab, solo); demo video public at https://youtu.be/agYFr2HgZ5Y (3:03). The boxes below are kept as the original working checklist.  
 **Public event deadline rechecked 2026-11-01 Asia/Taipei:** Nov 4, 2026 at 9:00 PM ET = **Nov 5, 2026 at 10:00 AM Asia/Taipei**. Organizer dates may change.
 
 Official public references:
