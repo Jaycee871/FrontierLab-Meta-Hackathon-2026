@@ -1,3 +1,11 @@
+## 2026-11-03 · Final accuracy sweep after PR #42 — docs only
+
+- `docs/DEMO_RUNBOOK.md` and `docs/SUBMISSION_COPY.md` no longer cite merge `6f0f7d2` as main or say later commits are docs-only: runtime code is from `6f0f7d2` (PR #37), later commits are docs and deploy-allow-list only (PR #42 also changed `scripts/deploy_hf_space.py` and its test), and the served `deployment.json` is the authority for the exact SHA.
+- `docs/DEMO_VIDEO_SCRIPT.md` post-production checklist closed: the video is recorded and public at https://youtu.be/agYFr2HgZ5Y (3:03); it no longer asks for placeholder replacement or allows an unlisted upload.
+- Deployment status in README, `docs/SUBMISSION_COPY.md`, `docs/DEMO_RUNBOOK.md`, `docs/RELEASE_CHECKLIST.md` and `docs/HACKATHON_FINAL_SPRINT.md` now says "synced to the latest main merge" instead of naming PR #42, and adds `e6a81fa` (PR #42) → Space `ec5d057` (run 41596184744) to the deploy history. This merge (PR #43) is redeployed by the workflow.
+- `docs/HACKATHON_FINAL_SPRINT.md`: the portal-form check and Priority 4 item are marked done (submitted 2026-11-02).
+- No code, test, fixture or run record changed.
+
 ## 2026-11-03 · Space/main resync, deploy allow-list and status text — docs + deploy script
 
 - `scripts/deploy_hf_space.py` now also uploads `docs/runs/*.png`, so the live-run screenshot linked from `docs/SUBMISSION_COPY.md` and `docs/runs/space_live_muse_20261102.md` resolves on the Space (deployment test asserts it). `docs/EVIDENCE_GRAPH.md` links its test file by absolute GitHub URL because tests are intentionally not deployed.
