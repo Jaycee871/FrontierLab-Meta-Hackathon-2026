@@ -24,7 +24,8 @@ def source_files(root: Path) -> dict[str, bytes]:
     files = {name: (root / name).read_bytes()
              for name in ("app.py", "requirements.txt", ".streamlit/config.toml", "LICENSE", "NOTICE")}
     for folder, suffixes in (("frontierlab", {".py"}), ("datasets", {".json"}),
-                             ("docs", {".md", ".json"}), ("docs/assets", {".svg", ".png"})):
+                             ("docs", {".md", ".json"}), ("docs/assets", {".svg", ".png"}),
+                             ("docs/runs", {".png"})):
         for path in sorted((root / folder).rglob("*")):
             if path.is_file() and path.suffix in suffixes and not path.is_symlink():
                 relative = path.relative_to(root)

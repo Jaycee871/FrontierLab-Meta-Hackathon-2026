@@ -1,6 +1,6 @@
 # FrontierLab — release & submission checklist
 
-**Target public release:** v0.38 main after HF redeploy and runtime verification (superseded: v0.40 is the deployed baseline).  
+**Target public release:** v0.40 on main (runtime code from merge `6f0f7d2`, PR #37), redeployed to the existing HF Space from the latest main merge and runtime-verified.  
 **Status 2026-11-03 Asia/Taipei:** submitted on the Cerebral Valley portal on 2026-11-02 (Indie Developer Track, Push the Frontier, team FrontierLab, solo); demo video public at https://youtu.be/agYFr2HgZ5Y (3:03). The boxes below are kept as the original working checklist.  
 **Public event deadline rechecked 2026-11-01 Asia/Taipei:** Nov 4, 2026 at 9:00 PM ET = **Nov 5, 2026 at 10:00 AM Asia/Taipei**. Organizer dates may change.
 
@@ -22,7 +22,7 @@ Official public references:
 
 ## B. Hugging Face deployment
 
-**Current deployment reference (2026-11-02):** the deployed baseline is **v0.40**. v0.40 main source `6f0f7d2431548621c3f2481939823058d2b9a72d` was uploaded by run [41408148915](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/actions/runs/41408148915) (2026-11-02 15:43 Asia/Taipei) to HF Space commit `94bc1eb3cf8d216c17573fe958fa2ec01bef885d` after **407 software tests passed**. The receipt reported `HF_SOURCE_COMMITTED_BUILD_PENDING`; a later read-only check of the public Space API (2026-11-02, Asia/Taipei) showed runtime stage `RUNNING` and a served `deployment.json` with `version: v0.40` and that source SHA. Main CI run 41408148161 passed 407 software tests and matched main canary run 41408148311 is HEALTHY with advisory DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT (`requirements.txt` hash differs from the accepted Nov 1 baseline). Any later merge needs one more manual deploy before claiming exact Space/main SHA parity; then re-verify runtime health and the rendered source marker.
+**Current deployment reference (2026-11-03 Asia/Taipei):** the deployed baseline is **v0.40**, synced to main at the merge of PR #42 by the deploy workflow (407 software tests passed in the workflow before upload). The public Space API then reported runtime stage `RUNNING`; the served [`deployment.json`](https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026/blob/main/deployment.json) records the exact source SHA and per-file hashes. Earlier v0.40 deploys: `6f0f7d2` → Space `94bc1eb` (run 41408148915), `21f9092` → `714c31d` (run 41412146919), `a0a6a51` → `8f3db35` (run 41442246144), `1012ce5` → `6041356` (run 41448120728), all 2026-11-02, then a docs-only hand edit `f339cbf` on 2026-11-03 that did not regenerate `deployment.json`. Main CI run 41408148161 passed 407 software tests and matched main canary run 41408148311 is HEALTHY with advisory DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT (`requirements.txt` hash differs from the accepted Nov 1 baseline). Any later merge needs one more workflow deploy before claiming exact Space/main SHA parity; do not hand-edit Space files, because that leaves `deployment.json` stale.
 
 The deployment workflow is manual (`workflow_dispatch`).
 

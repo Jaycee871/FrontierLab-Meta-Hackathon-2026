@@ -20,7 +20,7 @@ Only reviewer-supported source IDs are passed to further model agents or to a dr
 
 ## User interface and retention
 
-The Streamlit UI now provides a per-claim review form and downloadable blank/annotated JSON packets. Session changes alone are not a durable private archive: use the JSON download. The human labels are not automatically verified as independent domain-expert judgments. The public HF CPU Space does not currently run Meta Muse Glimmer: new interface code will only appear after the CPU Basic Docker Space is manually rebuilt from main, and real extracted claims require a separately connected inference backend.
+The Streamlit UI now provides a per-claim review form and downloadable blank/annotated JSON packets. Session changes alone are not a durable private archive: use the JSON download. The human labels are not automatically verified as independent domain-expert judgments. The public HF CPU Space loads no model itself. Since v0.39–v0.40 it offers **Live Meta Muse (via Hugging Face)**: when the Space owner has set a Hugging Face token as a Space secret, it calls Muse Spark Open through Hugging Face Inference Providers, with Muse Glimmer as the configured fallback, under a 6-call per-session and per-process daily cap; without that token the mode is labelled unavailable. Claims from that live path enter this same review gate as PENDING. New code reaches the Space only through the manual `Deploy FrontierLab to existing HF Space` workflow, which uploads a revision-bound snapshot and triggers the Docker rebuild.
 
 ## Proposed future publishable evaluation
 

@@ -1,6 +1,6 @@
 # Evidence graph: provenance for every plan step
 
-Module: [`frontierlab/evidence_graph.py`](../frontierlab/evidence_graph.py) · Tests: [`tests/test_evidence_graph.py`](../tests/test_evidence_graph.py)
+Module: [`frontierlab/evidence_graph.py`](../frontierlab/evidence_graph.py) · Tests: [`tests/test_evidence_graph.py`](https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026/blob/main/tests/test_evidence_graph.py)
 
 FrontierLab builds a small, typed graph from each run, linking the plan back to the literature:
 
