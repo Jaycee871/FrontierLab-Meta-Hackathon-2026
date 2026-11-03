@@ -12,8 +12,9 @@ This file contains reusable public-facing copy. Update only claims that have act
 | Team members | Solo — Pack Kwan Low (Jaycee), Indie Developer track |
 | Code repository | https://github.com/Jaycee871/FrontierLab-Meta-Hackathon-2026 (MIT License) |
 | Live demo (HF Space) | https://huggingface.co/spaces/Jaycee766/FrontierLab-Meta-Hackathon-2026 · direct app: https://jaycee766-frontierlab-meta-hackathon-2026.hf.space |
-| Demo video | [Demo video (3 min)](https://youtu.be/d3VaysvMFuA) (YouTube, public; follows [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md)) |
+| Demo video | [Demo video (3:03)](https://youtu.be/agYFr2HgZ5Y) (YouTube, public, 3:03; follows [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md)) |
 | Version | v0.40 on main (`6f0f7d2`), deployed to the Space (Space commit `94bc1eb3…`) |
+| Submission status | Submitted on the Cerebral Valley portal on 2026-11-02 · team FrontierLab (solo entry) · Indie Developer Track · Push the Frontier |
 | Submission deadline | 2026-11-04 21:00 ET = 2026-11-05 10:00 Asia/Taipei (recheck the participant portal) |
 
 ## One-line description
@@ -48,7 +49,7 @@ The current biomedical demonstration uses published pH-dependent antibody-engine
 
 **Why it matters beyond this demo.** The five-stage contract, the evidence gate and the provenance/trajectory graphs are domain-agnostic; the pH-dependent antibody-engineering case is the first worked domain. The broader contribution is Pack Kwan Low's Information Management extension — maintainability, provenance and research governance as the three pillars for managing paper-derived agents as research infrastructure — and the Research Operating Interface that reports those pillars as operational status. FrontierLab also proposes a concrete field list for an Agent Availability statement; the Agent Availability concept itself was anticipated by the Paper2Agent authors.
 
-**What we do not claim.** No scientific-accuracy score, no independently adjudicated gold standard, no wet-lab or clinical validation, and no recorded result yet from the live Hugging Face Muse path. The impact claimed is narrower and verifiable: model-assisted scientific steps become inspectable, challengeable and reproducible.
+**What we do not claim.** No scientific-accuracy score, no independently adjudicated gold standard, no wet-lab or clinical validation, and only two single-paper execution records from the live Hugging Face Muse path (not an accuracy evaluation). The impact claimed is narrower and verifiable: model-assisted scientific steps become inspectable, challengeable and reproducible.
 
 ## Why this fits Push the Frontier
 

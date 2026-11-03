@@ -1,6 +1,6 @@
 # FrontierLab — Meta Hackathon Final Sprint
 
-**Updated 2026-11-02 (Asia/Taipei) · Planning memo, NOT proof of completed inference or submission.**
+**Updated 2026-11-03 (Asia/Taipei) · Planning memo, NOT proof of completed inference. Formal submission completed on Cerebral Valley on 2026-11-02.**
 
 ## Verified inference update — October 28, 2026
 
@@ -27,7 +27,7 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 
 | Deliverable | Status | Evidence / limitation |
 | --- | --- | --- |
-| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.38 main; **367 tests passed** after merge on run 41298101837. Test count is software coverage, not model accuracy. |
+| Python research evidence/provenance pipeline | SOFTWARE VERIFIED | v0.40 main; **407 tests passed** after merge on run 41408148161. Test count is software coverage, not model accuracy. |
 | Manuscript-to-abstract source matching | SOFTWARE VERIFIED | Valid DOI and verbatim excerpt checks are not semantic entailment |
 | Human review gate, version-bound annotations | SOFTWARE + RECORDED REVIEW VERIFIED | Two real core claims have explicit researcher SUPPORTED judgments; these are not independent expert gold labels |
 | BioNeMo Boltz-2 request and response checks | OFFLINE PREFLIGHT ONLY | NO hosted Boltz-2 model computation, no validated binding function |
@@ -37,10 +37,10 @@ The reviewed continuation was executed successfully in GitHub Actions run 405748
 | Researcher method selection | COMPLETED | M2 selected; M1 retained as comparator; canonical evaluation bound to exact live hypotheses and human rationale stored separately |
 | M2 planning readiness | COMPLETED, NOT AUTHORIZED | Zero-call packet validates current context and carries data/code/environment gaps plus SPR/avidity/search-bias/replication obligations. `planning_approved=false`; no plan generated. |
 | Research Operating Interface | IMPLEMENTED / MEASURED | Recorded M2 core: 4/4 source-traceable artifacts (100%) and 2/4 fully EXTRACTED (50%); provenance metric, not accuracy. |
-| Maintainability canary + advisory repair proposal | EXECUTED / SCHEDULED | Main v0.38 canary run 41298101823 passed 367 tests, matched the accepted Nov 1 dependency baseline, and emitted NO_REPAIR_NEEDED / HEALTHY_STABLE; artifact 13079632919. Failures remain quarantined; repair proposals are advisory only and cannot edit/commit/merge/deploy. |
+| Maintainability canary + advisory repair proposal | EXECUTED / SCHEDULED | Main v0.40 canary run 41408148311 passed 407 tests and reported HEALTHY, with an advisory DRIFT_REVIEW_REQUIRED / HEALTHY_DRIFT because the `requirements.txt` hash differs from the accepted Nov 1 baseline (accepting a new baseline is left to the owner). Failures remain quarantined; repair proposals are advisory only and cannot edit/commit/merge/deploy. |
 | Gate-ablation comparison | PARTIALLY EXECUTED | Recorded 12-case post-generation replay is implemented: 8 decisive / 4 abstaining outputs, 0 new abstentions from the source/quote post gate, 8 human reviews pending. A true same-model/same-cases two-call prompt-level workflow is prepared but not yet executed. No accuracy claim. |
-| Three-minute competition video | NOT VERIFIED | Design storyboard not recording |
-| Formal submission through Cerebral Valley | NOT SUBMITTED | GitHub + HF publication is not contest submission |
+| Three-minute competition video | RECORDED AND PUBLIC | [YouTube](https://youtu.be/agYFr2HgZ5Y), public, 3:03; follows `DEMO_VIDEO_SCRIPT.md` |
+| Formal submission through Cerebral Valley | SUBMITTED 2026-11-02 | Indie Developer Track, Push the Frontier, team FrontierLab (solo); the event page shows "View Submission". Deadline 2026-11-04 21:00 ET. |
 
 ## Priority 1: explicit Stage 5 decision — highest priority
 

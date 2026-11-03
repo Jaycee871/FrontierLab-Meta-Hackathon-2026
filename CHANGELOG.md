@@ -1,6 +1,13 @@
+## 2026-11-03 · Demo video re-upload and post-submission status sync — docs only
+
+- The demo video was re-uploaded. Every link now points to the new public video [FrontierLab - Meta Global AI Developer Hackathon 2026 Demo](https://youtu.be/agYFr2HgZ5Y) (YouTube, public, 3:03). The previous upload is private and its link no longer plays. The Cerebral Valley submission form already uses the new link.
+- Submission status synced: FrontierLab was submitted on the Cerebral Valley portal on 2026-11-02 (Indie Developer Track, Push the Frontier, team FrontierLab, solo entry); submissions close 2026-11-04 9:00 PM ET. README next milestones, `docs/HACKATHON_FINAL_SPRINT.md` status table and `docs/RELEASE_CHECKLIST.md` no longer describe the video or the submission as outstanding.
+- `docs/SUBMISSION_COPY.md`: added a submission-status row and removed the outdated "no recorded result yet from the live Hugging Face Muse path" wording, which contradicted the two live runs recorded in the same file.
+- No code, test, fixture or run record changed.
+
 ## 2026-11-02 · Demo video link and team field — docs only
 
-- Added the recorded demo video ([Demo video (3 min)](https://youtu.be/d3VaysvMFuA), YouTube, unlisted, 3:00) to README and `docs/SUBMISSION_COPY.md`, replacing the demo-video `[TODO Jaycee: …]` placeholders.
+- Added the recorded demo video (YouTube, first uploaded unlisted, 3:00) to README and `docs/SUBMISSION_COPY.md`, replacing the demo-video `[TODO Jaycee: …]` placeholders. That upload has since been replaced; see the 2026-11-03 entry for the current link.
 - Demo video visibility changed from unlisted to public on YouTube (2026-11-02); `docs/SUBMISSION_COPY.md` updated to match. Project submitted on the Cerebral Valley portal on 2026-11-02 (Asia/Taipei).
 - `docs/SUBMISSION_COPY.md` team members: **Solo — Pack Kwan Low (Jaycee), Indie Developer track**.
 - `docs/DEMO_VIDEO_SCRIPT.md` narration now says the canary re-runs all **407** tests (was 398), matching the current suite (`pytest -q`: 407 passed).
